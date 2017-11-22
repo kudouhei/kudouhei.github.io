@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="txt," />
+  <meta name="keywords" content="JavaScript," />
 
 
 
@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="这是我的第一个技术博客！">
-<meta name="keywords" content="txt">
+<meta name="description" content="js去除数组重复项方法1：js对象的特性：在js对象中key是永远不会重复的  把数组转成一个js的对象 把数组中的值，变成js对象当中的key 把这个对象，在还原成数组    代码   function unique(arr){    var obj = {};    var _arr = [];    for(va">
+<meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="first">
-<meta property="og:url" content="http://yoursite.com/2017/11/19/first/index.html">
+<meta property="og:title" content="js实现数组去除重复项">
+<meta property="og:url" content="http://yoursite.com/2017/11/22/js-array-weighting/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="这是我的第一个技术博客！">
+<meta property="og:description" content="js去除数组重复项方法1：js对象的特性：在js对象中key是永远不会重复的  把数组转成一个js的对象 把数组中的值，变成js对象当中的key 把这个对象，在还原成数组    代码   function unique(arr){    var obj = {};    var _arr = [];    for(var i = 0,len = arr.length;i&amp;lt;len;i++){">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-19T14:15:58.000Z">
+<meta property="og:updated_time" content="2017-11-22T14:49:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="first">
-<meta name="twitter:description" content="这是我的第一个技术博客！">
+<meta name="twitter:title" content="js实现数组去除重复项">
+<meta name="twitter:description" content="js去除数组重复项方法1：js对象的特性：在js对象中key是永远不会重复的  把数组转成一个js的对象 把数组中的值，变成js对象当中的key 把这个对象，在还原成数组    代码   function unique(arr){    var obj = {};    var _arr = [];    for(var i = 0,len = arr.length;i&amp;lt;len;i++){">
 
 
 
@@ -125,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/19/first/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/22/js-array-weighting/"/>
 
 
 
 
 
-  <title>first | FE_hei</title>
+  <title>js实现数组去除重复项 | FE_hei</title>
   
 
 
@@ -248,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/19/first/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/22/js-array-weighting/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -265,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">first</h1>
+          <h1 class="post-title" itemprop="name headline">js实现数组去除重复项</h1>
         
 
         <div class="post-meta">
@@ -277,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-19T17:49:47+08:00">
-                2017-11-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T22:46:34+08:00">
+                2017-11-22
               </time>
             
 
@@ -315,8 +315,64 @@
       
 
       
-        <p>这是我的第一个技术博客！</p>
+        <h3 id="js去除数组重复项"><a href="#js去除数组重复项" class="headerlink" title="js去除数组重复项"></a>js去除数组重复项</h3><p><strong>方法1：js对象的特性：在js对象中key是永远不会重复的</strong></p>
+<ol>
+<li>把数组转成一个js的对象</li>
+<li>把数组中的值，变成js对象当中的key</li>
+<li>把这个对象，在还原成数组  </li>
+</ol>
+<p>代码  </p>
+<pre><code>function unique(arr){
+   var obj = {};
+   var _arr = [];
+   for(var i = 0,len = arr.length;i&lt;len;i++){
+     obj[arr[i]] = true;
+   } 
 
+   for(var attr in obj){
+     if(obj.hasOwnProperty(attr)){
+       _arr.push(attr);
+     }
+   }
+   return _arr.map(function(item){ return +item});
+}  
+var arr=[1,1,2,3,3,4,5,6];
+console.log(unique(arr));      
+</code></pre><p><strong>方法2：遍历数组法： 这应该是最简单的去重方法（实现思路：新建一新数组，遍历数组，值不在新数组就加入该新数组中）</strong>    </p>
+<pre><code>// 遍历数组去重法
+function unique(arr){
+  var _arr = []
+  //遍历当前数组
+  for(var i = 0; i &lt; arr.length; i++){
+    //如果当前数组的第i已经保存进了临时数组，那么跳过，
+    //否则把当前项push到临时数组里面
+    if (_arr.indexOf(arr[i]) == -1) _arr.push(arr[i])
+  }
+  return _arr
+}
+</code></pre><p><strong>方法3：对象键值对。速度快，高效，占用更大的内存换取更快的时间，用 JavaScript 中的 Object 对象来当做哈希表，hash去重的核心是构建了一个 hash 对象来替代 indexOf</strong>  </p>
+<pre><code> // hash 去重法
+function unique(arr){
+    var _arr = [], 
+        hash = {}
+    for (var i = 0; i &lt; arr.length; i++) {
+        var item = arr[i]
+        var key = typeof(item) + item
+          // 对象的键值只能是字符串, typeof(item) + item来去分1和&apos;1&apos;的情况
+        if(hash[key] !== 1){
+            _arr.push(item)
+            hash[key] = 1
+        }
+    }
+    return _arr
+}
+</code></pre><p><strong>方法4：es6 Set数据结构：</strong>ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值  </p>
+<pre><code>function unique(arr){
+    return Array.from(new Set(arr))
+    // Array.from方法用于将两类对象转为真正的数组：
+    // 类似数组的对象（array-like object）和可遍历（iterable）的对象
+}
+</code></pre>
       
     </div>
     
@@ -333,7 +389,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/txt/" rel="tag"><i class="fa fa-tag"></i> txt</a>
+            <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
           
         </div>
       
@@ -346,15 +402,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/11/20/sticky-footers/" rel="next" title="绝对底部sticky_footers">
+                <i class="fa fa-chevron-left"></i> 绝对底部sticky_footers
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/11/20/sticky-footers/" rel="prev" title="绝对底部sticky_footers">
-                绝对底部sticky_footers <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -406,8 +462,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -481,6 +546,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#js去除数组重复项"><span class="nav-number">1.</span> <span class="nav-text">js去除数组重复项</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
