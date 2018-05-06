@@ -84,20 +84,18 @@
 
 
 
-<meta name="description" content="line-height行高指文本行基线间的垂直距离。    图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.   半行距 = (line-height - font-size)/2 取值一">
+<meta name="description" content="&amp;lt;section style=&amp;quot;margin-bottom: 150px;&amp;quot;&amp;gt;   &amp;lt;!-- 浮动定位 缺点：需要清除浮动；center盒子必须放在最后，中间层后渲染 优点：兼容性好； --&amp;gt;   &amp;lt;!-- 中间d">
 <meta name="keywords" content="CSS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="line-height属性值">
-<meta property="og:url" content="http://yoursite.com/2018/05/01/line-height/index.html">
+<meta property="og:title" content="CSS三栏布局">
+<meta property="og:url" content="http://yoursite.com/2018/05/06/三栏布局/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="line-height行高指文本行基线间的垂直距离。    图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.   半行距 = (line-height - font-size)/2 取值一般情况下，浏览器默认的line-height为1.2。    值 描述">
+<meta property="og:description" content="&amp;lt;section style=&amp;quot;margin-bottom: 150px;&amp;quot;&amp;gt;   &amp;lt;!-- 浮动定位 缺点：需要清除浮动；center盒子必须放在最后，中间层后渲染 优点：兼容性好； --&amp;gt;   &amp;lt;!-- 中间div为何要放在最后？ --&amp;gt;   &amp;lt;!--      假如某个div元素A是浮动的，如果A元素上一个元素也是浮动的，那">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/line-height/line.jpg">
-<meta property="og:updated_time" content="2018-05-01T13:17:12.000Z">
+<meta property="og:updated_time" content="2018-05-06T08:29:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="line-height属性值">
-<meta name="twitter:description" content="line-height行高指文本行基线间的垂直距离。    图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.   半行距 = (line-height - font-size)/2 取值一般情况下，浏览器默认的line-height为1.2。    值 描述">
-<meta name="twitter:image" content="http://yoursite.com/images/line-height/line.jpg">
+<meta name="twitter:title" content="CSS三栏布局">
+<meta name="twitter:description" content="&amp;lt;section style=&amp;quot;margin-bottom: 150px;&amp;quot;&amp;gt;   &amp;lt;!-- 浮动定位 缺点：需要清除浮动；center盒子必须放在最后，中间层后渲染 优点：兼容性好； --&amp;gt;   &amp;lt;!-- 中间div为何要放在最后？ --&amp;gt;   &amp;lt;!--      假如某个div元素A是浮动的，如果A元素上一个元素也是浮动的，那">
 
 
 
@@ -127,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/01/line-height/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/06/三栏布局/"/>
 
 
 
 
 
-  <title>line-height属性值 | FE_hei</title>
+  <title>CSS三栏布局 | FE_hei</title>
   
 
 
@@ -250,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/line-height/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/06/三栏布局/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -267,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">line-height属性值</h1>
+          <h1 class="post-title" itemprop="name headline">CSS三栏布局</h1>
         
 
         <div class="post-meta">
@@ -279,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T00:00:00+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-06T00:00:00+08:00">
+                2018-05-06
               </time>
             
 
@@ -317,116 +315,242 @@
       
 
       
-        <h4 id="line-height"><a href="#line-height" class="headerlink" title="line-height"></a>line-height</h4><p>行高指文本行基线间的垂直距离。</p>
-<p><img src="/images/line-height/line.jpg" alt="">  </p>
-<p>图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.  </p>
-<pre><code>半行距 = (line-height - font-size)/2
-</code></pre><p><strong>取值</strong><br>一般情况下，浏览器默认的line-height为1.2。</p>
-<table>
-<thead>
-<tr>
-<th>值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>normal</td>
-<td>默认1.2。设置合理的行间距</td>
-</tr>
-<tr>
-<td>number</td>
-<td>设置数字，此数字会与当前的字体尺寸相乘来设置行间距，即number为当前font-size的倍数</td>
-</tr>
-<tr>
-<td>length</td>
-<td>设置固定的行间距</td>
-</tr>
-<tr>
-<td>%</td>
-<td>基于当前字体尺寸的百分比行间距</td>
-</tr>
-<tr>
-<td>inherit</td>
-<td>规定应该从父元素继承line-height属性的值</td>
-</tr>
-</tbody>
-</table>
-<pre><code>body { font-size:16px; line-height:XXX; }    
-h1 {font-size:32px;}    
-p {font-size:16px;} 
-</code></pre><p><strong>（1）值百分比</strong>  </p>
-<pre><code>body { font-size: 16px; line-height: 120%;}  
-</code></pre><p>line-height的百分比和body的文字大小用来计算，这个计算值会被层叠下去的元素所继承。line-height不会随着相关的font-size做相应的比例缩放。  </p>
-<table>
-<thead>
-<tr>
-<th>element</th>
-<th>font-size</th>
-<th>line-height</th>
-<th>计算后的line-height  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>body</td>
-<td>16px</td>
-<td>120%</td>
-<td>16*120% =19.2px  </td>
-</tr>
-<tr>
-<td>h1</td>
-<td>32px</td>
-<td>继承计算后的值19.2px</td>
-<td>19.2px</td>
-</tr>
-<tr>
-<td>p</td>
-<td>16px</td>
-<td>继承计算后的值19.2px</td>
-<td>19.2px</td>
-</tr>
-</tbody>
-</table>
-<p><strong>（2）值 length</strong>  </p>
-<pre><code>body { font-size: 16px; line-height:20px}
-</code></pre><p>line-height的20px会被后代继承，所有继承下来的元素会忽略本身的font-size，而使用相同的，继承的line-height。</p>
-<p><strong>（3）值 normal</strong><br>line-height被设置为normal，约为1.2</p>
-<pre><code>body { font-size:16px; line-height:normal}
-</code></pre><p>所有继承下来的元素不会忽略本身的font-size，而使用基于font-size算出来的line-height。此时line-height会随着相关的font-size做相应的比例缩放。 </p>
-<table>
-<thead>
-<tr>
-<th>element</th>
-<th>font-size</th>
-<th>line-height</th>
-<th>计算后的line-height </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>body</td>
-<td>16px</td>
-<td>normal</td>
-<td>16*1.2 =19.2px  </td>
-</tr>
-<tr>
-<td>h1</td>
-<td>32px</td>
-<td>normal</td>
-<td>32*1.2=38.4px  </td>
-</tr>
-<tr>
-<td>p</td>
-<td>16px</td>
-<td>normal</td>
-<td>16px*1.2 =19.2px</td>
-</tr>
-</tbody>
-</table>
-<p><strong>值：数字</strong><br>所有继承下来的元素使用基于font-size算出来的line-height。line-height会随着相关的font-size做相应的比例缩放</p>
-<p>参考文章<br><a href="https://segmentfault.com/a/1190000003038583" target="_blank" rel="noopener">css中的line-height</a></p>
+          <!-- 左右定宽，中间自适应三栏布局 -->
+<pre><code>&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
+  &lt;!-- 浮动定位 缺点：需要清除浮动；center盒子必须放在最后，中间层后渲染 优点：兼容性好； --&gt;
+  &lt;!-- 中间div为何要放在最后？ --&gt;
+  &lt;!-- 
+    假如某个div元素A是浮动的，如果A元素上一个元素也是浮动的，那么A元素会跟随
+    在上一个元素的后边（如果一行放不下这两个元素，那么A元素会被挤到下一行）；
+    如果A元素上一个元素是标准流中的元素，那么A的相对垂直位置不会改变，也就是
+    说A的顶部总是和上一个元素的底部对齐。
+  --&gt;
+  &lt;style&gt;
+    .left {
+      border: 1px solid red;
+      float: left;
+      width: 200px;
+    }
+    .center {
+      border: 1px solid blue;
+      margin: 0 200px;
+    }
+    .right {
+      border: 1px solid yellow;
+      float: right;
+      width: 200px;
+    }
+    .box {
+      overflow: hidden;
+      border: 1px solid gray;
+    }
+   .sub {
+      padding-bottom: 2000px;
+      margin-bottom: -2000px;
+    }
+  &lt;/style&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;left sub&quot;&gt;left
+      &lt;p&gt;left1&lt;/p&gt;
+      &lt;p&gt;left1&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;right sub&quot;&gt;right&lt;/div&gt;
+    &lt;div class=&quot;center sub&quot;&gt;float布局&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
 
+&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
+  &lt;!-- 绝对定位会让整个布局脱离文档流 --&gt;
+  &lt;style&gt;
+    .wrap {
+      position: relative;
+    }
+    .left1 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 1px solid red;
+      width: 200px;
+    }
+    .right1 {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border: 1px solid blue;
+      width: 200px;
+    }
+    .center1 {
+      margin: 0 200px;
+      border: 1px solid gray;
+    }
+  &lt;/style&gt;
+  &lt;div class=&quot;wrap&quot;&gt;
+    &lt;div class=&quot;left1&quot;&gt;left
+        &lt;p&gt;left1&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;center1&quot;&gt;position：absolute布局&lt;/div&gt;
+    &lt;div class=&quot;right1&quot;&gt;right&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+ &lt;!-- table布局 默认会等高 --&gt;
+&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
+  &lt;style&gt;
+    .wrap2 {
+      display: table;
+      width: 100%;
+    }
+    .wrap2 &gt; div {
+      display: table-cell;
+    }
+    .left2 {
+      border: 1px solid pink;
+      width: 200px;
+    }
+    .right2 {
+      border: 1px solid green;
+      width: 200px;
+    }
+    .center2 {
+      border: 1px solid red;
+    }
+  &lt;/style&gt;
+  &lt;div class=&quot;wrap2&quot;&gt;
+    &lt;div class=&quot;left2&quot;&gt;left
+        &lt;p&gt;left1&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;center2&quot;&gt;table布局&lt;/div&gt;
+    &lt;div class=&quot;right2&quot;&gt;right2&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+ &lt;!-- flex布局，默认等高 --&gt;
+&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
+  &lt;!-- 兼容性问题；比较主流的移动端布局方式 --&gt;
+  &lt;style&gt;
+    .wrap3 {
+      display: flex;
+      width: 100%;
+    }
+    .left3 {
+      width: 200px;
+      border: 1px solid blue;
+    }
+    .right3 {
+      width: 200px;
+      border: 1px solid red;
+    }
+    .center3 {
+      flex: 1;
+      border: 1px solid yellow;
+    }
+  &lt;/style&gt;
+  &lt;div class=&quot;wrap3&quot;&gt;
+    &lt;div class=&quot;left3&quot;&gt;left
+        &lt;p&gt;left1&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;center3&quot;&gt;flex布局&lt;/div&gt;
+    &lt;div class=&quot;right3&quot;&gt;right3&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+ &lt;!-- grid布局 --&gt;
+&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
+  &lt;style&gt;
+    .wrap4 {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 200px auto 200px;
+    }
+    .left4 {
+      border: 1px solid yellow;
+    }
+    .right4 {
+      border: 1px solid green;
+    }
+    .center4 {
+      border: 1px solid red;
+    }
+  &lt;/style&gt;
+  &lt;div class=&quot;wrap4&quot;&gt;
+    &lt;div class=&quot;left4&quot;&gt;left4
+        &lt;p&gt;left1&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;center4&quot;&gt;grid布局&lt;/div&gt;
+    &lt;div class=&quot;right4&quot;&gt;right4&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;!-- 增加：中间栏优先渲染 --&gt;
+&lt;section style=&quot;margin-bottom: 250px;&quot;&gt;
+  &lt;!-- 圣杯布局 --&gt;
+  &lt;style&gt;
+    .center5 {
+      float: left;
+      width: 100%;
+      background-color: aqua;
+    }
+    .left5 {
+      float: left;
+      width: 200px;
+      margin-left: -100%;
+      background-color: bisque;
+      position: relative;
+      left: -200px;
+    }
+    .right5 {
+      float: left;
+      width: 200px;
+      margin-left: -200px;
+      background-color: blue;
+      position: relative;
+      right: -200px;
+    }
+    .wrap5 {
+      padding-left: 200px;
+      padding-right: 200px;
+      min-width: 700px;
+    }
+  &lt;/style&gt;
+  &lt;div class=&quot;wrap5&quot;&gt;
+    &lt;div class=&quot;center5&quot;&gt;center5&lt;/div&gt;
+    &lt;div class=&quot;left5&quot;&gt;left5
+        &lt;p&gt;left1&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;right5&quot;&gt;right5&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+ &lt;!-- 主要应用order属性 --&gt;
+&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
+  &lt;style&gt;
+    .center6 {
+      background-color: lightpink;
+      flex: 1;
+    }
+    .left6 {
+      background-color: lightgreen;
+      width: 200px;
+      order: -1;
+    }
+    .right6 {
+      background-color: khaki;
+      width: 200px;
+    }
+    .wrap6 {
+      display: flex;
+
+    }
+  &lt;/style&gt;
+  &lt;div class=&quot;wrap6&quot;&gt;
+    &lt;div class=&quot;center6&quot;&gt;center6
+      &lt;p&gt;flex&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;left6&quot;&gt;left6&lt;/div&gt;
+    &lt;div class=&quot;right6&quot;&gt;right6&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+</code></pre>
       
     </div>
     
@@ -456,8 +580,8 @@ p {font-size:16px;}
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/29/position/" rel="next" title="细说position属性">
-                <i class="fa fa-chevron-left"></i> 细说position属性
+              <a href="/2018/05/01/line-height/" rel="next" title="line-height属性值">
+                <i class="fa fa-chevron-left"></i> line-height属性值
               </a>
             
           </div>
@@ -465,10 +589,6 @@ p {font-size:16px;}
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/06/三栏布局/" rel="prev" title="CSS三栏布局">
-                CSS三栏布局 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -520,17 +640,8 @@ p {font-size:16px;}
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -604,22 +715,6 @@ p {font-size:16px;}
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#line-height"><span class="nav-number">1.</span> <span class="nav-text">line-height</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
