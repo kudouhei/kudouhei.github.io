@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="CSS," />
+  <meta name="keywords" content="javascript," />
 
 
 
@@ -84,20 +84,18 @@
 
 
 
-<meta name="description" content="line-height行高指文本行基线间的垂直距离。    图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.   半行距 = (line-height - font-size)/2 取值一">
-<meta name="keywords" content="CSS">
+<meta name="description" content="javascript实现继承的方式1. 类式继承 function A(){   this.name = &amp;quot;A&amp;quot;; } A.prototype.getName = function(name){   console.log(name) }  function a(){   this.">
+<meta name="keywords" content="javascript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="line-height属性值">
-<meta property="og:url" content="http://yoursite.com/2018/05/01/line-height/index.html">
+<meta property="og:title" content="javascript实现继承的方式">
+<meta property="og:url" content="http://yoursite.com/2018/05/10/jsextend/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="line-height行高指文本行基线间的垂直距离。    图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.   半行距 = (line-height - font-size)/2 取值一般情况下，浏览器默认的line-height为1.2。    值 描述">
+<meta property="og:description" content="javascript实现继承的方式1. 类式继承 function A(){   this.name = &amp;quot;A&amp;quot;; } A.prototype.getName = function(name){   console.log(name) }  function a(){   this.name = &amp;quot;a&amp;quot;; } a.prototype = new A(); v">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/line-height/line.jpg">
-<meta property="og:updated_time" content="2018-05-01T13:17:12.000Z">
+<meta property="og:updated_time" content="2018-05-10T13:38:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="line-height属性值">
-<meta name="twitter:description" content="line-height行高指文本行基线间的垂直距离。    图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.   半行距 = (line-height - font-size)/2 取值一般情况下，浏览器默认的line-height为1.2。    值 描述">
-<meta name="twitter:image" content="http://yoursite.com/images/line-height/line.jpg">
+<meta name="twitter:title" content="javascript实现继承的方式">
+<meta name="twitter:description" content="javascript实现继承的方式1. 类式继承 function A(){   this.name = &amp;quot;A&amp;quot;; } A.prototype.getName = function(name){   console.log(name) }  function a(){   this.name = &amp;quot;a&amp;quot;; } a.prototype = new A(); v">
 
 
 
@@ -127,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/01/line-height/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/10/jsextend/"/>
 
 
 
 
 
-  <title>line-height属性值 | FE_hei</title>
+  <title>javascript实现继承的方式 | FE_hei</title>
   
 
 
@@ -250,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/line-height/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/jsextend/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -267,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">line-height属性值</h1>
+          <h1 class="post-title" itemprop="name headline">javascript实现继承的方式</h1>
         
 
         <div class="post-meta">
@@ -279,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T00:00:00+08:00">
-                2018-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T00:00:00+08:00">
+                2018-05-10
               </time>
             
 
@@ -317,115 +315,119 @@
       
 
       
-        <h4 id="line-height"><a href="#line-height" class="headerlink" title="line-height"></a>line-height</h4><p>行高指文本行基线间的垂直距离。</p>
-<p><img src="/images/line-height/line.jpg" alt="">  </p>
-<p>图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.  </p>
-<pre><code>半行距 = (line-height - font-size)/2
-</code></pre><p><strong>取值</strong><br>一般情况下，浏览器默认的line-height为1.2。</p>
-<table>
-<thead>
-<tr>
-<th>值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>normal</td>
-<td>默认1.2。设置合理的行间距</td>
-</tr>
-<tr>
-<td>number</td>
-<td>设置数字，此数字会与当前的字体尺寸相乘来设置行间距，即number为当前font-size的倍数</td>
-</tr>
-<tr>
-<td>length</td>
-<td>设置固定的行间距</td>
-</tr>
-<tr>
-<td>%</td>
-<td>基于当前字体尺寸的百分比行间距</td>
-</tr>
-<tr>
-<td>inherit</td>
-<td>规定应该从父元素继承line-height属性的值</td>
-</tr>
-</tbody>
-</table>
-<pre><code>body { font-size:16px; line-height:XXX; }    
-h1 {font-size:32px;}    
-p {font-size:16px;} 
-</code></pre><p><strong>（1）值百分比</strong>  </p>
-<pre><code>body { font-size: 16px; line-height: 120%;}  
-</code></pre><p>line-height的百分比和body的文字大小用来计算，这个计算值会被层叠下去的元素所继承。line-height不会随着相关的font-size做相应的比例缩放。  </p>
-<table>
-<thead>
-<tr>
-<th>element</th>
-<th>font-size</th>
-<th>line-height</th>
-<th>计算后的line-height  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>body</td>
-<td>16px</td>
-<td>120%</td>
-<td>16*120% =19.2px  </td>
-</tr>
-<tr>
-<td>h1</td>
-<td>32px</td>
-<td>继承计算后的值19.2px</td>
-<td>19.2px</td>
-</tr>
-<tr>
-<td>p</td>
-<td>16px</td>
-<td>继承计算后的值19.2px</td>
-<td>19.2px</td>
-</tr>
-</tbody>
-</table>
-<p><strong>（2）值 length</strong>  </p>
-<pre><code>body { font-size: 16px; line-height:20px}
-</code></pre><p>line-height的20px会被后代继承，所有继承下来的元素会忽略本身的font-size，而使用相同的，继承的line-height。</p>
-<p><strong>（3）值 normal</strong><br>line-height被设置为normal，约为1.2</p>
-<pre><code>body { font-size:16px; line-height:normal}
-</code></pre><p>所有继承下来的元素不会忽略本身的font-size，而使用基于font-size算出来的line-height。此时line-height会随着相关的font-size做相应的比例缩放。 </p>
-<table>
-<thead>
-<tr>
-<th>element</th>
-<th>font-size</th>
-<th>line-height</th>
-<th>计算后的line-height </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>body</td>
-<td>16px</td>
-<td>normal</td>
-<td>16*1.2 =19.2px  </td>
-</tr>
-<tr>
-<td>h1</td>
-<td>32px</td>
-<td>normal</td>
-<td>32*1.2=38.4px  </td>
-</tr>
-<tr>
-<td>p</td>
-<td>16px</td>
-<td>normal</td>
-<td>16px*1.2 =19.2px</td>
-</tr>
-</tbody>
-</table>
-<p><strong>值：数字</strong><br>所有继承下来的元素使用基于font-size算出来的line-height。line-height会随着相关的font-size做相应的比例缩放</p>
-<p>参考文章<br><a href="https://segmentfault.com/a/1190000003038583" target="_blank" rel="noopener">css中的line-height</a></p>
+        <h4 id="javascript实现继承的方式"><a href="#javascript实现继承的方式" class="headerlink" title="javascript实现继承的方式"></a>javascript实现继承的方式</h4><p><strong>1. 类式继承</strong></p>
+<pre><code>function A(){
+  this.name = &quot;A&quot;;
+}
+A.prototype.getName = function(name){
+  console.log(name)
+}
+
+function a(){
+  this.name = &quot;a&quot;;
+}
+a.prototype = new A();
+var instance = new a();
+instance.getName(&quot;hello&quot;);
+console.log(instance.name)
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>创建两个类A和a，给A.prototype原型上添加一个共有方法，然后通过new命令实例化一个A，并且赋值给a.prototype原型。</li>
+<li>在实例化一个类时，新创建的对象复制了父类的构造函数内的属性与方法并且将原型<code>__proto__</code>指向了父类的原型对象，这样就拥有了父类的原型对象上的属性与方法。</li>
+<li>两个缺点：<ul>
+<li>引用缺陷，新建的不同实例会修改父类中的引用类型</li>
+<li>无法为不同的实例初始化继承来的属性。</li>
+</ul>
+</li>
+</ul>
+<p><strong>2. 构造函数继承</strong>  </p>
+<pre><code>function A(color){
+  this.name = &apos;A&apos;;
+  this.color = color;
+  this.type = [&apos;color1&apos;, &apos;color2&apos;];
+}
+A.prototype.getName = function(name) {
+  console.log(name);
+}
+
+function a(color){
+  A.apply(this, arguments);
+}
+
+var h1 = new a(&quot;white&quot;); 
+var h2 = new a(&quot;blue&quot;); 
+console.log(h1.color); // white
+h1.type.push(&quot;red&quot;);  
+console.log(h1.type);  // [&quot;color1&quot;, &quot;color2&quot;, &quot;red&quot;]
+
+console.log(h2.type);  //&quot;color1&quot;, &quot;color2&quot;]
+console.log(h2.color);  //blue
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>apply方法的运用，可以改变函数的作用域，所以在a子类中调用这个方法也就是将a子类的变量在父类中执行一遍，这样子类就拥有了父类中的共有属性和方法。</li>
+<li>构造函数继承的缺点就是无法获取到父类的共有方法，也就是通过原型prototype绑定的方法。</li>
+</ul>
+<p><strong>3. 组合继承</strong><br>组合继承就是将类式继承和构造函数继承组合在一起。  </p>
+<pre><code>function a(color){
+  A.apply(this, arguments);
+}
+a.prototype = new A();
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>在子类构造函数中执行父类构造函数，在子类原型上实例化父类。</li>
+<li>缺点就是调用了两次父类的构造函数。</li>
+</ul>
+<p><strong>4. 寄生组合式继承</strong>  </p>
+<pre><code>function A(color){
+  this.color = color;
+}
+A.prototype.getName = function(name){
+  console.log(name);
+}
+
+function a(color){
+  A.apply(this,arguments);
+}
+a.prototype = Object.create(A.prototype);
+a.prototype.constructor = a;
+
+var h1 = new a(&quot;white&quot;);
+console.log(h1.color);
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>使用<code>Object.create()</code>进行一次浅拷贝，将父类原型上的方法拷贝后赋给<code>a.prototype</code>，这样子类上就能拥有了父类的共有方法，而少一次调用父类的构造函数。</li>
+<li><p><code>Object.create()</code>的浅拷贝作用类似下面函数</p>
+<pre><code>function create(obj){
+    function F(){};
+    F.prototype = obj;
+    return new F();
+}
+</code></pre></li>
+<li><p>对A的原型进行拷贝后赋给a.prototype，因此a.prototype上的constructor属性也被重写了，所以要进行修复。</p>
+</li>
+</ul>
+<p><strong>5. extends继承</strong><br>Class和extends是在ES6中新增的，Class用来创建一个类，extends用来实现继承。</p>
+<pre><code>class A {
+  constructor(color) {
+    this.color = color;
+  }
+  getName(name){
+    console.log(name)
+  }
+}
+class a extends A {
+  constructor(color){
+    super(color);
+    this.color = color;
+  }
+}
+let h1 = new a(&quot;black&quot;);
+h1.getName(&quot;hello&quot;);
+console.log(h1.color);
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>子类必须在constructor方法中调用super方法，否则新建实例时会报错。这是因为子类没有自己的this对象，而是继承父类的this对象，然后对其进行加工。如果不调用super方法，子类就得不到this对象。</li>
+</ul>
 
       
     </div>
@@ -443,7 +445,7 @@ p {font-size:16px;}
       
         <div class="post-tags">
           
-            <a href="/tags/CSS/" rel="tag"><i class="fa fa-tag"></i> CSS</a>
+            <a href="/tags/javascript/" rel="tag"><i class="fa fa-tag"></i> javascript</a>
           
         </div>
       
@@ -456,8 +458,8 @@ p {font-size:16px;}
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/29/position/" rel="next" title="细说position属性">
-                <i class="fa fa-chevron-left"></i> 细说position属性
+              <a href="/2018/05/07/this/" rel="next" title="箭头函数this">
+                <i class="fa fa-chevron-left"></i> 箭头函数this
               </a>
             
           </div>
@@ -465,10 +467,6 @@ p {font-size:16px;}
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/06/三栏布局/" rel="prev" title="CSS三栏布局">
-                CSS三栏布局 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -614,7 +612,7 @@ p {font-size:16px;}
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#line-height"><span class="nav-number">1.</span> <span class="nav-text">line-height</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#javascript实现继承的方式"><span class="nav-number">1.</span> <span class="nav-text">javascript实现继承的方式</span></a></li></ol></div>
             
 
           </div>
