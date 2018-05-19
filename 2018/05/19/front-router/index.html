@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="CSS," />
+  <meta name="keywords" content="js," />
 
 
 
@@ -84,20 +84,18 @@
 
 
 
-<meta name="description" content="理解分析floatfloat即为浮动，使用float，该浮动元素便会脱离正常的文档流，使其浮动到父元素的行的一端（元素向右或向左移动，直到碰到浮动元素，或者达到父元素内容的边界），并且其他元素将忽略该浮动元素并填补其原先的空间。 文档流：元素按照自上向下，自左到右的顺序依次排放。 float特性1.包裹性block元素">
-<meta name="keywords" content="CSS">
+<meta name="description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有">
+<meta name="keywords" content="js">
 <meta property="og:type" content="article">
-<meta property="og:title" content="理解float &amp; display：inline-block">
-<meta property="og:url" content="http://yoursite.com/2018/04/28/float/index.html">
+<meta property="og:title" content="前端路由">
+<meta property="og:url" content="http://yoursite.com/2018/05/19/front-router/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="理解分析floatfloat即为浮动，使用float，该浮动元素便会脱离正常的文档流，使其浮动到父元素的行的一端（元素向右或向左移动，直到碰到浮动元素，或者达到父元素内容的边界），并且其他元素将忽略该浮动元素并填补其原先的空间。 文档流：元素按照自上向下，自左到右的顺序依次排放。 float特性1.包裹性block元素不指定width的话，默认是100%，一旦让该div浮动起来，就会产生类似inl">
+<meta property="og:description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升  1. hash路由hash路由明显的标志是带有#，主要是通过监听">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/images/float/img1.jpg">
-<meta property="og:updated_time" content="2018-04-28T07:41:54.000Z">
+<meta property="og:updated_time" content="2018-05-19T06:43:08.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="理解float &amp; display：inline-block">
-<meta name="twitter:description" content="理解分析floatfloat即为浮动，使用float，该浮动元素便会脱离正常的文档流，使其浮动到父元素的行的一端（元素向右或向左移动，直到碰到浮动元素，或者达到父元素内容的边界），并且其他元素将忽略该浮动元素并填补其原先的空间。 文档流：元素按照自上向下，自左到右的顺序依次排放。 float特性1.包裹性block元素不指定width的话，默认是100%，一旦让该div浮动起来，就会产生类似inl">
-<meta name="twitter:image" content="http://yoursite.com/images/float/img1.jpg">
+<meta name="twitter:title" content="前端路由">
+<meta name="twitter:description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升  1. hash路由hash路由明显的标志是带有#，主要是通过监听">
 
 
 
@@ -127,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/28/float/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/19/front-router/"/>
 
 
 
 
 
-  <title>理解float & display：inline-block | FE_hei</title>
+  <title>前端路由 | FE_hei</title>
   
 
 
@@ -250,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/float/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/19/front-router/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -267,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">理解float & display：inline-block</h1>
+          <h1 class="post-title" itemprop="name headline">前端路由</h1>
         
 
         <div class="post-meta">
@@ -279,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T00:00:00+08:00">
-                2018-04-28
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-19T00:00:00+08:00">
+                2018-05-19
               </time>
             
 
@@ -317,23 +315,98 @@
       
 
       
-        <h4 id="理解分析float"><a href="#理解分析float" class="headerlink" title="理解分析float"></a>理解分析float</h4><p>float即为浮动，使用float，该浮动元素便会脱离正常的文档流，使其浮动到父元素的行的一端（元素向右或向左移动，直到碰到浮动元素，或者达到父元素内容的边界），并且其他元素将忽略该浮动元素并填补其原先的空间。</p>
-<p><strong>文档流：</strong>元素按照自上向下，自左到右的顺序依次排放。</p>
-<h5 id="float特性"><a href="#float特性" class="headerlink" title="float特性"></a>float特性</h5><p><strong>1.包裹性</strong><br>block元素不指定width的话，默认是100%，一旦让该div浮动起来，就会产生类似inline元素的包裹性，宽度会跟随内容自适应。（通常float元素需要手动指定width）</p>
-<p>浮动能设定为左浮和右浮，但display:inline-block都是从左到右排列的。</p>
-<p><strong>对比 inline-block</strong><br>inline-block的元素是宽高可设置，相邻的元素会在一行显示，直到本行排满，也就是让元素的容器属性为block，内容为inline。</p>
-<ol>
-<li>inline-block: 水平排列一行，即使元素高度不一，也会以高度最大的元素高度为行高，即使高度小的元素周围留空，也不回有第二行元素上浮补位。可以设置默认的垂直对齐基线。inline-block的元素仍然在仍在文档流中占据位置。</li>
-<li>float: 让元素脱离当前文档流，呈环绕状排列，如遇上行有空白，而当前元素大小可以挤进去，这个元素会在上行补位排列。默认是顶部对齐。脱离文档流。</li>
-<li>当我们要设置某些元素在一行显示，并且排列方向一致的情况下，我们尽可能去用inline-block。<br>因为inline-block的元素仍然在仍在文档流中占据位置。，这样就减少了程序对DOM的更改操作，因为DOM的每一次更改，浏览器会重绘DOM树。会增加性能消耗。这样也不用像float那样麻烦，需要清除flaot.</li>
-</ol>
-<p><strong>2.高度欺骗</strong>  </p>
-<pre><code>&lt;div style=&quot;border:4px solid red;&quot;&gt;
-    &lt;img style=&quot;border:4px solid yellow;float:left;&quot; src=&quot;img/25/2.jpg&quot; /&gt;
-&lt;/div&gt;
-</code></pre><p><img src="/images/float/img1.jpg" alt="">  </p>
-<p>外层div没有了浮动，因此红色边框宽度默认是100%全屏。其内容img由于加上了float，使得该img具有了欺骗性。float给img施了个障眼法，让该img的inline-height高度塌陷为0了。这样外层div计算高度时，认为img的高度为0，相当于div的content的高度为0，因此红色边框看起来是一条直线。</p>
+        <h4 id="前端路由"><a href="#前端路由" class="headerlink" title="前端路由"></a>前端路由</h4><ul>
+<li>在页面不刷新的情况下实现url的变化</li>
+<li>捕捉url的变化，根据url更改页面内容</li>
+</ul>
+<p>前端路由和服务端路由的区别  </p>
+<ul>
+<li>服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟</li>
+<li>前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升</li>
+</ul>
+<p><strong>1. hash路由</strong><br>hash路由明显的标志是带有#，主要是通过监听url中的hash变化来进行路由跳转。优势就是兼容性好</p>
+<pre><code>class Routers {
+          constructor(){
+              // 以键值对的形式储存路由
+              this.routes = {};
+              // 当前路由的url
+              this.currentUrl = &apos;&apos;;
+              // 记录出现过的hash
+              this.history = [];
+              // 作为指针，默认指向this.history的末尾，根据后退前进指向history中不同的hash
+              this.currentIndex = this.history.length-1;
+              this.refresh = this.refresh.bind(this);
+              this.back = this.back.bind(this);
+              // 默认不是后退
+              this.isBack = false;
+              //监听对应事件
+              window.addEventListener(&apos;load&apos;,this.refresh, false);
+              window.addEventListener(&apos;haschange&apos;, this.refresh, false);
+          }
+          // 将path路径与对应的callback函数存储
+          route(path, callback){
+              this.routes[path] = callback || function(){}
+          }
+          // 刷新
+          refresh(){
+              // 获取当前url中的hash路径
+              this.currentUrl = location.hash.slice(1) || &apos;/&apos;
+              if(!this.isBack){
+                  // 如果不是后退操作,且当前指针小于数组总长度,直接截取指针之前的部分储存下来
+                  if(this.currentIndex&lt;this.history.length-1)
+                    this.history = this.history.slice(0, this.currentIndex+1);
+                  // 将当前hash路由推入数组储存
+                  this.history.push(this.currentUrl);
+                  this.currentIndex++;
+              }
+              // 执行当前hash路径的callback函数
+              this.routes[this.currentUrl]();
+              this.isBack = false;
+          }
+          back(){
+              this.isBack = true;
+              this.currentIndex &lt;= 0 ? (this.currentIndex=0):(this.currentIndex=this.currentIndex-1);
+              location.hash = `#${this.history[this.currentIndex]}`;
+              this.routes[this.history[this.currentIndex]]();
+          }
+      }
+</code></pre><p><strong>2. History API</strong><br><code>history.pushState</code>用于在浏览器历史中添加历史记录，但是并不触发跳转，此方法接受三个参数  </p>
+<ul>
+<li>state：与指定网址相关的状态对象，popstate事件触发时，该对象会传入回调函数</li>
+<li>title：新页面标题</li>
+<li>url：新的网址，必须与当前页面处在同一个域</li>
+</ul>
+<p><code>popstate</code>事件，每当同一个文档的浏览历史（History对象）出现变化时，就会触发popstate事件。</p>
+<pre><code>class Routers {
+  constructor() {
+    this.routes = {};
+    // 在初始化时监听popstate事件
+    this._bindPopState();
+  }
+  // 初始化路由
+  init(path) {
+    history.replaceState({path: path}, null, path);
+    this.routes[path] &amp;&amp; this.routes[path]();
+  }
+  // 将路径和对应回调函数加入hashMap储存
+  route(path, callback) {
+    this.routes[path] = callback || function() {};
+  }
 
+  // 触发路由对应回调
+  go(path) {
+    history.pushState({path: path}, null, path);
+    this.routes[path] &amp;&amp; this.routes[path]();
+  }
+  // 监听popstate事件
+  _bindPopState() {
+    window.addEventListener(&apos;popstate&apos;, e =&gt; {
+      const path = e.state &amp;&amp; e.state.path;
+      this.routes[path] &amp;&amp; this.routes[path]();
+    });
+  }
+}
+</code></pre>
       
     </div>
     
@@ -350,7 +423,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/CSS/" rel="tag"><i class="fa fa-tag"></i> CSS</a>
+            <a href="/tags/js/" rel="tag"><i class="fa fa-tag"></i> js</a>
           
         </div>
       
@@ -363,8 +436,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/22/js-array-weighting/" rel="next" title="js实现数组去除重复项">
-                <i class="fa fa-chevron-left"></i> js实现数组去除重复项
+              <a href="/2018/05/10/jsextend/" rel="next" title="javascript实现继承的方式">
+                <i class="fa fa-chevron-left"></i> javascript实现继承的方式
               </a>
             
           </div>
@@ -372,10 +445,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/29/position/" rel="prev" title="细说position属性">
-                细说position属性 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -521,7 +590,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#理解分析float"><span class="nav-number">1.</span> <span class="nav-text">理解分析float</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#float特性"><span class="nav-number">1.1.</span> <span class="nav-text">float特性</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前端路由"><span class="nav-number">1.</span> <span class="nav-text">前端路由</span></a></li></ol></div>
             
 
           </div>
