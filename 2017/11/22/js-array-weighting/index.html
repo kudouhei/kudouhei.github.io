@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="js去除数组重复项方法1：js对象的特性：在js对象中key是永远不会重复的  把数组转成一个js的对象 把数组中的值，变成js对象当中的key 把这个对象，在还原成数组    代码   function unique(arr){    var obj = {};    var _arr = [];    for(var i = 0,len = arr.length;i&amp;lt;len;i++){">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-22T14:49:41.000Z">
+<meta property="og:updated_time" content="2018-06-02T01:27:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="js实现数组去除重复项">
 <meta name="twitter:description" content="js去除数组重复项方法1：js对象的特性：在js对象中key是永远不会重复的  把数组转成一个js的对象 把数组中的值，变成js对象当中的key 把这个对象，在还原成数组    代码   function unique(arr){    var obj = {};    var _arr = [];    for(var i = 0,len = arr.length;i&amp;lt;len;i++){">
@@ -371,6 +371,18 @@ function unique(arr){
     return Array.from(new Set(arr))
     // Array.from方法用于将两类对象转为真正的数组：
     // 类似数组的对象（array-like object）和可遍历（iterable）的对象
+}
+</code></pre><p><strong>方法5：Map实现</strong>  </p>
+<pre><code>function unique(arr){
+    const newArray = [];
+    const tmp = new Map();
+    for(let i=0;i&lt;arr.length;i++){
+        if(!tmp.get(arr[i])){
+            tmp.set(arr[i],1);
+            newArray.push(arr[i]);
+        }
+    }
+    return newArray;
 }
 </code></pre>
       

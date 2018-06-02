@@ -1867,6 +1867,18 @@ function unique(arr){
     // Array.from方法用于将两类对象转为真正的数组：
     // 类似数组的对象（array-like object）和可遍历（iterable）的对象
 }
+</code></pre><p><strong>方法5：Map实现</strong>  </p>
+<pre><code>function unique(arr){
+    const newArray = [];
+    const tmp = new Map();
+    for(let i=0;i&lt;arr.length;i++){
+        if(!tmp.get(arr[i])){
+            tmp.set(arr[i],1);
+            newArray.push(arr[i]);
+        }
+    }
+    return newArray;
+}
 </code></pre>
           
         
