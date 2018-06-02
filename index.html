@@ -247,6 +247,268 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/archives/archives/2018/06/02/js二叉树/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/archives/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/archives/2018/06/02/js二叉树/" itemprop="url">javascript二叉树</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-02T00:00:00+08:00">
+                2018-06-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="js实现二叉树"><a href="#js实现二叉树" class="headerlink" title="js实现二叉树"></a>js实现二叉树</h4><pre><code>/**
+ * 二叉搜索树的构造函数
+ */
+function BinarySearchTree() {
+
+  /**
+   * 二叉搜索树键的构造函数
+   * @param {Number} key 要生成的键值
+   */
+  var Node = function(key) {
+    // 键值
+    this.key = key;
+    // 左子节点
+    this.left = null;
+    // 右子节点
+    this.right = null;
+  }
+
+  /**
+   * 二叉树的根节点，不存在时表示为Null
+   * @type {Null or Number}
+   */
+  var root = null;
+
+  /**
+   * 插入某个键到二叉树中
+   * @param  {Number} key 要插入的键值
+   */
+  this.insert = function(key) {
+    // 用传入的值生成二叉树的键
+    var newNode = new Node(key);
+
+    // 根节点为Null时，传入的键则为根节点
+    // 否则调用insertNode函数来插入子节点
+    if (root === null) {
+      root = newNode;
+    } else {
+      insertNode(root, newNode)
+    }
+  };
+
+  /**
+   * 用于插入子节点。
+   * @param  {Node} node    根节点
+   * @param  {Node} newNode 要插入的节点
+   */
+  var insertNode = function(node, newNode) {
+    //由于二叉搜索树的性质，所以当键值小于当前所在节点的键值
+    //则使得左子结点成为新的要比较的节点，进行递归调用
+    //如果左子结点为null，则将键值赋值给左子结点。
+    //如果键值大于当前所在节点的键值，原理同上。
+    if (newNode.key &lt; node.key) {
+      if (node.left === null) {
+        node.left = newNode;
+      } else {
+        insertNode(node.left, newNode)
+      }
+    } else {
+      if (node.right === null) {
+        node.right = newNode
+      } else {
+        insertNode(node.right, newNode)
+      }
+    }
+  };
+
+  var printNode = function(value) {
+    console.log(value);
+  }
+</code></pre><h5 id="二叉树遍历"><a href="#二叉树遍历" class="headerlink" title="二叉树遍历"></a>二叉树遍历</h5><p>定义一个二叉树结构  </p>
+<pre><code>var nodes = {
+  node: 6,
+  left: {
+    node: 5, 
+    left: { 
+      node: 4 
+    }, 
+    right: { 
+      node: 3 
+    }
+  },
+  right: { 
+    node: 2, 
+    right: { 
+      node: 1 
+    } 
+  }
+}    
+</code></pre><p><strong>深度优先遍历</strong>  </p>
+<ol>
+<li><p>先序遍历（根左右）递归</p>
+<pre><code>var result = []
+var dfs = function(nodes) {
+  if(nodes.node) {
+    result.push(nodes.node)
+    nodes.left &amp;&amp; dfs(nodes.left)
+    nodes.right &amp;&amp; dfs(nodes.right)
+  }
+}
+dfs(nodes)
+console.log(result) 
+</code></pre></li>
+</ol>
+<p>非递归  </p>
+<ul>
+<li>初始化一个栈，将根节点压入栈中</li>
+<li>当栈为空时，循环3，4，否则结束</li>
+<li>出队列取得一个节点，访问该节点</li>
+<li><p>若该节点的右子树为非空，则将该节点的右子树入栈，若该节点的左子树为非空，则将该节点的左子树入栈  </p>
+<pre><code>var dfs = function(nodes){
+    var result = [];
+    var stack = [];
+    stack.push(nodes);
+    while(stack.length){
+        var item = stack.pop();
+        result.push(item.node);
+        item.right&amp;&amp; stack.push(item.right);
+        item.left &amp;&amp; stack.push(item.left)
+    }
+    return result;
+} 
+</code></pre></li>
+</ul>
+<p><strong>广度优先遍历</strong><br>广度优先遍历二叉树(层序遍历)是用队列来实现的，从二叉树的第一层（根结点）开始，自上至下逐层遍历；在同一层中，按照从左到右的顺序对结点逐一访问。</p>
+<pre><code>var result = []
+var queue = [nodes]
+var bfs = function(count) {
+  count = count || 0
+  if(queue[count]) {
+    result.push(queue[count].node)
+    var left = queue[count].left
+    var right = queue[count].right
+    if(left) {
+      queue.push(left)
+    }
+    if(right) {
+      queue.push(right)
+    }
+    bfs(++count)
+  }
+}
+bfs()
+console.log(result)      
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/archives/archives/2018/05/19/front-router/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2113,129 +2375,13 @@ body &gt; .content {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/archives/archives/2017/11/19/first/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/archives/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/archives/2017/11/19/first/" itemprop="url">first</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-19T17:49:47+08:00">
-                2017-11-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>这是我的第一个技术博客！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -2283,7 +2429,7 @@ body &gt; .content {
               
                 <a href="/archives/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
