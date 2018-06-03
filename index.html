@@ -1064,6 +1064,309 @@ console.log(result)
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/ajax/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/ajax/" itemprop="url">解决跨域</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="ajax跨域"><a href="#ajax跨域" class="headerlink" title="ajax跨域"></a>ajax跨域</h4><p>ajax跨域属于浏览器“同源策略”中的一部分。</p>
+<p>原因：  </p>
+<ul>
+<li>浏览器限制</li>
+<li>跨域（同源策略）</li>
+<li>XHR请求</li>
+</ul>
+<p>当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。 </p>
+<p><strong>跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的</strong></p>
+<h5 id="如何解决ajax跨域"><a href="#如何解决ajax跨域" class="headerlink" title="如何解决ajax跨域"></a>如何解决ajax跨域</h5><p><strong>1. jsonp方式</strong><br>JSONP能够用来解决跨域方案,主要是因为 <code>&lt;script&gt;</code> 脚本拥有跨域能力.</p>
+<p><img src="/images/ajax/jsonp.jpg" alt=""></p>
+<p><strong>实现流程</strong>  </p>
+<ul>
+<li><p>客户端网页通过添加一个<code>&lt;script&gt;</code>元素，向服务器请求JSON数据，这种做法不受同源政策限制。</p>
+<pre><code>function addScriptTag(src){
+    var script = document.createElement(&apos;script&apos;);
+    script.setAttribute(&quot;type&quot;, &quot;text/javascript&quot;);
+    script.src = src;
+    document.body.appendChild(script);
+}
+window.onload = function(){
+    addScriptTag(&apos;http://example.com/ip?callback=foo&apos;);
+}
+function foo(data){
+    console.log(&apos;response data:&apos;+JSON.stringify(data));
+}
+</code></pre></li>
+<li><p>服务端对应的接口在返回参数外面添加函数包裹层</p>
+<pre><code>foo({
+    &quot;test&quot;: &quot;testData&quot;
+})
+</code></pre></li>
+<li><p>由于<code>&lt;script&gt;</code>元素请求的脚本，直接作为代码运行。只要浏览器定义了foo函数，该函数就会立即调用。作为参数的JSON数据被视为JavaScript对象，而不是字符串，因此避免了使用JSON.parse的步骤。</p>
+</li>
+</ul>
+<p>一般的JSONP接口和普通接口返回数据是有区别的，所以接口如果要做JSONP兼容，需要进行判断是否有对应callback关键字参数，如果有则是JSONP请求，返回JSONP数据，否则返回普通数据。</p>
+<p><strong>注意：普通ajax请求和jsonp请求区别</strong>  </p>
+<ul>
+<li>普通的ajax请求发出去Type类型是xhr，而jsonp发出的请求是script。</li>
+<li>返回的类型不同(Content-Type)。普通ajax请求返回的是application/json，jsonp请求返回的是application/javascript</li>
+<li>需要进行判断是否有对应callback关键字参数，如果有则是JSONP请求，返回JSONP数据，否则返回普通数据。</li>
+</ul>
+<p><strong>JSONP弊端</strong></p>
+<ul>
+<li>服务器需要改动代码支持</li>
+<li>只支持GET</li>
+<li>发送的不是XHR请求</li>
+</ul>
+<p><strong>2. 代理请求方式</strong><br>前端对接口进行代理  </p>
+<ul>
+<li>前端ajax请求的是本地接口</li>
+<li>本地接口接收到请求后向实际的接口请求数据，然后再讲信息返回给前端</li>
+<li>一般用Node.js即可代理</li>
+</ul>
+<p><strong>3. 通过WebSocket跨域</strong><br>WebSocket是一种通信协议，使用ws://非加密和wss://加密作为协议前缀。该协议不实现同源政策，只要服务器支持，就可以通过他进行跨源通信。  </p>
+<pre><code>wsUrl = &apos;wss://127.0.0.1:8090/ws/&apos;;
+//发送
+ws = new WebSocket(wsUrl);
+//连接成功建立时调用
+ws.open = function(event){
+    console.log(&quot;websocke onopen&quot;);
+    var msg = {
+        username: &quot;test&quot;
+    }
+    //通过send()方法向服务端发送消息，参数必须为字符串
+    ws.send(JSON.stringify(msg))
+}
+//服务端向客户端发送消息时调用
+ws.onmessage = function(event){
+    console.log(&quot;websocket onmessage:&quot; + event.data)
+    if(event.data ===&quot;success&quot;){
+        ws.close()
+    }
+}
+//连接被关闭时调用
+ws.onclose = function(event){
+    console.log(&apos;websocket onclose&apos; + event.data);
+}
+//连接出错误时调用
+ws.onerror = function(event){
+    console.log(&quot;websocket onerror&quot;+event.data)
+}
+</code></pre><p><strong>4. 跨源资源共享CORS</strong><br>这种机制让web应用服务器能支持跨站访问控制，从而使得安全地进行跨站数据传输成为可能。这个规范是针对API容器的（比如XMLHTTPRequest或者Fetch），以减轻跨域HTTP请求的风险。</p>
+<p>只要服务器返回的响应中包含头部信息Access-Control-Allow-Origin: domain-name，domain-name为允许跨域的域名，也可以设置成*，浏览器就会允许本次跨域请求。 </p>
+<ul>
+<li>使用简单方便，更为安全</li>
+<li>支持POST请求方式</li>
+<li>CORS存在兼容问题，仅支持IE10以上</li>
+</ul>
+<h4 id="手写原生ajax请求"><a href="#手写原生ajax请求" class="headerlink" title="手写原生ajax请求"></a>手写原生ajax请求</h4><pre><code>function createXHR(){
+    if(window.XMLHttpRequest){
+        return new XMLHttpRequest();
+    }else{
+        return new ActiveXObject(&apos;Microsoft.XMLHttp&apos;);
+    }
+}
+var xhr = createXHR();
+xhr.onReadyStateChange = function(){
+    if(xhr.readyState == 4){
+        // 状态码为200至300之间或304都表示这一请求已经成功
+        if(xhr.status &gt;= 200 &amp;&amp; xhr.status &lt; 300 || xhr.status ==304){
+            console.log(xhr.responseText);
+        }else{
+            ...
+        }
+    }
+}
+xhr.open(&apos;GET&apos;, url, true);
+xhr.send(null);
+...
+xhr.open(&apos;POST&apos;, url, true);
+xhr.setRequestHeader(&apos;Content-Type&apos;,&apos;application/x-www-form-urlencoded;charset=UTF-8&apos;);
+xhr.send(data);
+</code></pre><h4 id="完全不同源的跨域-两个页面之间的通信"><a href="#完全不同源的跨域-两个页面之间的通信" class="headerlink" title="完全不同源的跨域(两个页面之间的通信)"></a>完全不同源的跨域(两个页面之间的通信)</h4><p><strong>1. 通过location.hash跨域</strong><br>通过设置/监听url的hash部分，来实现跨域，借助第三个页面进行辅助。</p>
+<pre><code>A域 a.html -&gt; B域 b.html -&gt; A域 c.html -&gt; A域 a.html
+
+// a.html
+&lt;iframe id=&quot;iframe-b&quot; src=&quot;http://domain-b.com/b.html&quot;&gt;&lt;/iframe&gt;
+&lt;script&gt;
+    var bPage = document.getElementById(&apos;iframe-b&apos;);
+    bPage.src = bPage.src + &apos;#user=test&apos;;
+    function cb(res){
+        console.log(res)
+    }
+&lt;/script&gt;
+
+// b.html
+&lt;iframe id=&quot;iframe-c&quot; src=&quot;http://domain-a.com/c.html&quot;&gt;&lt;/iframe&gt;
+&lt;script&gt;
+    var cPage = document.getElementById(&apos;iframe-c&apos;);
+    window.onhashchange = function(){
+        cPage.src = cPage.src + location.hash
+    }
+&lt;/script&gt;
+
+// c.html
+&lt;script&gt;
+    window.onhashchange = function(){
+        window.parent.parent.cb(&apos;success&apos;+location.hash)
+    }
+&lt;/script&gt;
+</code></pre><p>优点： 可以解决域名完全不同的跨域。实现双向通讯。<br>缺点：location.hash暴露在url中，安全性不高。由于url大小限制，支持传递的数据量有限。  </p>
+<p><strong>2通过window.postMessage</strong><br>window.postMessage方法，允许跨窗口通信，不论这两个窗口是否同源。</p>
+<p> otherWindow.postMessage(message,targetOrigin, 可选)   </p>
+<ul>
+<li>message：消息内容</li>
+<li><p>targetOrigin：接受消息窗口的源，也可以设置为通配符*，向所有窗口发送。</p>
+<p>发送者和接收者可以通过message事件，监听对方的消息。message事件的事件对象event包含三个属性：  </p>
+</li>
+<li><p>event.source：发送消息的窗口对象的引用，可以用此在两个窗口建立双向通信。</p>
+</li>
+<li>event.origin: 发送消息的URI</li>
+<li><p>event.data: 消息内容</p>
+<pre><code>// 发送者domain-a/a.html
+&lt;script&gt;
+var newWindow = window.open(&apos;http://domain-b.com/b.html&apos;)
+    newWindow.postMessage(&apos;Hello&apos;,&apos;http://domain-b.com/b.html&apos;) //向b.html发送消息
+// 双向通信，接受b.html的回复消息
+var onmessage = function(event){
+    var data = event.data;
+    var origin = event.origin;
+    if(origin==&apos;http://domain-b.com/b.html&apos;){
+        console.log(data); // Nice
+    }
+}
+window.addEventListener(&apos;message&apos;, onmessage, false);
+    &lt;/script&gt;
+
+//接收者 domain-b.com/b.html
+&lt;script&gt;
+    var onmessage = function(event){
+        var data = event.data;
+        var origin = event.origin;
+        var source = event.source;
+        if(origin==&apos;http://domain-a.com/a.html&apos;){
+            console.log(data) // Hello
+            //回复消息
+            source.postMessage(&apos;Nice&apos;,&apos;http://domain-a.com/a.html&apos;)
+        }
+    }
+    window.addEventListener(&apos;message&apos;, onmessage, false)
+&lt;/script&gt;
+</code></pre></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/19/front-router/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2543,194 +2846,6 @@ p {font-size:16px;}
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/22/js-array-weighting/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/22/js-array-weighting/" itemprop="url">js实现数组去除重复项</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T22:46:34+08:00">
-                2017-11-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="js去除数组重复项"><a href="#js去除数组重复项" class="headerlink" title="js去除数组重复项"></a>js去除数组重复项</h3><p><strong>方法1：js对象的特性：在js对象中key是永远不会重复的</strong></p>
-<ol>
-<li>把数组转成一个js的对象</li>
-<li>把数组中的值，变成js对象当中的key</li>
-<li>把这个对象，在还原成数组  </li>
-</ol>
-<p>代码  </p>
-<pre><code>function unique(arr){
-   var obj = {};
-   var _arr = [];
-   for(var i = 0,len = arr.length;i&lt;len;i++){
-     obj[arr[i]] = true;
-   } 
-
-   for(var attr in obj){
-     if(obj.hasOwnProperty(attr)){
-       _arr.push(attr);
-     }
-   }
-   return _arr.map(function(item){ return +item});
-}  
-var arr=[1,1,2,3,3,4,5,6];
-console.log(unique(arr));      
-</code></pre><p><strong>方法2：遍历数组法： 这应该是最简单的去重方法（实现思路：新建一新数组，遍历数组，值不在新数组就加入该新数组中）</strong>    </p>
-<pre><code>// 遍历数组去重法
-function unique(arr){
-  var _arr = []
-  //遍历当前数组
-  for(var i = 0; i &lt; arr.length; i++){
-    //如果当前数组的第i已经保存进了临时数组，那么跳过，
-    //否则把当前项push到临时数组里面
-    if (_arr.indexOf(arr[i]) == -1) _arr.push(arr[i])
-  }
-  return _arr
-}
-</code></pre><p><strong>方法3：对象键值对。速度快，高效，占用更大的内存换取更快的时间，用 JavaScript 中的 Object 对象来当做哈希表，hash去重的核心是构建了一个 hash 对象来替代 indexOf</strong>  </p>
-<pre><code> // hash 去重法
-function unique(arr){
-    var _arr = [], 
-        hash = {}
-    for (var i = 0; i &lt; arr.length; i++) {
-        var item = arr[i]
-        var key = typeof(item) + item
-          // 对象的键值只能是字符串, typeof(item) + item来去分1和&apos;1&apos;的情况
-        if(hash[key] !== 1){
-            _arr.push(item)
-            hash[key] = 1
-        }
-    }
-    return _arr
-}
-</code></pre><p><strong>方法4：es6 Set数据结构：</strong>ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值  </p>
-<pre><code>function unique(arr){
-    return Array.from(new Set(arr))
-    // Array.from方法用于将两类对象转为真正的数组：
-    // 类似数组的对象（array-like object）和可遍历（iterable）的对象
-}
-</code></pre><p><strong>方法5：Map实现</strong>  </p>
-<pre><code>function unique(arr){
-    const newArray = [];
-    const tmp = new Map();
-    for(let i=0;i&lt;arr.length;i++){
-        if(!tmp.get(arr[i])){
-            tmp.set(arr[i],1);
-            newArray.push(arr[i]);
-        }
-    }
-    return newArray;
-}
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2785,7 +2900,7 @@ function unique(arr){
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
