@@ -1129,6 +1129,61 @@ async function doIt(){
     console.log(`result is ${result}`);
     console.log(&quot;doIt&quot;)
 }
+</code></pre><h4 id="生成器用途"><a href="#生成器用途" class="headerlink" title="生成器用途"></a>生成器用途</h4><p><strong>返回随机数函数</strong>  </p>
+<pre><code>function *randomFrom(...arr){
+    while(true){
+        yield arr[Math.floor(Math.random()*arr.length)]
+    }
+}
+const getRandom = randomFrom(1,2,5,9,4);
+getRandom.next().value; //返回随机的一个数
+</code></pre><p><strong>用生成器来操作HTML</strong>  </p>
+<pre><code>const strings = document.querySelectorAll(&apos;.string&apos;);
+const btn = document.querySelector(&apos;#btn&apos;);
+const className = &apos;darker&apos;;
+function *addClassToEach(elements, className){
+    for(const el of Array.from(elements))
+        yield el.classList.add(className)
+};
+const addClassToStrings = addClassToEach(strings, className);    
+btn.addEventListener(&apos;click&apos;, (el) =&gt; {
+  if (addClassToStrings.next().done)
+    el.target.classList.add(className);
+});
+</code></pre><p><strong>用generator和Promise实现async函数</strong>  </p>
+<pre><code>// async函数
+async function init(){
+    const res1 = await doTask1();
+    console.log(res1);
+    const res2 = await doTask2(res1);
+    console.log(res2);
+    const res3 = await doTask3(res2);
+    console.log(res3);
+    return res3;
+}
+</code></pre><p>函数体中依次执行三个异步任务，每个任务依赖前一个任务的完成。最后，函数返回最后一个任务的结果。</p>
+<pre><code>// generator
+function runner(genFn){
+    const itr = genFn();
+    function run(arg){
+        const result = itr.next(arg);
+        if(result.done){
+            return result.value;
+        }else{
+            return Promise.resolve(result.value).then(run);
+        }
+    }
+    return run();
+}
+runner(function(){
+    const res1 = await doTask1();
+    console.log(res1);
+    const res2 = await doTask2(res1);
+    console.log(res2);
+    const res3 = await doTask3(res2);
+    console.log(res3);
+    return res3;
+})
 </code></pre>
           
         

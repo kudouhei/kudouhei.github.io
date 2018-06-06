@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="PromisePromise是一种异步解决方案，它有resolve和reject两个回调参数，resolve是Promise从pending状态变为fulfilled状态后触发的回调函数。而reject则是状态从pending状态变为rejected后触发的。 而且一个Promise对象的状态只能从pending-&amp;gt;fulfilled或者从pending-&amp;gt;reject,不可能同时达到">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-03T04:31:56.000Z">
+<meta property="og:updated_time" content="2018-06-06T14:48:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Promise整理">
 <meta name="twitter:description" content="PromisePromise是一种异步解决方案，它有resolve和reject两个回调参数，resolve是Promise从pending状态变为fulfilled状态后触发的回调函数。而reject则是状态从pending状态变为rejected后触发的。 而且一个Promise对象的状态只能从pending-&amp;gt;fulfilled或者从pending-&amp;gt;reject,不可能同时达到">
@@ -751,6 +751,61 @@ async function doIt(){
     console.log(`result is ${result}`);
     console.log(&quot;doIt&quot;)
 }
+</code></pre><h4 id="生成器用途"><a href="#生成器用途" class="headerlink" title="生成器用途"></a>生成器用途</h4><p><strong>返回随机数函数</strong>  </p>
+<pre><code>function *randomFrom(...arr){
+    while(true){
+        yield arr[Math.floor(Math.random()*arr.length)]
+    }
+}
+const getRandom = randomFrom(1,2,5,9,4);
+getRandom.next().value; //返回随机的一个数
+</code></pre><p><strong>用生成器来操作HTML</strong>  </p>
+<pre><code>const strings = document.querySelectorAll(&apos;.string&apos;);
+const btn = document.querySelector(&apos;#btn&apos;);
+const className = &apos;darker&apos;;
+function *addClassToEach(elements, className){
+    for(const el of Array.from(elements))
+        yield el.classList.add(className)
+};
+const addClassToStrings = addClassToEach(strings, className);    
+btn.addEventListener(&apos;click&apos;, (el) =&gt; {
+  if (addClassToStrings.next().done)
+    el.target.classList.add(className);
+});
+</code></pre><p><strong>用generator和Promise实现async函数</strong>  </p>
+<pre><code>// async函数
+async function init(){
+    const res1 = await doTask1();
+    console.log(res1);
+    const res2 = await doTask2(res1);
+    console.log(res2);
+    const res3 = await doTask3(res2);
+    console.log(res3);
+    return res3;
+}
+</code></pre><p>函数体中依次执行三个异步任务，每个任务依赖前一个任务的完成。最后，函数返回最后一个任务的结果。</p>
+<pre><code>// generator
+function runner(genFn){
+    const itr = genFn();
+    function run(arg){
+        const result = itr.next(arg);
+        if(result.done){
+            return result.value;
+        }else{
+            return Promise.resolve(result.value).then(run);
+        }
+    }
+    return run();
+}
+runner(function(){
+    const res1 = await doTask1();
+    console.log(res1);
+    const res2 = await doTask2(res1);
+    console.log(res2);
+    const res3 = await doTask3(res2);
+    console.log(res3);
+    return res3;
+})
 </code></pre>
       
     </div>
@@ -939,7 +994,7 @@ async function doIt(){
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise"><span class="nav-number">1.</span> <span class="nav-text">Promise</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-A"><span class="nav-number">2.</span> <span class="nav-text">Promise/A+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-A-1"><span class="nav-number">3.</span> <span class="nav-text">Promise/A+</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#异步任务的分组调度"><span class="nav-number">3.1.</span> <span class="nav-text">异步任务的分组调度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。"><span class="nav-number">3.2.</span> <span class="nav-text">10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Generator函数异步应用"><span class="nav-number">4.</span> <span class="nav-text">Generator函数异步应用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise"><span class="nav-number">1.</span> <span class="nav-text">Promise</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-A"><span class="nav-number">2.</span> <span class="nav-text">Promise/A+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-A-1"><span class="nav-number">3.</span> <span class="nav-text">Promise/A+</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#异步任务的分组调度"><span class="nav-number">3.1.</span> <span class="nav-text">异步任务的分组调度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。"><span class="nav-number">3.2.</span> <span class="nav-text">10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Generator函数异步应用"><span class="nav-number">4.</span> <span class="nav-text">Generator函数异步应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成器用途"><span class="nav-number">5.</span> <span class="nav-text">生成器用途</span></a></li></ol></div>
             
 
           </div>
