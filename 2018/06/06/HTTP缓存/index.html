@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+  <meta name="keywords" content="缓存," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="浏览器缓存当发送一个服务器请求时，浏览器首先会进行缓存过期判断。浏览器根据缓存过期时间判断缓存文件是否过期。 情景一、利用(Expires或者Cache-Control表示资源在客户端缓存的有效期)若没有过期，则不向服务器发送请求，直接使用缓存中的结果，此时可以在控制台看到200 OK(from cache),此时完全">
+<meta name="keywords" content="缓存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http缓存">
+<meta property="og:url" content="http://yoursite.com/2018/06/06/HTTP缓存/index.html">
+<meta property="og:site_name" content="FE_hei">
+<meta property="og:description" content="浏览器缓存当发送一个服务器请求时，浏览器首先会进行缓存过期判断。浏览器根据缓存过期时间判断缓存文件是否过期。 情景一、利用(Expires或者Cache-Control表示资源在客户端缓存的有效期)若没有过期，则不向服务器发送请求，直接使用缓存中的结果，此时可以在控制台看到200 OK(from cache),此时完全使用缓存，浏览器和服务器没有任何交互。  Chrome浏览器状态码表现为：200">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/cache/cache.png">
+<meta property="og:updated_time" content="2018-06-06T13:14:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="http缓存">
+<meta name="twitter:description" content="浏览器缓存当发送一个服务器请求时，浏览器首先会进行缓存过期判断。浏览器根据缓存过期时间判断缓存文件是否过期。 情景一、利用(Expires或者Cache-Control表示资源在客户端缓存的有效期)若没有过期，则不向服务器发送请求，直接使用缓存中的结果，此时可以在控制台看到200 OK(from cache),此时完全使用缓存，浏览器和服务器没有任何交互。  Chrome浏览器状态码表现为：200">
+<meta name="twitter:image" content="http://yoursite.com/images/cache/cache.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/06/HTTP缓存/"/>
+
+
+
+
+
+  <title>http缓存 | FE_hei</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FE_hei</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">认真的你 势不可挡</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/HTTP缓存/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">http缓存</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T00:00:00+08:00">
+                2018-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="浏览器缓存"><a href="#浏览器缓存" class="headerlink" title="浏览器缓存"></a>浏览器缓存</h4><p>当发送一个服务器请求时，浏览器首先会进行缓存过期判断。浏览器根据缓存过期时间判断缓存文件是否过期。</p>
+<p>情景一、利用(Expires或者Cache-Control表示资源在客户端缓存的有效期)若没有过期，则不向服务器发送请求，直接使用缓存中的结果，此时可以在控制台看到200 OK(from cache),此时完全使用缓存，浏览器和服务器没有任何交互。</p>
+<ul>
+<li>Chrome浏览器状态码表现为：200 OK(from disk cache)或是200 OK(from memory cache)</li>
+<li>在浏览器中，浏览器会在js和图片等文件解析执行后直接存入内存缓存中，那么当刷新页面时只需直接从内存缓存中读取(from memory cache)；而css文件则会存入硬盘文件中，所以每次渲染页面都需要从硬盘读取缓存(from disk cache)。</li>
+</ul>
+<p>情景二、若已过期，则向服务器发送请求，此时请求中带上1中设置的文件修改时间和Etag，进行资源更新判断。服务器根据浏览器传过来的文件修改时间，判断自浏览器上一次请求之后，文件是否被修改过；根据Etag，判断文件内容自上一次请求之后，有没有发生变化。</p>
+<ul>
+<li>若两种判断的结果都是文件没有被修改过，则服务器服务器告诉浏览器文件没有被修改过，可以用浏览器的缓存–请求响应返回304 Not Modified。此情况为协商缓存，浏览器和服务器之间有一次请求交互。</li>
+</ul>
+<p><strong>强缓存</strong><br>浏览器在加载资源时，先根据这个资源的一些http header：(Expires或Cache-Control)判断它是否命中强缓存，强缓存如果命中，浏览器直接从自己的缓存中读取资源，不会发请求到服务器。</p>
+<p>Expires是http1.0提出的一个表示资源过期时间的header，描述一个绝对时间，由服务器返回，用GMT格式的字符串表示。原理是：  </p>
+<ol>
+<li>浏览器第一次跟服务器请求一个资源，服务器在返回这个资源的同时，在response的header加上Expires的header。</li>
+<li>浏览器在接到这个资源后，会把这个资源连同所有response header一起缓存下来（所以缓存命中的请求返回的header并不是来自服务器，而是来自之前缓存的header）</li>
+<li>浏览器再请求这个资源时，先从缓存中寻找，找到这个资源后，拿出它的Expires跟当前的请求时间比较，如果请求时间在Expires指定的时间之前，就能命中缓存，否则就不行。</li>
+<li>如果缓存没有命中，浏览器会直接从服务器加载资源，Expires Header在重新加载的时候会被更新。</li>
+</ol>
+<p>Cache-Control是http1.1提出的，相对时间，在配置缓存的时候，以秒为单位。Cache-Control:max-age:3600。原理：  </p>
+<p>第三步时：根据它第一次的请求时间和Cache-Control设定的有效期，计算出一个资源过期时间，再拿这个过期时间跟当前的请求时间比较，如果请求时间在过期时间之前，就能命中缓存，否则不行。</p>
+<p><strong>Cache-Control在进行缓存命中的时候，利用客户端时间进行判断，对比Expires，Cache-Control的缓存管理更有效，更安全</strong></p>
+<h5 id="强缓存应用"><a href="#强缓存应用" class="headerlink" title="强缓存应用"></a>强缓存应用</h5><p>性能优化之一：对于大量静态资源的网页，要利用强缓存，提高响应速度。做法：为这些静态资源全部配置一个超时时间超长的Expires或Cache-Control，这样用户在访问网页时，只会在第一次加载时从服务器请求静态资源，其他时候只要缓存没有失效并且用户没有强制刷新的条件下都会从自己的缓存中加载。例如淘宝、京东首页缓存。</p>
+<p>这种缓存配置方式会有一个新问题，就是在发布时资源更新问题，网站发布新版本，由于缓存，会导致默认情况下不会请求服务器最新的图片资源，除非清除或禁用缓存</p>
+<p><strong>协商缓存</strong><br>协商缓存利用的是<code>Last-Modified</code>、<code>If-Modified-Since</code>和<code>Etag</code>、<code>If-None-Match</code>这两对Header来管理的。</p>
+<p>【Last-Modified，If-Modified-Since】的控制缓存的原理是：  </p>
+<ol>
+<li>浏览器第一次跟服务器请求一个资源，服务器在返回这个资源的同时，在response的header加上<strong>Last-Modified</strong>，这个header表示这个资源在服务器上的最后修改时间。</li>
+<li>浏览器再次跟服务器请求这个资源时，在request的header中加上<strong>If-Modified-Since</strong>，这个header的值就是上一次请求时返回的Last-Modified的值。</li>
+<li>服务器再次收到资源请求时，根据浏览器传过来If-Modified-Since和资源在服务器上的最后修改时间判断资源是否有变化，如果没有变化则返回304 Not Modified，但是不会返回资源内容；如果有变化，就正常返回资源内容。</li>
+<li>浏览器收到304的响应后，就会从缓存中加载资源。</li>
+<li>如果协商缓存没有命中，浏览器直接从服务器加载资源时，Last-Modified Header在重新加载的时候会被更新，下次请求时，If-Modified-Since会启用上次返回的Last-Modified值。</li>
+</ol>
+<p>有时候服务器上资源其实有变化，但是最后修改时间却没有变化，这是需要【ETag、If-None-Match】。它们的缓存管理的方式是：</p>
+<ol>
+<li>浏览器第一次跟服务器请求一个资源，服务器在返回这个资源的同时，在respone的header加上ETag的header，这个header是服务器根据当前请求的资源生成的一个唯一标识，这个唯一标识是一个字符串，只要资源有变化这个串就不同，跟最后修改时间没有关系</li>
+<li>浏览器再次跟服务器请求这个资源时，在request的header上加上If-None-Match的header，这个header的值就是上一次请求时返回的ETag的值</li>
+<li>服务器再次收到资源请求时，根据浏览器传过来If-None-Match和然后再根据资源生成一个新的ETag，如果这两个值相同就说明资源没有变化，否则就是有变化；如果没有变化则返回304 Not Modified，但是不会返回资源内容；如果有变化，就正常返回资源内容。</li>
+<li>浏览器收到304的响应后，就会从缓存中加载资源。</li>
+</ol>
+<p><strong>使用Etag解决Last-Modified存在的一些问题</strong>  </p>
+<ul>
+<li>某些服务器不能精确得到资源的最后修改时间，这样就无法通过最后修改时间判断资源是否更新</li>
+<li>如果资源修改非常频繁，在秒以下的时间内进行修改，而Last-Modified只能精确到秒</li>
+<li>一些资源的最后修改时间改变了，但是内容没改变，使用Etag就认为资源还是没有修改的。</li>
+</ul>
+<p><strong>缓存流程</strong>  </p>
+<p><img src="/images/cache/cache.png" alt="">  </p>
+<h4 id="cookie、localStorage和sessionStorage"><a href="#cookie、localStorage和sessionStorage" class="headerlink" title="cookie、localStorage和sessionStorage"></a>cookie、localStorage和sessionStorage</h4><p>使用场景</p>
+<ul>
+<li>cookie的作用是与服务器进行交互</li>
+<li>localStorge可以用于存储该浏览器对该页面的访问次数，还可以用来存储一些固定不变的页面信息，这样不需要每次重新加载，值也可以进行覆盖</li>
+<li>sessionStorage进行页面传值</li>
+</ul>
+<p>三者异同：  </p>
+<ul>
+<li>生命周期：<ul>
+<li>cookie：可设置失效时间，没有设置的话，默认是关闭浏览器后失效</li>
+<li>localstorge：除非手动清除，否则将会永久保存</li>
+<li>sessionStorage：仅在当前网页会话下有效，关闭页面或浏览器后就会被清除</li>
+</ul>
+</li>
+<li>存放数据大小：<ul>
+<li>cookie: 4KB左右</li>
+<li>localStorge和sessionStorage可以保存5MB信息</li>
+</ul>
+</li>
+<li>http请求：<ul>
+<li>cookie：每次都会携带在http头中，如果使用cookie保存过多数据会带来性能问题<ul>
+<li>localStorge和sessionStorage：仅在浏览器中保存，不参与和服务器通信</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>关于缓存问答</strong>  </p>
+<ol>
+<li>请求被缓存，导致新代码未生效  <ul>
+<li>修改请求头<code>If-modified-since:0</code>或<code>If-none-match</code></li>
+<li>修改请求URL，请求URL后加随机数，随机数可以是时间戳，哈希值</li>
+</ul>
+</li>
+<li>服务端缓存导致本地代码未更新<ul>
+<li>合理设置Cache-Control：s-maxage</li>
+<li>设置Cache-Control:private指令，防止代理服务器缓存资源</li>
+</ul>
+</li>
+<li>Cache-Control:max-age=0和no-cache区别  <ul>
+<li>max-age=0和no-cache应该是从语气上不同。max-age=0是告诉客户端资源的缓存到期应该向服务器验证缓存的有效性。而no-cache则告诉客户端使用缓存前必须向服务器验证缓存的有效性。</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/缓存/" rel="tag"><i class="fa fa-tag"></i> 缓存</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/03/promise/" rel="next" title="Promise整理">
+                <i class="fa fa-chevron-left"></i> Promise整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpeg"
+                alt="FE_Hei" />
+            
+              <p class="site-author-name" itemprop="name">FE_Hei</p>
+              <p class="site-description motion-element" itemprop="description">Keep for all</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/kudouhei" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#浏览器缓存"><span class="nav-number">1.</span> <span class="nav-text">浏览器缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#强缓存应用"><span class="nav-number">1.1.</span> <span class="nav-text">强缓存应用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cookie、localStorage和sessionStorage"><span class="nav-number">2.</span> <span class="nav-text">cookie、localStorage和sessionStorage</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  © 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">FE_Hei</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
