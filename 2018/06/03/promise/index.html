@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="PromisePromise是一种异步解决方案，它有resolve和reject两个回调参数，resolve是Promise从pending状态变为fulfilled状态后触发的回调函数。而reject则是状态从pending状态变为rejected后触发的。 而且一个Promise对象的状态只能从pending-&amp;gt;fulfilled或者从pending-&amp;gt;reject,不可能同时达到">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-07T14:03:25.000Z">
+<meta property="og:updated_time" content="2018-06-07T14:42:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Promise整理">
 <meta name="twitter:description" content="PromisePromise是一种异步解决方案，它有resolve和reject两个回调参数，resolve是Promise从pending状态变为fulfilled状态后触发的回调函数。而reject则是状态从pending状态变为rejected后触发的。 而且一个Promise对象的状态只能从pending-&amp;gt;fulfilled或者从pending-&amp;gt;reject,不可能同时达到">
@@ -870,6 +870,41 @@ return promises.map(promise =&gt; {
 }    
 dealPromises(promises, 3)
 // 输出: 来到了catch catch 超过了3次
+</code></pre><h4 id="抛开Promise，了解异步操作流程"><a href="#抛开Promise，了解异步操作流程" class="headerlink" title="抛开Promise，了解异步操作流程"></a>抛开Promise，了解异步操作流程</h4><p>假设有一个异步任务模板，使用setTimeout模拟异步，在每个异步任务中先打印这个参数arg，然后以2*arg作为参数传入回调函数中。</p>
+<pre><code>asyncFn = (arg, cb) =&gt; {
+    setTimeout(function(){
+        console.log(`参数为${arg}`)
+        cb(arg*2)
+    })
+}
+//要执行异步任务的参数队列
+let items = [1,2,3,4,5,6];
+</code></pre><p>串行任务：在每个异步任务的回调方法中通过shift()方法，每次从任务队列中取出一个值，并且更新剩余任务的数组，实现任务的接力进行。</p>
+<pre><code>let results = [];
+final =(value) =&gt; {
+    console.log(`完成：${value}`);
+}
+series=(item)=&gt;{
+    if(item){
+        asyncFn(item, function(res){
+            results.push(res);
+            return series(items.shift());
+        })
+    }else{
+        final(results);
+    }
+}
+series(items.shift())
+</code></pre><p>并行任务：一开始就将所有任务都执行，然后监测负责保存异步任务执行结果的数组的长度，若等于任务队列长度时，则是所有异步任务都执行完毕。</p>
+<pre><code>let len = items.length;
+items.forEach((item) =&gt; {
+    asyncFn(item, function(res){
+        results.push(res);
+        if(results.length===len){
+            final(results);
+        }
+    })
+})
 </code></pre>
       
     </div>
@@ -1058,7 +1093,7 @@ dealPromises(promises, 3)
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise"><span class="nav-number">1.</span> <span class="nav-text">Promise</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-A"><span class="nav-number">2.</span> <span class="nav-text">Promise/A+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-A-1"><span class="nav-number">3.</span> <span class="nav-text">Promise/A+</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#异步任务的分组调度"><span class="nav-number">3.1.</span> <span class="nav-text">异步任务的分组调度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。"><span class="nav-number">3.2.</span> <span class="nav-text">10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Generator函数异步应用"><span class="nav-number">4.</span> <span class="nav-text">Generator函数异步应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成器用途"><span class="nav-number">5.</span> <span class="nav-text">生成器用途</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise"><span class="nav-number">1.</span> <span class="nav-text">Promise</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-A"><span class="nav-number">2.</span> <span class="nav-text">Promise/A+</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Promise-A-1"><span class="nav-number">3.</span> <span class="nav-text">Promise/A+</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#异步任务的分组调度"><span class="nav-number">3.1.</span> <span class="nav-text">异步任务的分组调度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。"><span class="nav-number">3.2.</span> <span class="nav-text">10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Generator函数异步应用"><span class="nav-number">4.</span> <span class="nav-text">Generator函数异步应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成器用途"><span class="nav-number">5.</span> <span class="nav-text">生成器用途</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抛开Promise，了解异步操作流程"><span class="nav-number">6.</span> <span class="nav-text">抛开Promise，了解异步操作流程</span></a></li></ol></div>
             
 
           </div>
