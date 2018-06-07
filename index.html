@@ -1184,6 +1184,70 @@ runner(function(){
     console.log(res3);
     return res3;
 })
+</code></pre><p><strong>需求：实现一个函数，在多次异步请求全部结束之后再进行处理，即使有一次或多次失败，在失败时我们可以处理这些失败的情况，但是不会阻塞其他请求</strong>  </p>
+<p>Promise.all()其中的一个请求失败了就会走catch，无法满足请求全部结束的需求。</p>
+<p>思路让所有的promises都走resolve，把error的信息扔到resolve中。基于这个思路把所有的promises转成resolve。</p>
+<pre><code>const p1 = new Promise((res,rej) =&gt; {
+    setTimeout(() =&gt; {
+        res(1)
+    }, 1000)
+})
+const p2 = new Promise((res,rej) =&gt; {
+    setTimeout(() =&gt; {
+        rej(&apos;err 2&apos;)
+    },2000)
+})
+const p3 = new Promise((res,rej) =&gt; {
+    setTimeout(() =&gt; {
+        res(3)
+    },3000)
+})
+let promises = [p1,p2,p3]
+
+let transferedPromises = (promise =&gt; {
+    //返回一个处理之后的Promise数组
+    return promises.map(promise =&gt; {
+        return promise.then(res =&gt; res).catch(err =&gt; err)
+    })
+})
+let promiseArr = transferedPromises(promises)
+Promise.all(promiseArr).then(resArr =&gt; {
+    console.log(resArr)
+}) // [1, &apos;err 2&apos;,3]
+</code></pre><p>增加了需求：5(n)次异步请求最多允许失败2(m,m&lt;n)次  </p>
+<pre><code>const dealPromises = (promises, count) =&gt;{
+    let errorCount = 0;
+    let thenHandler = function(res){
+        return {
+            res: res,
+            status: &apos;success&apos;
+        }
+    }
+    let catchHandler = function(err){
+        errorCount++;
+        if(errorCount &gt;= count){
+            return Promise.reject(`catch 超过了${count}次`)
+        }else{
+            return {
+                err: err,
+                status: &apos;failed&apos;
+            }
+        }
+    }
+    let transferedPromises = (promises) =&gt; { // 返回一个处理之后的promise数组
+return promises.map(promise =&gt; {
+     return promise.then(thenHandler).catch(catchHandler)
+    })
+  }
+  let promiseArr = transferedPromises(promises)
+  Promise.all(promiseArr).then(resArr =&gt; {
+    console.log(&apos;来到了then&apos;, resArr)
+  }).catch(err =&gt; {
+    console.log(&apos;来到了catch&apos;, err)
+  })
+}    
+dealPromises(promises, 3)
+// 输出: 来到了catch catch 超过了3次
 </code></pre>
           
         
