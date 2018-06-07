@@ -247,6 +247,232 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/07/js引擎机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/07/js引擎机制/" itemprop="url">JS引擎解析过程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-07T00:00:00+08:00">
+                2018-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="JS引擎解析过程"><a href="#JS引擎解析过程" class="headerlink" title="JS引擎解析过程"></a>JS引擎解析过程</h4><p><strong>1.解释阶段</strong><br>js是解释型语言，所有无需提前编译，而是解释器实时运行。</p>
+<ol>
+<li>读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token）</li>
+<li>对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree）</li>
+<li>使用翻译器（translator），将代码转为字节码（bytecode）</li>
+<li>使用字节码解释器（bytecode interpreter），将字节码转为机器码。最终计算机执行的就是机器码。</li>
+</ol>
+<p><strong>2.js的预处理阶段</strong><br>预处理阶段主要为了确保JS可以正确执行，会做一些事情，诸如变量提升，分号补全。</p>
+<p>变量提升：  </p>
+<ul>
+<li><strong>函数声明提升优先级高于变量声明提升</strong></li>
+<li><p>变量对象/活动对象（VO/AO）填充的顺序也是按照以上顺序：函数的形参-&gt;函数声明-&gt;变量声明；<br>在变量对象/活动对象（VO/AO）中权重高低也按照函数的形参-&gt;函数声明-&gt;变量声明顺序来。</p>
+<pre><code>var a=1;
+function b(a){ console.log(a)}
+var b;
+console.log(b); // function b(a){console.log(a)}
+b();  //undefined
+</code></pre></li>
+</ul>
+<p>按照优先级只要console.log(a)中的a是函数中的形参，就永远不会被函数和变量声明覆盖，就算没有赋值也是默认填充的undefined值。</p>
+<p><strong>3.JS的执行阶段</strong><br>执行流程大概：  </p>
+<ul>
+<li>执行上下文，执行堆栈(全局上下文，当前活动上下文)</li>
+<li>VO(变量对象，会放一些变量信息，如声明的变量，函数，arguments参数等)和AO(活动对象)</li>
+<li>作用域链</li>
+<li>this机制</li>
+</ul>
+<p>VO与AO：  </p>
+<ul>
+<li>VO是执行上下文的属性，但是只有全局上下文的变量对象允许通过VO的属性名称来间接访问。（因为在全局上下文里，全局对象自身就是变量对象）。</li>
+<li>AO当函数被调用者激活，AO就被创建了</li>
+</ul>
+<p>可以理解为：  </p>
+<ul>
+<li>在函数上下文中：VO===AO</li>
+<li>在全局上下文中：VO === this === global</li>
+</ul>
+<p><strong>js执行上下文细节</strong><br>每次调用函数都会创建新的执行上下文，但是在js解释器内部，每次调用执行上下文，分为两个阶段：  </p>
+<ol>
+<li>创建阶段【当函数被调用，但未执行任何其内部代码之前】<ul>
+<li>创建作用域链</li>
+<li>创建变量，函数和参数</li>
+<li>求this的值</li>
+</ul>
+</li>
+<li>激活/代码执行阶段<ul>
+<li>指派变量的值和函数的引用，解释/执行代码。</li>
+</ul>
+</li>
+</ol>
+<p><strong>解释器如何执行代码的伪逻辑</strong>  </p>
+<ol>
+<li>查找调用函数的代码</li>
+<li>执行函数代码之前，先创建执行上下文</li>
+<li>进入创建阶段：<ul>
+<li>初始化作用域链</li>
+<li>创建变量对象<ul>
+<li>创建arguments对象，检查上下文，初始化参数名称和值并创建引用的复制</li>
+<li>扫描上下文的函数声明：为发现的每一个函数，在变量对象上创建一个属性(函数的名字)，其有一个指向函数在内存中的引用。如果函数的名字已经存在，引用指针将被重写。</li>
+<li>扫描上下文的变量声明：为发现的每个变量声明，在变量对象上创建一个属性(变量的名字)，并且将变量的值初始化为undefined。如果变量的名字已经存在，将不会进行任何操作并继续扫描。</li>
+</ul>
+</li>
+<li>求出上下文内部的this值</li>
+</ul>
+</li>
+<li>激活/代码执行阶段<ul>
+<li>在当前上下文上运行/解释函数代码，并随着代码一行行执行指派变量的值</li>
+</ul>
+</li>
+</ol>
+<p><strong>例如</strong>  </p>
+<pre><code>function foo(i){
+    var a = &quot;hello&quot;;
+    var b = function privateB(){};
+    function c(){};
+}    
+foo(22);
+</code></pre><p>当调用foo(22)时，创建状态如下： </p>
+<pre><code>fooExecutionContext = {
+    scopeChain: {...},
+    variableObject: {
+        arguments: {
+            0: 22,
+            length:1
+        },
+        i:22,
+        c: pointer to function c(),
+        a: undefined,
+        b: undefined
+    },
+    this: {...}
+}
+</code></pre><p>函数执行完成后：  </p>
+<pre><code>fooExecutionContext = {
+    scopeChain: {...},
+    variableObject: {
+        arguments: {
+            0: 22,
+            length:1
+        },
+        i:22,
+        c: pointer to function c(),
+        a: &apos;hello&apos;,
+        b: pointer to function privateB()
+    },
+    this: {...}
+}
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/HTTP缓存/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2786,234 +3012,6 @@ var p = new Person() // 0 1 2...
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/line-height/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/01/line-height/" itemprop="url">line-height属性值</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T00:00:00+08:00">
-                2018-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="line-height"><a href="#line-height" class="headerlink" title="line-height"></a>line-height</h4><p>行高指文本行基线间的垂直距离。</p>
-<p><img src="/images/line-height/line.jpg" alt="">  </p>
-<p>图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.  </p>
-<pre><code>半行距 = (line-height - font-size)/2
-</code></pre><p><strong>取值</strong><br>一般情况下，浏览器默认的line-height为1.2。</p>
-<table>
-<thead>
-<tr>
-<th>值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>normal</td>
-<td>默认1.2。设置合理的行间距</td>
-</tr>
-<tr>
-<td>number</td>
-<td>设置数字，此数字会与当前的字体尺寸相乘来设置行间距，即number为当前font-size的倍数</td>
-</tr>
-<tr>
-<td>length</td>
-<td>设置固定的行间距</td>
-</tr>
-<tr>
-<td>%</td>
-<td>基于当前字体尺寸的百分比行间距</td>
-</tr>
-<tr>
-<td>inherit</td>
-<td>规定应该从父元素继承line-height属性的值</td>
-</tr>
-</tbody>
-</table>
-<pre><code>body { font-size:16px; line-height:XXX; }    
-h1 {font-size:32px;}    
-p {font-size:16px;} 
-</code></pre><p><strong>（1）值百分比</strong>  </p>
-<pre><code>body { font-size: 16px; line-height: 120%;}  
-</code></pre><p>line-height的百分比和body的文字大小用来计算，这个计算值会被层叠下去的元素所继承。line-height不会随着相关的font-size做相应的比例缩放。  </p>
-<table>
-<thead>
-<tr>
-<th>element</th>
-<th>font-size</th>
-<th>line-height</th>
-<th>计算后的line-height  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>body</td>
-<td>16px</td>
-<td>120%</td>
-<td>16*120% =19.2px  </td>
-</tr>
-<tr>
-<td>h1</td>
-<td>32px</td>
-<td>继承计算后的值19.2px</td>
-<td>19.2px</td>
-</tr>
-<tr>
-<td>p</td>
-<td>16px</td>
-<td>继承计算后的值19.2px</td>
-<td>19.2px</td>
-</tr>
-</tbody>
-</table>
-<p><strong>（2）值 length</strong>  </p>
-<pre><code>body { font-size: 16px; line-height:20px}
-</code></pre><p>line-height的20px会被后代继承，所有继承下来的元素会忽略本身的font-size，而使用相同的，继承的line-height。</p>
-<p><strong>（3）值 normal</strong><br>line-height被设置为normal，约为1.2</p>
-<pre><code>body { font-size:16px; line-height:normal}
-</code></pre><p>所有继承下来的元素不会忽略本身的font-size，而使用基于font-size算出来的line-height。此时line-height会随着相关的font-size做相应的比例缩放。 </p>
-<table>
-<thead>
-<tr>
-<th>element</th>
-<th>font-size</th>
-<th>line-height</th>
-<th>计算后的line-height </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>body</td>
-<td>16px</td>
-<td>normal</td>
-<td>16*1.2 =19.2px  </td>
-</tr>
-<tr>
-<td>h1</td>
-<td>32px</td>
-<td>normal</td>
-<td>32*1.2=38.4px  </td>
-</tr>
-<tr>
-<td>p</td>
-<td>16px</td>
-<td>normal</td>
-<td>16px*1.2 =19.2px</td>
-</tr>
-</tbody>
-</table>
-<p><strong>值：数字</strong><br>所有继承下来的元素使用基于font-size算出来的line-height。line-height会随着相关的font-size做相应的比例缩放</p>
-<p>参考文章<br><a href="https://segmentfault.com/a/1190000003038583" target="_blank" rel="noopener">css中的line-height</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3068,7 +3066,7 @@ p {font-size:16px;}
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

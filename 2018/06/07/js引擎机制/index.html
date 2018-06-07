@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="JavaScript," />
 
 
 
@@ -84,17 +84,18 @@
 
 
 
-<meta name="description" content="关于我I am 前端er.I am 100% cool.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="FE_hei">
-<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta name="description" content="JS引擎解析过程1.解释阶段js是解释型语言，所有无需提前编译，而是解释器实时运行。  读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token） 对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree） 使用翻译器（translator），将代码转为字">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS引擎解析过程">
+<meta property="og:url" content="http://yoursite.com/2018/06/07/js引擎机制/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="关于我I am 前端er.I am 100% cool.">
+<meta property="og:description" content="JS引擎解析过程1.解释阶段js是解释型语言，所有无需提前编译，而是解释器实时运行。  读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token） 对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree） 使用翻译器（translator），将代码转为字节码（bytecode） 使用字节码解释器（bytecode interpret">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-19T14:18:05.000Z">
+<meta property="og:updated_time" content="2018-06-07T14:11:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="FE_hei">
-<meta name="twitter:description" content="关于我I am 前端er.I am 100% cool.">
+<meta name="twitter:title" content="JS引擎解析过程">
+<meta name="twitter:description" content="JS引擎解析过程1.解释阶段js是解释型语言，所有无需提前编译，而是解释器实时运行。  读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token） 对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree） 使用翻译器（translator），将代码转为字节码（bytecode） 使用字节码解释器（bytecode interpret">
 
 
 
@@ -124,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/07/js引擎机制/"/>
 
 
 
 
 
-  <title> | FE_hei</title>
+  <title>JS引擎解析过程 | FE_hei</title>
   
 
 
@@ -235,34 +236,250 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/07/js引擎机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline"></h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <h3 id="关于我"><a href="#关于我" class="headerlink" title="关于我"></a>关于我</h3><p>I am 前端er.<br>I am 100% cool.</p>
-
+          <h1 class="post-title" itemprop="name headline">JS引擎解析过程</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-07T00:00:00+08:00">
+                2018-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h4 id="JS引擎解析过程"><a href="#JS引擎解析过程" class="headerlink" title="JS引擎解析过程"></a>JS引擎解析过程</h4><p><strong>1.解释阶段</strong><br>js是解释型语言，所有无需提前编译，而是解释器实时运行。</p>
+<ol>
+<li>读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token）</li>
+<li>对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree）</li>
+<li>使用翻译器（translator），将代码转为字节码（bytecode）</li>
+<li>使用字节码解释器（bytecode interpreter），将字节码转为机器码。最终计算机执行的就是机器码。</li>
+</ol>
+<p><strong>2.js的预处理阶段</strong><br>预处理阶段主要为了确保JS可以正确执行，会做一些事情，诸如变量提升，分号补全。</p>
+<p>变量提升：  </p>
+<ul>
+<li><strong>函数声明提升优先级高于变量声明提升</strong></li>
+<li><p>变量对象/活动对象（VO/AO）填充的顺序也是按照以上顺序：函数的形参-&gt;函数声明-&gt;变量声明；<br>在变量对象/活动对象（VO/AO）中权重高低也按照函数的形参-&gt;函数声明-&gt;变量声明顺序来。</p>
+<pre><code>var a=1;
+function b(a){ console.log(a)}
+var b;
+console.log(b); // function b(a){console.log(a)}
+b();  //undefined
+</code></pre></li>
+</ul>
+<p>按照优先级只要console.log(a)中的a是函数中的形参，就永远不会被函数和变量声明覆盖，就算没有赋值也是默认填充的undefined值。</p>
+<p><strong>3.JS的执行阶段</strong><br>执行流程大概：  </p>
+<ul>
+<li>执行上下文，执行堆栈(全局上下文，当前活动上下文)</li>
+<li>VO(变量对象，会放一些变量信息，如声明的变量，函数，arguments参数等)和AO(活动对象)</li>
+<li>作用域链</li>
+<li>this机制</li>
+</ul>
+<p>VO与AO：  </p>
+<ul>
+<li>VO是执行上下文的属性，但是只有全局上下文的变量对象允许通过VO的属性名称来间接访问。（因为在全局上下文里，全局对象自身就是变量对象）。</li>
+<li>AO当函数被调用者激活，AO就被创建了</li>
+</ul>
+<p>可以理解为：  </p>
+<ul>
+<li>在函数上下文中：VO===AO</li>
+<li>在全局上下文中：VO === this === global</li>
+</ul>
+<p><strong>js执行上下文细节</strong><br>每次调用函数都会创建新的执行上下文，但是在js解释器内部，每次调用执行上下文，分为两个阶段：  </p>
+<ol>
+<li>创建阶段【当函数被调用，但未执行任何其内部代码之前】<ul>
+<li>创建作用域链</li>
+<li>创建变量，函数和参数</li>
+<li>求this的值</li>
+</ul>
+</li>
+<li>激活/代码执行阶段<ul>
+<li>指派变量的值和函数的引用，解释/执行代码。</li>
+</ul>
+</li>
+</ol>
+<p><strong>解释器如何执行代码的伪逻辑</strong>  </p>
+<ol>
+<li>查找调用函数的代码</li>
+<li>执行函数代码之前，先创建执行上下文</li>
+<li>进入创建阶段：<ul>
+<li>初始化作用域链</li>
+<li>创建变量对象<ul>
+<li>创建arguments对象，检查上下文，初始化参数名称和值并创建引用的复制</li>
+<li>扫描上下文的函数声明：为发现的每一个函数，在变量对象上创建一个属性(函数的名字)，其有一个指向函数在内存中的引用。如果函数的名字已经存在，引用指针将被重写。</li>
+<li>扫描上下文的变量声明：为发现的每个变量声明，在变量对象上创建一个属性(变量的名字)，并且将变量的值初始化为undefined。如果变量的名字已经存在，将不会进行任何操作并继续扫描。</li>
+</ul>
+</li>
+<li>求出上下文内部的this值</li>
+</ul>
+</li>
+<li>激活/代码执行阶段<ul>
+<li>在当前上下文上运行/解释函数代码，并随着代码一行行执行指派变量的值</li>
+</ul>
+</li>
+</ol>
+<p><strong>例如</strong>  </p>
+<pre><code>function foo(i){
+    var a = &quot;hello&quot;;
+    var b = function privateB(){};
+    function c(){};
+}    
+foo(22);
+</code></pre><p>当调用foo(22)时，创建状态如下： </p>
+<pre><code>fooExecutionContext = {
+    scopeChain: {...},
+    variableObject: {
+        arguments: {
+            0: 22,
+            length:1
+        },
+        i:22,
+        c: pointer to function c(),
+        a: undefined,
+        b: undefined
+    },
+    this: {...}
+}
+</code></pre><p>函数执行完成后：  </p>
+<pre><code>fooExecutionContext = {
+    scopeChain: {...},
+    variableObject: {
+        arguments: {
+            0: 22,
+            length:1
+        },
+        i:22,
+        c: pointer to function c(),
+        a: &apos;hello&apos;,
+        b: pointer to function privateB()
+    },
+    this: {...}
+}
+</code></pre>
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/06/HTTP缓存/" rel="next" title="http缓存">
+                <i class="fa fa-chevron-left"></i> http缓存
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -389,7 +606,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于我"><span class="nav-number">1.</span> <span class="nav-text">关于我</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#JS引擎解析过程"><span class="nav-number">1.</span> <span class="nav-text">JS引擎解析过程</span></a></li></ol></div>
             
 
           </div>
