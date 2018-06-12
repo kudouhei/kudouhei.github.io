@@ -635,6 +635,45 @@ foo(22);
 </ul>
 </li>
 </ol>
+<p><strong>关于localStorge问答</strong> </p>
+<ol>
+<li>a.meituan.com和b.meituan.com这两个域能够共享同一个localStorge吗  <ul>
+<li>同一个域名共享同一个localStorge，上述为两个域名，所以不能共享</li>
+</ul>
+</li>
+<li>在 webview 中打开一个页面：i.meituan.com/home.html，点击一个按钮，调用 js 桥打开一个新的 webview：i.meituan.com/list.html，这两个分属不同 webview 的页面能共享同一个 localStorage 吗？<ul>
+<li>能，相当于同一个浏览器的不同标签页</li>
+</ul>
+</li>
+<li>如果localStorge存满了，再往里面存东西，或者要存的东西超过了剩余容量，会发生什么<ul>
+<li>存不进去并报错</li>
+</ul>
+</li>
+</ol>
+<p>同一个域名共享同一个 localStorage，而同一个域名下存在过多独立的业务线，业务线之间各自为政，毫无节制的攫取公共资源，这就是 localStorage 溢出问题的根源。</p>
+<p><strong>本地存储容量有限，那么就整个站点而言，使用本地存储的策略是什么</strong>  </p>
+<ul>
+<li>只保存重要页面的重要数据<ul>
+<li>典型的，首页首屏。对业务庞大的站点尤为重要</li>
+</ul>
+</li>
+<li>极大提高用户体验的数据<ul>
+<li>比如表单的状态，可以提交之前保存，当用户刷新页面时可以还原</li>
+<li>静态资源，如js和css</li>
+</ul>
+</li>
+<li>一个请求一个key值<ul>
+<li>避免请求链接加参数的key</li>
+</ul>
+</li>
+</ul>
+<p><strong>本地存储注意事项</strong>  </p>
+<ul>
+<li>localStorge只能作为提升用户体验的手段，而不能成为客户端逻辑的可靠，唯一的依赖。</li>
+<li>key过多，页面path作为key值，该页面上的数据统一在value处理</li>
+<li>序列化，过于依赖JOSN.stringify，性能问题，移动端尤为明显。</li>
+<li>避免频繁set/get,尽量将数据缓存进内存，然后页面卸载的时候一次写入。</li>
+</ul>
 
           
         
