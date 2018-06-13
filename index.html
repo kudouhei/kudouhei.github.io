@@ -2113,7 +2113,38 @@ window.addEventListener(&apos;message&apos;, onmessage, false);
 &lt;/script&gt;
 </code></pre></li>
 </ul>
+<p><strong>手写jsonp</strong>  </p>
+<pre><code>var jsonp = function(url,data,callback){
+    //将传入的data数据转化为url字符串形式
+    //{id:1,name:&apos;test&apos;}=&gt; id=1&amp;name=test
+    var dataString = url.indexOf(&apos;?&apos;)==-1 ? &apos;?&apos;:&apos;&amp;&apos;;
+    for(var key in data){
+        dataString += key + &apos;=&apos; + data[key] + &apos;&amp;&apos;;
+    };
+    //处理url中的回调函数
+    // cbFuncName回调函数的名字 ：my_json_cb_名字的前缀 + 随机数（把小数点去掉）
+    var cbFuncName = &apos;my_json_cb_&apos;+Math.random().toString().replace(&apos;.&apos;,&apos;&apos;);
+    dataString += &apos;callback=&apos;+ cbFuncName;
+    // 创建一个script标签并插入到页面中
+    var scriptEle = document.createElement(&apos;script&apos;);
+    scriptEle.src = url + dataString;
+    //挂载回调函数
+    window[cbFuncName] = function(data){
+        callback(data);
+        document.body.removeChild(scriptEle);
+    }
+    //append到页面中
+    document.body.appendChild(scriptEle);
+}
 
+var baidu = new Object();
+baidu.sug = function(data){
+    console.log(data)
+}
+jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
+//Request URL: http://suggestion.baidu.com/su?wd=baidu&amp;callback=my_json_cb_07050386954155996
+//window.baidu.sug({q:&quot;baidu&quot;,p:false,s:[&quot;百度翻译&quot;,&quot;百度网盘&quot;,&quot;百度地图&quot;,&quot;百度云盘&quot;,&quot;百度学术&quot;,&quot;百度&quot;,&quot;百度云&quot;,&quot;百度文库&quot;,&quot;百度贴吧&quot;,&quot;百度翻译在线&quot;]});
+</code></pre>
           
         
       
