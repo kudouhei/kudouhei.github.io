@@ -247,6 +247,226 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/19/component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/19/component/" itemprop="url">vue组件通信</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-19T00:00:00+08:00">
+                2018-06-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="Vue组件通信"><a href="#Vue组件通信" class="headerlink" title="Vue组件通信"></a>Vue组件通信</h4><p><strong>父组件向子组件通信</strong>  </p>
+<ul>
+<li>props，父组件使用props向子组件传递数据</li>
+<li>使用$children，可以在父组件中访问子组件</li>
+</ul>
+<p><strong>子组件向父组件中传递数据</strong>  </p>
+<ul>
+<li><p>父组件向子组件传递事件方法，子组件通过$emit触发事件，回调给父组件。</p>
+<pre><code>&lt;template&gt;
+    &lt;child @msgFunc=&quot;func&quot;&gt;&lt;/child&gt;
+&lt;/template&gt;
+import child from &apos;./child.vue&apos;;
+export default {
+    components: {
+        child
+    },
+    methods: {
+        func(msg){
+            console.log(msg);
+        }
+    }
+}
+//子组件vue模板
+&lt;template&gt;
+    &lt;button @click=&apos;handleClick&apos;&gt;Click&lt;/button&gt;
+&lt;/template&gt;
+export default {
+    props: {
+        msg: {
+            type: String,
+            required: true
+        }
+    },
+    methods(){
+        handleClick(){
+            this.$emit(&apos;msgFunc&apos;)
+        }
+    }
+}
+</code></pre></li>
+<li><p>通过自定义事件从子组件向父组件中传递数据</p>
+<ul>
+<li><p>在子组件中通过$emit(event, […参数])触发一个自定义的事件，父组件可以在使用子组件的地方直接用v-on来监听子组件触发的事件，并且可以在监听函数中依次取得所有从子组件传来的参数</p>
+<pre><code>//在子组件中某个部分写入
+this.emit(&apos;eventYouDefined&apos;, arg);
+
+//在父组件的子组件模板里监听
+&lt;Son v-on: eventYouDefined=&apos;functionYours&apos; /&gt;
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<p>如果子组件里没有类似“按钮”的东西，因而无法制造原生事件，同时也没办法找到一个触发自定义事件的时机的时候，如何从子组件向父组件传递数据呢？</p>
+<ul>
+<li><p>通过ref属性在父组件中直接取得子组件的数据  </p>
+<ul>
+<li><p>在父组件中为子组件设置ref，就可以直接通过vm.$refs.[子组件的ref].[子组件的属性]去拿到数据。</p>
+<pre><code>//父组件
+&lt;div id=&apos;father&apos;&gt;
+    I am Parent! {{text || '暂无'}}
+    &lt;button @click=&apos;getSonText()&apos;&gt;接收数据&lt;/button&gt;
+    &lt;son ref=&apos;son&apos;&gt;&lt;/son&gt;
+&lt;/div&gt;
+import son from &apos;./son.vue&apos;
+export default{
+    data: function(){
+        return {
+            text: &apos;&apos;
+        }
+    },
+    components:{
+        getSonText(){
+            this.text = this.$refs.son.text
+        }
+    }
+}
+//子组件
+&lt;div&gt;
+    &lt;p&gt;I am child! {{text}}&lt;/p&gt;
+&lt;/div&gt;
+export default {
+    data() {
+        return {
+            text: ‘来自子组件的数据’
+        }
+    }
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<p><strong>通过sync实现数据双向绑定，从而同步父子组件数据</strong>  </p>
+<pre><code>&lt;comp :foo.sync=&quot;bar&quot;&gt;&lt;/comp&gt;
+扩展为：
+&lt;comp :foo=&apos;bar&apos; @update:foo=&quot;val=&gt; bar=val&quot;&gt;&lt;/comp&gt;
+需要在子组件中改变父组件数据时，需要触发以下自定义事件  
+this.$emit(&apos;update:foo&apos;, newValue)
+</code></pre><p><strong>v-model语法糖</strong>  </p>
+<pre><code>&lt;comp v-model=&apos;something&apos;&gt;&lt;/comp&gt;
+相当于  
+&lt;comp v-bind:value=&apos;something&apos; v-on:input=&apos;something =$event.target.value&apos;&gt;
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/15/css/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3081,148 +3301,6 @@ console.log(h1.color);
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/this/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/07/this/" itemprop="url">箭头函数this</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T00:00:00+08:00">
-                2018-05-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="箭头函数this"><a href="#箭头函数this" class="headerlink" title="箭头函数this"></a>箭头函数this</h4><p>箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName: () =&gt; console.log(this.name)
-}
-person.getName() // undefined
-</code></pre><p>事实上，箭头函数的this是其所在上下文的this决定的。这里的箭头函数<code>()=&gt;console.log(this.name)</code>的上下文是全局上下文也就是<code>window</code>。<code>person.getName()</code>调用getName函数时，this指向全局上下文，而此时全局上下文中没有name（因为箭头函数没有自己的this上下文，那么当它作为对象的方法函数运行时，this并不指向这个对象）</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName(){
-    return () =&gt; console.log(this.name)
-  }
-}
-person.getName()(); // test
-</code></pre><p>此时，<code>()=&gt;console.log(this.name)</code>中的this是由getName()的上下文的this决定的，当调用person.getName()时，getName()的上下文是person对象，因此箭头函数的上下文为person对象。所以<code>person.getName()()</code>虽然执行时的上下文是window，但是箭头函数的this却是指向person对象。</p>
-<pre><code>function Person(){
-  this.count = 0;
-  setInterval(()=&gt; {
-    console.log(this.count++);
-  },1000)
-}
-var p = new Person() // 0 1 2...
-</code></pre><p>如果定时器内部的函数是普通函数，那么函数的上下文是全局window，改为箭头函数之后，<code>()=&gt;{this.count++}</code>的this是由所在的上下文决定的，当执行 var p = new Person()时，Person函数内部的上下文的this便指向p，因此箭头函数内部的上下文也必定是p，this.count++可正常执行。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3277,7 +3355,7 @@ var p = new Person() // 0 1 2...
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3299,7 +3377,7 @@ var p = new Person() // 0 1 2...
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
