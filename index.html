@@ -247,6 +247,343 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/js闭包/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/25/js闭包/" itemprop="url">闭包</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T00:00:00+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h4><p>js 创建函数的同时，创建了函数作用域。本来函数执行完之后，里面的局部变量也就随之注销掉了。然而如果函数返回了另一个函数，那么相当于提供了一个访问那些的局部变量的入口。总之，闭包就是一个函数，能将创建的变量的值始终保持在内存中，以供本地环境使用。</p>
+<p><strong>为什么要用闭包</strong>  </p>
+<p>主要涉及JavaScript变量的作用域问题，变量作用域分为全局作用域和局部作用域。</p>
+<p>在js中仅有函数function具有作用域，并且函数内部可以访问外部变量，但在函数外部无法访问函数内部变量。简单说，<strong>1.使用闭包的主要作用就是间接访问函数的内部数据</strong>,<strong>2.将创建的变量的值始终保持在内存中，以供本地环境使用</strong>。 </p>
+<pre><code>function foo(){
+    var value = 0;
+    return function(){
+        console.log(value++);
+    }
+}
+var f = foo()
+f();
+</code></pre><p><strong>闭包注意事项</strong><br>内存泄漏：闭包阻止了垃圾回收机制对变量进行回收，因此变量会永远存在内存中，即使当变量不再被使用时，这样会造成内存泄漏，会严重影响页面的性能。因此当变量对象不再使用时，要将其释放。</p>
+<p><strong>闭包应用</strong>  </p>
+<ul>
+<li><p>模块：闭包能很好的将模块的公有属性、方法暴露出来</p>
+<pre><code>var myModule = (function(window, undefined){
+    let name=&apos;test&apos;;
+    function getName(){
+        return name;
+    }
+    return {
+        name,
+        getName
+    }
+})(window);
+console.log(myModule.name); //test
+</code></pre></li>
+</ul>
+<p>return关键字将对象引用导出赋值给myModule，从而应用到闭包</p>
+<ul>
+<li>存储变量<ul>
+<li>保存外部函数的变量，原理是基于JavaScript中函数作用域链的特点，内部函数保留了对外部函数的活动变量的引用，所有变量不会被释放。</li>
+</ul>
+</li>
+<li>结果缓存  </li>
+</ul>
+<p>设想我们有一个处理过程很耗时的函数对象，每次调用都会花费很长时间，那么我们就需要将计算出来的值存储起来，当调用这个函数的时候，首先在缓存中查找，如果找不到，则进行计算，然后更新缓存并返回值，如果找到了，直接返回查找到的值即可。闭包正是可以做到这一点，因为它不会释放外部的引用，从而函数内部的值可以得以保留。</p>
+<pre><code>var CachedSearchBox = (function(){
+    var cache = {}, count = [];
+    return {
+        attachSearchBox: function(dsid){
+            if(dsid in cache){
+                return cache[dsid]
+            }
+            var fsb = new SearchBox(dsid);//新建
+            cache[dsid] = fsb; //更新缓存
+            if(count.length&gt;100){
+                delete cache[count.shift()]
+            }
+            return fsb;
+        }
+    }
+})
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/23/判断变量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/23/判断变量/" itemprop="url">javascript判断变量类型陷阱</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-23T00:00:00+08:00">
+                2018-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="javascript判断变量类型陷阱"><a href="#javascript判断变量类型陷阱" class="headerlink" title="javascript判断变量类型陷阱"></a>javascript判断变量类型陷阱</h4><ul>
+<li>六种简单数据类型：String、Number、Boolean、Null、Undefined、Symbol  </li>
+<li>Object是唯一的复杂数据类型。Object、Array、Function类型都可归结为Object复杂数据类型。</li>
+</ul>
+<p><strong>typeof</strong>：用来检测变量数据类型</p>
+<p>对一个值使用typeof可能返回以下结果  </p>
+<ul>
+<li>undefined</li>
+<li>string</li>
+<li>boolean</li>
+<li>number</li>
+<li>object：<strong>值是对象或null,[]</strong></li>
+<li>function</li>
+</ul>
+<p>因为 typeof [] 和 typeof null 都是是会返回 ‘object’的。typeof不能判断数组对象类型。</p>
+<p><strong>instanceof</strong>：用来测试一个对象在其原型链中是否存在一个构造函数的prototype属性。instanceof不能用来判断五种基本类型值。</p>
+<p>用instanceof判断Array类型可以，但是不能安全的判断Object类型。  </p>
+<pre><code>[1,2] instanceof Object; //true
+</code></pre><p><strong>用对象的constructor来判断对象类型</strong>  </p>
+<pre><code>function cstor(variable){
+    if (variable === null || variable === undefined) {
+        return &apos;Null or Undefined&apos;;
+    }
+    var cst = variable.constructor;
+    switch(cst){
+        case Number:
+            return &apos;Number&apos;
+        case String:
+            return &apos;String&apos;
+        case Boolean:
+            return &apos;Boolean&apos;
+        case Array:
+            return &apos;Array&apos;
+        case Object:
+            return &apos;Object&apos;
+    }
+}
+</code></pre><p>用 constructor 判断变量类型有一个致命的缺陷，就是当检测 null 或者 undefined 类型的 constructor 属性时，js会报错。在利用变量的 constructor 属性来判断变量类型时，必须要先保证变量有 不会是 null 或者 undefined。</p>
+<p><strong>普适判断变量类型Object.prototype.toString.call()</strong><br>该方法返回 “[object type]”, 其中type是对象类型。  </p>
+<pre><code>Object.prototype.toString.call(null);  //  &quot;[object Null]&quot;
+Object.prototype.toString.call([]);  //  &quot;[object Array]&quot;    
+Object.prototype.toString.call({});  //  &quot;[object Object]&quot;    
+Object.prototype.toString.call(123);  //  &quot;[object Number]&quot;    
+Object.prototype.toString.call(&apos;123&apos;);  //  &quot;[object String]&quot;    
+Object.prototype.toString.call(false);  //  &quot;[object Boolean]&quot;    Object.prototype.toString.call(undefined);  //  &quot;[object Undefined]&quot;
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/19/component/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1036,6 +1373,171 @@ foo(22);
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/timezone/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/06/timezone/" itemprop="url">来个软文</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T00:00:00+08:00">
+                2018-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>纽约时间比加州早3个小时，</p>
+<p>New York is 3 hours ahead of California,</p>
+<p>但加州时间并没有变慢。</p>
+<p>but it does not make California slow.</p>
+<p>有人22岁就毕业了，</p>
+<p>Someone graduated at the age of 22,</p>
+<p>但持续了5年才找到稳定的工作！</p>
+<p>but waited 5 years before securing a good job!</p>
+<p>有人25岁就当上CEO，</p>
+<p>Someone became a CEO at 25,</p>
+<p>却在55岁去世。</p>
+<p>and died at 55.</p>
+<p>也有人迟到50岁才当上CEO，</p>
+<p>While another became a CEO at 50,</p>
+<p>然后活到85岁。</p>
+<p>and lived to 85 years.</p>
+<p>有人单身，</p>
+<p>Someone is still single,</p>
+<p>同时也有人已婚。</p>
+<p>while someone else got married.</p>
+<p>奥巴马55岁就已经退休了，</p>
+<p>Obama retires at 55,</p>
+<p>川普70岁才刚开始当总统。</p>
+<p>but Trump starts at 70.</p>
+<p>世上每个人，本来就有自己的发展时区。</p>
+<p>Absolutely everyone in this world works based on their Time Zone.</p>
+<p>身边有些人，看似走在你前面，</p>
+<p>People around you might seem to go ahead of you,</p>
+<p>也有一些人，看似走在你后面。</p>
+<p>some might seem to be behind you.</p>
+<p>但其实每个人在自己的时区，有自己的步程。</p>
+<p>But everyone is running their own RACE, in their own TIME.</p>
+<p>不用嫉妒，又或嘲笑他们。</p>
+<p>Don’t envy them or mock them.</p>
+<p>他们都在自己的时区里，你也是！</p>
+<p>They are in their TIME ZONE, and you are in yours!</p>
+<p>生命就是等待正确的行动时机。</p>
+<p>Life is about waiting for the right moment to act.</p>
+<p>所以，放轻松些。</p>
+<p>So, RELAX</p>
+<p>你没有落后。</p>
+<p>You’re not LATE.</p>
+<p>你没有领先。</p>
+<p>You’re not EARLY.</p>
+<p>在你自己的时区里，一切的安排都是准时的。</p>
+<p>You are very much ON TIME, and in your TIME ZONE.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/HTTP缓存/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1237,171 +1739,6 @@ foo(22);
 <li>序列化，过于依赖JOSN.stringify，性能问题，移动端尤为明显。</li>
 <li>避免频繁set/get,尽量将数据缓存进内存，然后页面卸载的时候一次写入。</li>
 </ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/timezone/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/06/timezone/" itemprop="url">来个软文</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T00:00:00+08:00">
-                2018-06-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>纽约时间比加州早3个小时，</p>
-<p>New York is 3 hours ahead of California,</p>
-<p>但加州时间并没有变慢。</p>
-<p>but it does not make California slow.</p>
-<p>有人22岁就毕业了，</p>
-<p>Someone graduated at the age of 22,</p>
-<p>但持续了5年才找到稳定的工作！</p>
-<p>but waited 5 years before securing a good job!</p>
-<p>有人25岁就当上CEO，</p>
-<p>Someone became a CEO at 25,</p>
-<p>却在55岁去世。</p>
-<p>and died at 55.</p>
-<p>也有人迟到50岁才当上CEO，</p>
-<p>While another became a CEO at 50,</p>
-<p>然后活到85岁。</p>
-<p>and lived to 85 years.</p>
-<p>有人单身，</p>
-<p>Someone is still single,</p>
-<p>同时也有人已婚。</p>
-<p>while someone else got married.</p>
-<p>奥巴马55岁就已经退休了，</p>
-<p>Obama retires at 55,</p>
-<p>川普70岁才刚开始当总统。</p>
-<p>but Trump starts at 70.</p>
-<p>世上每个人，本来就有自己的发展时区。</p>
-<p>Absolutely everyone in this world works based on their Time Zone.</p>
-<p>身边有些人，看似走在你前面，</p>
-<p>People around you might seem to go ahead of you,</p>
-<p>也有一些人，看似走在你后面。</p>
-<p>some might seem to be behind you.</p>
-<p>但其实每个人在自己的时区，有自己的步程。</p>
-<p>But everyone is running their own RACE, in their own TIME.</p>
-<p>不用嫉妒，又或嘲笑他们。</p>
-<p>Don’t envy them or mock them.</p>
-<p>他们都在自己的时区里，你也是！</p>
-<p>They are in their TIME ZONE, and you are in yours!</p>
-<p>生命就是等待正确的行动时机。</p>
-<p>Life is about waiting for the right moment to act.</p>
-<p>所以，放轻松些。</p>
-<p>So, RELAX</p>
-<p>你没有落后。</p>
-<p>You’re not LATE.</p>
-<p>你没有领先。</p>
-<p>You’re not EARLY.</p>
-<p>在你自己的时区里，一切的安排都是准时的。</p>
-<p>You are very much ON TIME, and in your TIME ZONE.</p>
 
           
         
@@ -2421,181 +2758,6 @@ console.log(result)
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/js闭包/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/28/js闭包/" itemprop="url">闭包</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
-                2018-05-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>title: 闭包<br>date: 2018-05-28 </p>
-<h2 id="tags-JavaScript"><a href="#tags-JavaScript" class="headerlink" title="tags: JavaScript"></a>tags: JavaScript</h2><h4 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h4><p>js 创建函数的同时，创建了函数作用域。本来函数执行完之后，里面的局部变量也就随之注销掉了。然而如果函数返回了另一个函数，那么相当于提供了一个访问那些的局部变量的入口。总之，闭包就是一个函数，能将创建的变量的值始终保持在内存中，以供本地环境使用。</p>
-<p><strong>为什么要用闭包</strong>  </p>
-<p>主要涉及JavaScript变量的作用域问题，变量作用域分为全局作用域和局部作用域。</p>
-<p>在js中仅有函数function具有作用域，并且函数内部可以访问外部变量，但在函数外部无法访问函数内部变量。简单说，<strong>1.使用闭包的主要作用就是间接访问函数的内部数据</strong>,<strong>2.将创建的变量的值始终保持在内存中，以供本地环境使用</strong>。 </p>
-<pre><code>function foo(){
-    var value = 0;
-    return function(){
-        console.log(value++);
-    }
-}
-var f = foo()
-f();
-</code></pre><p><strong>闭包注意事项</strong><br>内存泄漏：闭包阻止了垃圾回收机制对变量进行回收，因此变量会永远存在内存中，即使当变量不再被使用时，这样会造成内存泄漏，会严重影响页面的性能。因此当变量对象不再使用时，要将其释放。</p>
-<p><strong>闭包应用</strong>  </p>
-<ul>
-<li><p>模块：闭包能很好的将模块的公有属性、方法暴露出来</p>
-<pre><code>var myModule = (function(window, undefined){
-    let name=&apos;test&apos;;
-    function getName(){
-        return name;
-    }
-    return {
-        name,
-        getName
-    }
-})(window);
-console.log(myModule.name); //test
-</code></pre></li>
-</ul>
-<p>return关键字将对象引用导出赋值给myModule，从而应用到闭包</p>
-<ul>
-<li>存储变量<ul>
-<li>保存外部函数的变量，原理是基于JavaScript中函数作用域链的特点，内部函数保留了对外部函数的活动变量的引用，所有变量不会被释放。</li>
-</ul>
-</li>
-<li>结果缓存  </li>
-</ul>
-<p>设想我们有一个处理过程很耗时的函数对象，每次调用都会花费很长时间，那么我们就需要将计算出来的值存储起来，当调用这个函数的时候，首先在缓存中查找，如果找不到，则进行计算，然后更新缓存并返回值，如果找到了，直接返回查找到的值即可。闭包正是可以做到这一点，因为它不会释放外部的引用，从而函数内部的值可以得以保留。</p>
-<pre><code>var CachedSearchBox = (function(){
-    var cache = {}, count = [];
-    return {
-        attachSearchBox: function(dsid){
-            if(dsid in cache){
-                return cache[dsid]
-            }
-            var fsb = new SearchBox(dsid);//新建
-            cache[dsid] = fsb; //更新缓存
-            if(count.length&gt;100){
-                delete cache[count.shift()]
-            }
-            return fsb;
-        }
-    }
-})
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/ajax/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2917,253 +3079,11 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/性能优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/28/性能优化/" itemprop="url">前端性能优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
-                2018-05-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="前端性能优化"><a href="#前端性能优化" class="headerlink" title="前端性能优化"></a>前端性能优化</h4><p><strong>1. 网络方面（网络传输性能）</strong><br>浏览器同一时间所发送的网络请求数是有限的。浏览器处理用户请求的过程：<strong>浏览器在得到用户请求之后，经历了下面阶段：重定向-&gt;拉取缓存-&gt;DNS查询-&gt;建立TCP链接-&gt;发起请求-&gt;接收响应-&gt;处理HTML元素-&gt;元素加载完成</strong></p>
-<ul>
-<li>减少http请求，必要的资源合并</li>
-<li>减小资源体积，资源压缩(图片体积，雪碧图，使用字体图标，使用webp格式)</li>
-<li>缓存<ul>
-<li>DNS缓存：浏览器会在DNS解析步骤中消耗一定的时间<ul>
-<li>DNS预解析<ul>
-<li><code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;A.com&quot;&gt;</code></li>
-<li><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</code></li>
-</ul>
-</li>
-<li>当浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行DNS解析，减少用户的等待时间，提高用户体验</li>
-</ul>
-</li>
-<li>CDN部署与缓存：CDN作为静态资源文件的分发网络，本身就已经提升了，网站静态资源的获取速度，加快网站的加载速度，同时也给静态资源做好缓存工作，有效的利用已缓存的静态资源，加快获取速度</li>
-<li>http缓存：给资源设定缓存时间，防止在有效的缓存时间内对资源进行重复的下载，从而提升整体网页的加载速度</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/css/c1.png" alt="">  </p>
-<p>浏览器默认的缓存是放在内存里，内存里的缓存会因为进程的结束或浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。<code>from memory cache</code>和<code>from dis cache</code>，通过在服务器上设置的Etag字段控制缓存存放的位置，在浏览器接收到服务器响应后，会检测响应头部Header，如果有Etag字段，那么浏览器就会将本次缓存写入磁盘中。</p>
-<p>拉取缓存会出现200、304两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回304状态码。</p>
-<p><strong>2. 渲染和DOM操作方面</strong>  </p>
-<ul>
-<li>减少重排和重绘<ul>
-<li>DOM渲染层与GPU硬件加速：布局是由CPU处理的，绘制则是由GPU完成的<ul>
-<li>浏览器会先获取DOM树并依据样式将其分割成多个独立的渲染层</li>
-<li>CPU将每个层绘制进绘图中</li>
-<li>将位图作为纹理上传至GPU绘制</li>
-<li>GPU将所有的渲染层缓存，如果下次上传的渲染层没有发生变化，GPU就不需要对其进行重绘，并复合多个渲染层最终形成图像</li>
-</ul>
-</li>
-<li>重排：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加DOM元素，修改了影响元素盒子大小的CSS属性。获取某些属性，浏览器为了获得正确的值也会触发重排。<ul>
-<li>offset</li>
-<li>scroll</li>
-<li>client(top/left/width/height)</li>
-<li>width,height</li>
-<li>调用了getComputedStyle()或者IE的currentStyle</li>
-</ul>
-</li>
-<li>重绘：绘制，即渲染上色，所有对元素的视觉表现属性的修改，会引发重绘</li>
-</ul>
-</li>
-<li>优化网页渲染<ul>
-<li>css的文件放在头部，js文件放在尾部或者异步加载<ul>
-<li>动态脚本加载</li>
-<li>defer：defer是在HTML解析完之后才执行，如果是多个，按照加载的顺序依次执行</li>
-<li>async：async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</li>
-</ul>
-</li>
-<li>尽量避免内联样式 </li>
-</ul>
-</li>
-<li>DOM操作优化<ul>
-<li>避免在document上直接进行频繁的DOM操作</li>
-<li>使用classname代替大量的内联样式修改</li>
-<li>使用requestAnimationFrame代替setInterval操作</li>
-<li>使用事件代理</li>
-</ul>
-</li>
-</ul>
-<p><strong>async和defer区别</strong>  </p>
-<ul>
-<li>没有defer或async，浏览器会立即加载并执行指定脚本，所有script元素都会按照在页面出现的先后顺序依次被解析，只有在解析完前面的script代码后，才会解析后面的script代码。</li>
-<li>async标志，使用async属性表示当前脚本不必等待其他脚本，也不必阻塞文档呈现。但是不能保证异步脚本按照他们在页面出现的顺序执行。</li>
-<li>defer，使用defer属性可以让脚本在文档完成呈现之后再执行，延迟脚本总是按照指定的顺序执行。</li>
-</ul>
-<p><strong>3. 数据方面</strong>  </p>
-<ul>
-<li>图片加载处理（懒加载，预加载）</li>
-<li>json数据格式交互</li>
-<li>部分常用数据的缓存</li>
-</ul>
-<h5 id="浏览器显示页面的原理"><a href="#浏览器显示页面的原理" class="headerlink" title="浏览器显示页面的原理"></a>浏览器显示页面的原理</h5><p>流程  </p>
-<ol>
-<li>获取HTML文档及样式表文件</li>
-<li>解析成对应的树形数据结构<ul>
-<li>DOM tree</li>
-<li>CSSOM tree</li>
-</ul>
-</li>
-<li>计算可见节点形成render tree</li>
-<li>计算DOM的形状及位置进行布局</li>
-<li>将每个节点转化为实际像素绘制到视口上</li>
-</ol>
-<p><strong>资源加载：</strong>  </p>
-<ul>
-<li>执行JavaScript会阻止DOM tree构建</li>
-<li>加载CSS会阻止render tree构建</li>
-</ul>
-<p>默认情况下，JavaScript脚本会在引入它的位置执行，这是会阻断DOM tree的构建；如果在运行脚本时浏览器尚未完成CSS的下载和CSSOM tree的构建，浏览器会将脚本执行延迟到这些操作结束之后。</p>
-<p><strong>影响性能的因素</strong>  </p>
-<ul>
-<li>白屏<ul>
-<li>HTML和CSS的加载及解析速度</li>
-<li><code>&lt;head&gt;</code>内的脚本加载及执行</li>
-</ul>
-</li>
-<li>首屏<ul>
-<li>图片加载</li>
-<li><code>&lt;body&gt;</code>内的脚本加载及执行</li>
-</ul>
-</li>
-</ul>
-<p><strong>提高前端性能</strong>  </p>
-<ul>
-<li>缩短白屏时间</li>
-<li>加快首屏显示</li>
-<li>尽快监听主要操作的事件  </li>
-</ul>
-<h4 id="对移动端的认识"><a href="#对移动端的认识" class="headerlink" title="对移动端的认识"></a>对移动端的认识</h4><p>从兼容上讲  </p>
-<ul>
-<li>PC要兼容IE6+，Firefox，chrome，Safari</li>
-<li>mobile的网页开发，只需要考虑webkit内核的浏览器和chrome，uc，qq，小米手机浏览器，兼容的东西少了些</li>
-</ul>
-<p>从开发上讲  </p>
-<ul>
-<li>mobile端的网页开发比PC页面小了，装的东西要少些，相对交互稍简单些（滑动，触屏，手势） </li>
-</ul>
-<p>移动端前端开发：分为移动端web app和移动端网页</p>
-<p><strong>移动端网页布局和PC差异</strong><br>主要是css方面，外加如何做到同一url，不同客户端展现不一致的做法，俗称pc和mobile都兼容。</p>
-<p>rem在移动端布局  </p>
-<p>移动端的字体默认为16px，那么1rem我想表示为10px的话，我们就需要 10 % 16 = 0.625 即为62.5%，这样就可以比较方便的把设计稿里的px转换成rem单位来做到自适应了。这样无论用户如何设置电脑或者手机的默认字体大小，设置为rem的单位的长度都会随比例变化。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -3213,7 +3133,7 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
