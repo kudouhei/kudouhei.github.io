@@ -247,6 +247,238 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/jsextend/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/10/jsextend/" itemprop="url">javascript实现继承的方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T00:00:00+08:00">
+                2018-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="javascript实现继承的方式"><a href="#javascript实现继承的方式" class="headerlink" title="javascript实现继承的方式"></a>javascript实现继承的方式</h4><p><strong>1. 类式继承</strong></p>
+<pre><code>function A(){
+  this.name = &quot;A&quot;;
+}
+A.prototype.getName = function(name){
+  console.log(name)
+}
+
+function a(){
+  this.name = &quot;a&quot;;
+}
+a.prototype = new A();
+var instance = new a();
+instance.getName(&quot;hello&quot;);
+console.log(instance.name)
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>创建两个类A和a，给A.prototype原型上添加一个共有方法，然后通过new命令实例化一个A，并且赋值给a.prototype原型。</li>
+<li>在实例化一个类时，新创建的对象复制了父类的构造函数内的属性与方法并且将原型<code>__proto__</code>指向了父类的原型对象，这样就拥有了父类的原型对象上的属性与方法。</li>
+<li>两个缺点：<ul>
+<li>引用缺陷，新建的不同实例会修改父类中的引用类型</li>
+<li>无法为不同的实例初始化继承来的属性。</li>
+</ul>
+</li>
+</ul>
+<p><strong>2. 构造函数继承</strong>  </p>
+<pre><code>function A(color){
+  this.name = &apos;A&apos;;
+  this.color = color;
+  this.type = [&apos;color1&apos;, &apos;color2&apos;];
+}
+A.prototype.getName = function(name) {
+  console.log(name);
+}
+
+function a(color){
+  A.apply(this, arguments);
+}
+
+var h1 = new a(&quot;white&quot;); 
+var h2 = new a(&quot;blue&quot;); 
+console.log(h1.color); // white
+h1.type.push(&quot;red&quot;);  
+console.log(h1.type);  // [&quot;color1&quot;, &quot;color2&quot;, &quot;red&quot;]
+
+console.log(h2.type);  //&quot;color1&quot;, &quot;color2&quot;]
+console.log(h2.color);  //blue
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>apply方法的运用，可以改变函数的作用域，所以在a子类中调用这个方法也就是将a子类的变量在父类中执行一遍，这样子类就拥有了父类中的共有属性和方法。</li>
+<li>构造函数继承的缺点就是无法获取到父类的共有方法，也就是通过原型prototype绑定的方法。</li>
+</ul>
+<p><strong>3. 组合继承</strong><br>组合继承就是将类式继承和构造函数继承组合在一起。  </p>
+<pre><code>function a(color){
+  A.apply(this, arguments);
+}
+a.prototype = new A();
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>在子类构造函数中执行父类构造函数，在子类原型上实例化父类。</li>
+<li>缺点就是调用了两次父类的构造函数。</li>
+</ul>
+<p><strong>4. 寄生组合式继承</strong>  </p>
+<pre><code>function A(color){
+  this.color = color;
+}
+A.prototype.getName = function(name){
+  console.log(name);
+}
+
+function a(color){
+  A.apply(this,arguments);
+}
+a.prototype = Object.create(A.prototype);
+a.prototype.constructor = a;
+
+var h1 = new a(&quot;white&quot;);
+console.log(h1.color);
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>使用<code>Object.create()</code>进行一次浅拷贝，将父类原型上的方法拷贝后赋给<code>a.prototype</code>，这样子类上就能拥有了父类的共有方法，而少一次调用父类的构造函数。</li>
+<li><p><code>Object.create()</code>的浅拷贝作用类似下面函数</p>
+<pre><code>function create(obj){
+    function F(){};
+    F.prototype = obj;
+    return new F();
+}
+</code></pre></li>
+<li><p>对A的原型进行拷贝后赋给a.prototype，因此a.prototype上的constructor属性也被重写了，所以要进行修复。</p>
+</li>
+</ul>
+<p><strong>5. extends继承</strong><br>Class和extends是在ES6中新增的，Class用来创建一个类，extends用来实现继承。</p>
+<pre><code>class A {
+  constructor(color) {
+    this.color = color;
+  }
+  getName(name){
+    console.log(name)
+  }
+}
+class a extends A {
+  constructor(color){
+    super(color);
+    this.color = color;
+  }
+}
+let h1 = new a(&quot;black&quot;);
+h1.getName(&quot;hello&quot;);
+console.log(h1.color);
+</code></pre><p><strong>注意：</strong>  </p>
+<ul>
+<li>子类必须在constructor方法中调用super方法，否则新建实例时会报错。这是因为子类没有自己的this对象，而是继承父类的this对象，然后对其进行加工。如果不调用super方法，子类就得不到this对象。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/this/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1845,7 +2077,7 @@ body &gt; .content {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1867,7 +2099,7 @@ body &gt; .content {
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
