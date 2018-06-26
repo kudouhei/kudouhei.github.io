@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="js去除数组重复项方法1：js对象的特性：在js对象中key是永远不会重复的  把数组转成一个js的对象 把数组中的值，变成js对象当中的key 把这个对象，在还原成数组    代码   function unique(arr){    var obj = {};    var _arr = [];    for(va">
+<meta name="description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于docu">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="js实现数组去除重复项">
-<meta property="og:url" content="http://yoursite.com/2017/11/22/js-array-weighting/index.html">
+<meta property="og:title" content="图片懒加载">
+<meta property="og:url" content="http://yoursite.com/2018/06/26/图片懒加载/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="js去除数组重复项方法1：js对象的特性：在js对象中key是永远不会重复的  把数组转成一个js的对象 把数组中的值，变成js对象当中的key 把这个对象，在还原成数组    代码   function unique(arr){    var obj = {};    var _arr = [];    for(var i = 0,len = arr.length;i&amp;lt;len;i++){">
+<meta property="og:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-02T01:27:21.000Z">
+<meta property="og:updated_time" content="2018-06-26T14:59:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="js实现数组去除重复项">
-<meta name="twitter:description" content="js去除数组重复项方法1：js对象的特性：在js对象中key是永远不会重复的  把数组转成一个js的对象 把数组中的值，变成js对象当中的key 把这个对象，在还原成数组    代码   function unique(arr){    var obj = {};    var _arr = [];    for(var i = 0,len = arr.length;i&amp;lt;len;i++){">
+<meta name="twitter:title" content="图片懒加载">
+<meta name="twitter:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
 
 
 
@@ -125,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/22/js-array-weighting/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/06/26/图片懒加载/"/>
 
 
 
 
 
-  <title>js实现数组去除重复项 | FE_hei</title>
+  <title>图片懒加载 | FE_hei</title>
   
 
 
@@ -248,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/22/js-array-weighting/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/图片懒加载/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -265,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">js实现数组去除重复项</h1>
+          <h1 class="post-title" itemprop="name headline">图片懒加载</h1>
         
 
         <div class="post-meta">
@@ -277,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T22:46:34+08:00">
-                2017-11-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T00:00:00+08:00">
+                2018-06-26
               </time>
             
 
@@ -315,76 +315,78 @@
       
 
       
-        <h3 id="js去除数组重复项"><a href="#js去除数组重复项" class="headerlink" title="js去除数组重复项"></a>js去除数组重复项</h3><p><strong>方法1：js对象的特性：在js对象中key是永远不会重复的</strong></p>
-<ol>
-<li>把数组转成一个js的对象</li>
-<li>把数组中的值，变成js对象当中的key</li>
-<li>把这个对象，在还原成数组  </li>
-</ol>
-<p>代码  </p>
-<pre><code>function unique(arr){
-   var obj = {};
-   var _arr = [];
-   for(var i = 0,len = arr.length;i&lt;len;i++){
-     obj[arr[i]] = true;
-   } 
+        <h4 id="图片懒加载"><a href="#图片懒加载" class="headerlink" title="图片懒加载"></a>图片懒加载</h4><p>原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。</p>
+<p><strong>判断图片是否进入可视区域</strong><br>方法一：  </p>
+<ul>
+<li><p>通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。</p>
+<ul>
+<li>document.documentElement.clientHeight获取屏幕可视窗口高度</li>
+<li>通过element.offsetTop获取元素相对于文档顶部的距离</li>
+<li><p>通过document.documentElement.scrollTop获取浏览器窗口顶部与文档顶部之间的距离，也就是滚动条滚动的距离。</p>
+<pre><code>var lazyLoad = {
+    // 获取元素到页面顶部的距离
+    getoffsetTop: function(elem){
+        var offTop = 0;
+        while(elem!=null){
+            offTop += elem.offsetTop; //获取元素到其上一级元素顶部的距离
+            elem = elem.offsetParent; //元素上一级元素
+        }
+        return offTop;
+    }
+    // 判断是否加载图片
+    isLoad: function(elem){
+        var cHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight; //可视窗口的高度
+        var sx = window.pageXOffset || document.body.scrollTop || document.documentElement.scrollTop; //浏览器可视窗口距离页面顶部的距离
+        var oTop = this.getoffsetTop(elem); //元素到页面顶部的距离
+        var viewHeight = oTop-sx; //元素到页面顶部的距离
+        // 图片进入浏览器可视区域，加载图片
+        if(cHeight &gt;= viewHeight){
+            return true;
+        }else{
+            //图片没进入浏览器可视区域，不加载图片
+            return false;
+        }
+    },
+    loadImg: function(elems){
+        for(var i=0,len=elems.length; i&lt;len;i++){
+            if(this.isLoad(elems[i])){
+                if(elems[i].className !== &apos;loaded&apos;){
+                    //针对使用data-自定义的属性，要使用getAttribute()获取值
+                    elems[i].src = elems[i].getAttribute(&apos;data-url&apos;);//实际的url替换原来的url
+                    elems[i].className = &quot;loaded&quot;; //被加载的图片，添加class属性
+                }
+            }else{
+                return; //下一个图片没有进入加载区域，不循环
+            }
+        }
+    }
+}
+//使用
+window.onscroll = function(){
+    lazyLoad.loadImg(document.getElementsByTagName(&apos;img&apos;))
+}
+//html,src指向为占位符，data-url为图片的实际url
+&lt;img src=&apos;img/17.jpg&apos; data-url=&apos;img/11.jpg&apos;&gt;
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<p>方法二：  </p>
+<ul>
+<li>使用element.getBoundindClientRect()直接得到top值。</li>
+<li><p>该函数返回一个Object对象，该对象有6个属性：top，left，right，bottom，width，height</p>
+<pre><code>function isElementInView(el){
+    var react = el.getBoundingClientRect();
+    return (
+        rect.top &gt;=0 &amp;&amp; 
+        rect.left &gt;=0 &amp;&amp;
+        rect.bottom &lt;=(window.innerHeight || document.documentElement.clientHeight) &amp;&amp;
+        rect.right &lt;=(window.innerWidth || document.documentElement.clientWidth)    
+    )
+}
+</code></pre></li>
+</ul>
 
-   for(var attr in obj){
-     if(obj.hasOwnProperty(attr)){
-       _arr.push(attr);
-     }
-   }
-   return _arr.map(function(item){ return +item});
-}  
-var arr=[1,1,2,3,3,4,5,6];
-console.log(unique(arr));      
-</code></pre><p><strong>方法2：遍历数组法： 这应该是最简单的去重方法（实现思路：新建一新数组，遍历数组，值不在新数组就加入该新数组中）</strong>    </p>
-<pre><code>// 遍历数组去重法
-function unique(arr){
-  var _arr = []
-  //遍历当前数组
-  for(var i = 0; i &lt; arr.length; i++){
-    //如果当前数组的第i已经保存进了临时数组，那么跳过，
-    //否则把当前项push到临时数组里面
-    if (_arr.indexOf(arr[i]) == -1) _arr.push(arr[i])
-  }
-  return _arr
-}
-</code></pre><p><strong>方法3：对象键值对。速度快，高效，占用更大的内存换取更快的时间，用 JavaScript 中的 Object 对象来当做哈希表，hash去重的核心是构建了一个 hash 对象来替代 indexOf</strong>  </p>
-<pre><code> // hash 去重法
-function unique(arr){
-    var _arr = [], 
-        hash = {}
-    for (var i = 0; i &lt; arr.length; i++) {
-        var item = arr[i]
-        var key = typeof(item) + item
-          // 对象的键值只能是字符串, typeof(item) + item来去分1和&apos;1&apos;的情况
-        if(hash[key] !== 1){
-            _arr.push(item)
-            hash[key] = 1
-        }
-    }
-    return _arr
-}
-</code></pre><p><strong>方法4：es6 Set数据结构：</strong>ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值  </p>
-<pre><code>function unique(arr){
-    return Array.from(new Set(arr))
-    // Array.from方法用于将两类对象转为真正的数组：
-    // 类似数组的对象（array-like object）和可遍历（iterable）的对象
-}
-</code></pre><p><strong>方法5：Map实现</strong>  </p>
-<pre><code>function unique(arr){
-    const newArray = [];
-    const tmp = new Map();
-    for(let i=0;i&lt;arr.length;i++){
-        if(!tmp.get(arr[i])){
-            tmp.set(arr[i],1);
-            newArray.push(arr[i]);
-        }
-    }
-    return newArray;
-}
-</code></pre>
       
     </div>
     
@@ -414,8 +416,8 @@ function unique(arr){
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/20/sticky-footers/" rel="next" title="绝对底部sticky_footers">
-                <i class="fa fa-chevron-left"></i> 绝对底部sticky_footers
+              <a href="/2018/06/25/js闭包/" rel="next" title="闭包">
+                <i class="fa fa-chevron-left"></i> 闭包
               </a>
             
           </div>
@@ -424,8 +426,8 @@ function unique(arr){
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/28/float/" rel="prev" title="理解float & display：inline-block">
-                理解float & display：inline-block <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/26/模块化/" rel="prev" title="js模块化">
+                js模块化 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -572,7 +574,7 @@ function unique(arr){
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#js去除数组重复项"><span class="nav-number">1.</span> <span class="nav-text">js去除数组重复项</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#图片懒加载"><span class="nav-number">1.</span> <span class="nav-text">图片懒加载</span></a></li></ol></div>
             
 
           </div>

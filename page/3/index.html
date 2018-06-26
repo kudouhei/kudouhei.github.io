@@ -247,6 +247,194 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/22/js-array-weighting/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/22/js-array-weighting/" itemprop="url">js实现数组去除重复项</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T22:46:34+08:00">
+                2017-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="js去除数组重复项"><a href="#js去除数组重复项" class="headerlink" title="js去除数组重复项"></a>js去除数组重复项</h3><p><strong>方法1：js对象的特性：在js对象中key是永远不会重复的</strong></p>
+<ol>
+<li>把数组转成一个js的对象</li>
+<li>把数组中的值，变成js对象当中的key</li>
+<li>把这个对象，在还原成数组  </li>
+</ol>
+<p>代码  </p>
+<pre><code>function unique(arr){
+   var obj = {};
+   var _arr = [];
+   for(var i = 0,len = arr.length;i&lt;len;i++){
+     obj[arr[i]] = true;
+   } 
+
+   for(var attr in obj){
+     if(obj.hasOwnProperty(attr)){
+       _arr.push(attr);
+     }
+   }
+   return _arr.map(function(item){ return +item});
+}  
+var arr=[1,1,2,3,3,4,5,6];
+console.log(unique(arr));      
+</code></pre><p><strong>方法2：遍历数组法： 这应该是最简单的去重方法（实现思路：新建一新数组，遍历数组，值不在新数组就加入该新数组中）</strong>    </p>
+<pre><code>// 遍历数组去重法
+function unique(arr){
+  var _arr = []
+  //遍历当前数组
+  for(var i = 0; i &lt; arr.length; i++){
+    //如果当前数组的第i已经保存进了临时数组，那么跳过，
+    //否则把当前项push到临时数组里面
+    if (_arr.indexOf(arr[i]) == -1) _arr.push(arr[i])
+  }
+  return _arr
+}
+</code></pre><p><strong>方法3：对象键值对。速度快，高效，占用更大的内存换取更快的时间，用 JavaScript 中的 Object 对象来当做哈希表，hash去重的核心是构建了一个 hash 对象来替代 indexOf</strong>  </p>
+<pre><code> // hash 去重法
+function unique(arr){
+    var _arr = [], 
+        hash = {}
+    for (var i = 0; i &lt; arr.length; i++) {
+        var item = arr[i]
+        var key = typeof(item) + item
+          // 对象的键值只能是字符串, typeof(item) + item来去分1和&apos;1&apos;的情况
+        if(hash[key] !== 1){
+            _arr.push(item)
+            hash[key] = 1
+        }
+    }
+    return _arr
+}
+</code></pre><p><strong>方法4：es6 Set数据结构：</strong>ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值  </p>
+<pre><code>function unique(arr){
+    return Array.from(new Set(arr))
+    // Array.from方法用于将两类对象转为真正的数组：
+    // 类似数组的对象（array-like object）和可遍历（iterable）的对象
+}
+</code></pre><p><strong>方法5：Map实现</strong>  </p>
+<pre><code>function unique(arr){
+    const newArray = [];
+    const tmp = new Map();
+    for(let i=0;i&lt;arr.length;i++){
+        if(!tmp.get(arr[i])){
+            tmp.set(arr[i],1);
+            newArray.push(arr[i]);
+        }
+    }
+    return newArray;
+}
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/20/sticky-footers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -607,7 +795,7 @@ body &gt; .content {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
