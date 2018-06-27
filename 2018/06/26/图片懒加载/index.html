@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-26T14:59:07.000Z">
+<meta property="og:updated_time" content="2018-06-27T14:23:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图片懒加载">
 <meta name="twitter:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
@@ -384,9 +384,36 @@ window.onscroll = function(){
         rect.right &lt;=(window.innerWidth || document.documentElement.clientWidth)    
     )
 }
-</code></pre></li>
+</code></pre><p>  方法三：  </p>
+</li>
+<li><p>HTML5新的IntersectionObserver，可以自动观察元素是否可见</p>
+</li>
 </ul>
-
+<p>用法：  </p>
+<pre><code>var observer = new IntersectionObserver(callback, option)
+// 开始观察
+observer.observe(document.getElementById(&apos;first&apos;))
+// 停止观察
+observer.unobserve(document.getElementById(&apos;first&apos;))
+// 关闭观察器
+observer.disconnect()
+</code></pre><p>回调方法，每当期望被监视的元素进入或者退出另外一个元素的时候，该回调方法将会被执行，或者两个元素的交集部分大小发生变化的时候回调方法会被执行。</p>
+<pre><code>function query(tag){
+    return Array.from(document.getElementsByTagName(tag));
+} 
+var observer = new IntersectionObserver((changes) =&gt; {
+    changes.forEach((change) =&gt; {
+        if(change.intersectionRatio &gt; 0){
+            var img = change.target;
+            img.src = img.dataset.src;
+            observer.unobserve(img)
+        }
+    })
+})
+query(&apos;img&apos;).forEach((item) =&gt; {
+    observer.observe(item)
+})        
+</code></pre>
       
     </div>
     
