@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="PromisePromise是一种异步解决方案，它有resolve和reject两个回调参数，resolve是Promise从pending状态变为fulfilled状态后触发的回调函数。而reject则是状态从pending状态变为rejected后触发的。 而且一个Promise对象的状态只能从pending-&amp;gt;fulfilled或者从pending-&amp;gt;reject,不可能同时达到">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-07T14:42:56.000Z">
+<meta property="og:updated_time" content="2018-06-27T15:22:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Promise整理">
 <meta name="twitter:description" content="PromisePromise是一种异步解决方案，它有resolve和reject两个回调参数，resolve是Promise从pending状态变为fulfilled状态后触发的回调函数。而reject则是状态从pending状态变为rejected后触发的。 而且一个Promise对象的状态只能从pending-&amp;gt;fulfilled或者从pending-&amp;gt;reject,不可能同时达到">
@@ -905,6 +905,14 @@ items.forEach((item) =&gt; {
         }
     })
 })
+</code></pre><p><strong>场景：从两个不同的来源获取数据，然后把响应组合在一起以形成第三个请求，最终把最后一条响应打印出来</strong>  </p>
+<pre><code>function *foo(){
+    var results = yield Promise.all([request(&quot;http://some.url.1&quot;), request(&quot;http://some.url.2&quot;)]);
+    var r1 = results[0];
+    var r2 = results[1];
+    var r3 = yield request(&quot;http://some.url.3/?v=&quot;+r1+&quot;,&quot;+r2);
+    console.log(r3)
+}
 </code></pre>
       
     </div>

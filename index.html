@@ -2851,6 +2851,14 @@ items.forEach((item) =&gt; {
         }
     })
 })
+</code></pre><p><strong>场景：从两个不同的来源获取数据，然后把响应组合在一起以形成第三个请求，最终把最后一条响应打印出来</strong>  </p>
+<pre><code>function *foo(){
+    var results = yield Promise.all([request(&quot;http://some.url.1&quot;), request(&quot;http://some.url.2&quot;)]);
+    var r1 = results[0];
+    var r2 = results[1];
+    var r3 = yield request(&quot;http://some.url.3/?v=&quot;+r1+&quot;,&quot;+r2);
+    console.log(r3)
+}
 </code></pre>
           
         
