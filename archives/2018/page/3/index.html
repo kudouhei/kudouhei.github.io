@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="JavaScript," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,18 +84,16 @@
 
 
 
-<meta name="description" content="箭头函数this箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。 var person = {   name: &amp;quot;test&amp;quot;,   getName: () =&amp;gt; console.log(this.name) } person.get">
-<meta name="keywords" content="JavaScript">
-<meta property="og:type" content="article">
-<meta property="og:title" content="箭头函数this">
-<meta property="og:url" content="http://yoursite.com/2018/05/07/this/index.html">
+<meta name="description" content="Keep for all">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FE_hei">
+<meta property="og:url" content="http://yoursite.com/archives/2018/page/3/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="箭头函数this箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。 var person = {   name: &amp;quot;test&amp;quot;,   getName: () =&amp;gt; console.log(this.name) } person.getName() // undefined 事实上，箭头函数的this是其所在上下文的this决定的。这里的">
+<meta property="og:description" content="Keep for all">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-07T14:07:19.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="箭头函数this">
-<meta name="twitter:description" content="箭头函数this箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。 var person = {   name: &amp;quot;test&amp;quot;,   getName: () =&amp;gt; console.log(this.name) } person.getName() // undefined 事实上，箭头函数的this是其所在上下文的this决定的。这里的">
+<meta name="twitter:title" content="FE_hei">
+<meta name="twitter:description" content="Keep for all">
 
 
 
@@ -125,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/07/this/"/>
+  <link rel="canonical" href="http://yoursite.com/archives/2018/page/3/"/>
 
 
 
 
 
-  <title>箭头函数this | FE_hei</title>
+  <title>归档 | FE_hei</title>
   
 
 
@@ -150,7 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left page-archive">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -234,173 +232,78 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block archive">
+    <div id="posts" class="posts-collapse">
+      <span class="archive-move-on"></span>
 
-  
+      <span class="archive-page-counter">
+        
+        
+        
+          
+        
+        嗯..! 目前共计 24 篇日志。 继续努力。
+      </span>
 
-  
-  
-  
+      
+
+        
+        
+        
+
+        
+          
+          <div class="collection-title">
+            <h1 class="archive-year" id="archive-year-2018">2018</h1>
+          </div>
+        
+        
+
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/this/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">箭头函数this</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
+            <a class="post-title-link" href="/2018/04/28/float/" itemprop="url">
               
-                <span class="post-meta-item-text">发表于</span>
+                <span itemprop="name">理解float & display：inline-block</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T00:00:00+08:00">
-                2018-05-07
-              </time>
-            
+            </a>
+        
+      </h2>
 
-            
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2018-04-28T00:00:00+08:00"
+              content="2018-04-28" >
+          04-28
+        </time>
+      </div>
 
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h4 id="箭头函数this"><a href="#箭头函数this" class="headerlink" title="箭头函数this"></a>箭头函数this</h4><p>箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName: () =&gt; console.log(this.name)
-}
-person.getName() // undefined
-</code></pre><p>事实上，箭头函数的this是其所在上下文的this决定的。这里的箭头函数<code>()=&gt;console.log(this.name)</code>的上下文是全局上下文也就是<code>window</code>。<code>person.getName()</code>调用getName函数时，this指向全局上下文，而此时全局上下文中没有name（因为箭头函数没有自己的this上下文，那么当它作为对象的方法函数运行时，this并不指向这个对象）</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName(){
-    return () =&gt; console.log(this.name)
-  }
-}
-person.getName()(); // test
-</code></pre><p>此时，<code>()=&gt;console.log(this.name)</code>中的this是由getName()的上下文的this决定的，当调用person.getName()时，getName()的上下文是person对象，因此箭头函数的上下文为person对象。所以<code>person.getName()()</code>虽然执行时的上下文是window，但是箭头函数的this却是指向person对象。</p>
-<pre><code>function Person(){
-  this.count = 0;
-  setInterval(()=&gt; {
-    console.log(this.count++);
-  },1000)
-}
-var p = new Person() // 0 1 2...
-</code></pre><p>如果定时器内部的函数是普通函数，那么函数的上下文是全局window，改为箭头函数之后，<code>()=&gt;{this.count++}</code>的this是由所在的上下文决定的，当执行 var p = new Person()时，Person函数内部的上下文的this便指向p，因此箭头函数内部的上下文也必定是p，this.count++可正常执行。</p>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/05/06/三栏布局/" rel="next" title="CSS三栏布局">
-                <i class="fa fa-chevron-left"></i> CSS三栏布局
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/10/jsextend/" rel="prev" title="javascript实现继承的方式">
-                javascript实现继承的方式 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
       
+
     </div>
   </div>
+  
+  
+  
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/archives/2018/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/archives/2018/">1</a><a class="page-number" href="/archives/2018/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
+
 
 
           </div>
@@ -408,10 +311,6 @@ var p = new Person() // 0 1 2...
 
 
           
-
-  
-
-
 
         </div>
         
@@ -432,17 +331,8 @@ var p = new Person() // 0 1 2...
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -516,22 +406,6 @@ var p = new Person() // 0 1 2...
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#箭头函数this"><span class="nav-number">1.</span> <span class="nav-text">箭头函数this</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -652,10 +526,6 @@ var p = new Person() // 0 1 2...
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
-
-
 
   
 
