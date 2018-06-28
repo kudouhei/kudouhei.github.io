@@ -563,7 +563,8 @@ window.onscroll = function(){
 <p>方法二：  </p>
 <ul>
 <li>使用element.getBoundindClientRect()直接得到top值。</li>
-<li><p>该函数返回一个Object对象，该对象有6个属性：top，left，right，bottom，width，height</p>
+<li>该函数返回一个Object对象，该对象有6个属性：top，left，right，bottom，width，height</li>
+<li><p>浏览器兼容性，IE67的left、top会少2px，并且没有width、height属性</p>
 <pre><code>function isElementInView(el){
     var react = el.getBoundingClientRect();
     return (

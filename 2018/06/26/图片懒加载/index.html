@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-28T11:45:02.000Z">
+<meta property="og:updated_time" content="2018-06-28T14:25:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图片懒加载">
 <meta name="twitter:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
@@ -374,7 +374,8 @@ window.onscroll = function(){
 <p>方法二：  </p>
 <ul>
 <li>使用element.getBoundindClientRect()直接得到top值。</li>
-<li><p>该函数返回一个Object对象，该对象有6个属性：top，left，right，bottom，width，height</p>
+<li>该函数返回一个Object对象，该对象有6个属性：top，left，right，bottom，width，height</li>
+<li><p>浏览器兼容性，IE67的left、top会少2px，并且没有width、height属性</p>
 <pre><code>function isElementInView(el){
     var react = el.getBoundingClientRect();
     return (
