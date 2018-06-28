@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-27T14:23:45.000Z">
+<meta property="og:updated_time" content="2018-06-28T11:45:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图片懒加载">
 <meta name="twitter:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
@@ -413,6 +413,24 @@ var observer = new IntersectionObserver((changes) =&gt; {
 query(&apos;img&apos;).forEach((item) =&gt; {
     observer.observe(item)
 })        
+</code></pre><p><strong>图片懒加载优化</strong><br>使用节流函数  </p>
+<pre><code>function throttle(func, delay, time){
+    var timeout, startTime=new Date();
+    return function(){
+        var context = this,
+            args = arguments,
+            curTime = new Date();
+            clearTimeout(timeout);
+        if(curTime - startTime &gt;= time){
+            func.apply(context, args);
+            startTime = curTime;
+            // 没到触发间隔，重新设定定时器
+        }else{
+            timeout = setTimeout(func, delay)
+        }
+    }
+}
+window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))                
 </code></pre>
       
     </div>
