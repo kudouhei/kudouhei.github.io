@@ -247,7 +247,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/尾调用/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/js闭包/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -266,7 +266,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/25/尾调用/" itemprop="url">尾调用和尾递归</a></h1>
+                <a class="post-title-link" href="/2018/06/25/js闭包/" itemprop="url">闭包</a></h1>
         
 
         <div class="post-meta">
@@ -318,50 +318,60 @@
       
         
           
-            <h4 id="尾调用和尾递归"><a href="#尾调用和尾递归" class="headerlink" title="尾调用和尾递归"></a>尾调用和尾递归</h4><p><strong>1. 尾调用：</strong>当一个函数执行时的最后一个步骤是返回另一个函数的调用  </p>
-<p>调用方式，可以是：  </p>
-<pre><code>函数调用： func(...)
-方法调用： obj.method(...)
-call调用: func.call(...)
-apply调用: func.apply(...)
-</code></pre><p><strong>2. 尾调用优化：</strong>函数在调用的时候会调用栈(call stack)中存有记录，每一条记录叫做一个调用帧，每调用一个函数，就向栈中push一条记录，函数执行结束后依次向外弹出，直到清空调用栈。</p>
-<pre><code>function foo(){console.log(111);}
-function bar(){foo();}
-function baz(){bar();}
-baz();
-</code></pre><p><img src="/images/wei/1.png" alt=""></p>
-<p>造成这种结果是因为每个函数在调用另一个函数的时候，并没有return该调用，所有JS引擎会认为还没有执行完，会保留你的调用帧。  </p>
-<p>对上面的例子做修改：  </p>
-<pre><code>function foo(){console.log(111)}
-function bar(){return foo();}
-function baz(){return bar();}
-baz();
-</code></pre><p>尾调用优化只有在严格模式下有效。<br>在非严格模式下，大多数引擎包含下面两个属性  </p>
+            <h4 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h4><p>js 创建函数的同时，创建了函数作用域。本来函数执行完之后，里面的局部变量也就随之注销掉了。然而如果函数返回了另一个函数，那么相当于提供了一个访问那些的局部变量的入口。总之，闭包就是一个函数，能将创建的变量的值始终保持在内存中，以供本地环境使用。</p>
+<p><strong>为什么要用闭包</strong>  </p>
+<p>主要涉及JavaScript变量的作用域问题，变量作用域分为全局作用域和局部作用域。</p>
+<p>在js中仅有函数function具有作用域，并且函数内部可以访问外部变量，但在函数外部无法访问函数内部变量。简单说，<strong>1.使用闭包的主要作用就是间接访问函数的内部数据</strong>,<strong>2.将创建的变量的值始终保持在内存中，以供本地环境使用</strong>。 </p>
+<pre><code>function foo(){
+    var value = 0;
+    return function(){
+        console.log(value++);
+    }
+}
+var f = foo()
+f();
+</code></pre><p><strong>闭包注意事项</strong><br>内存泄漏：闭包阻止了垃圾回收机制对变量进行回收，因此变量会永远存在内存中，即使当变量不再被使用时，这样会造成内存泄漏，会严重影响页面的性能。因此当变量对象不再使用时，要将其释放。</p>
+<p><strong>闭包应用</strong>  </p>
 <ul>
-<li>func.arguments:表示对func最近一次调用所包含的参数</li>
-<li><p>func.caller:引用对func最近一次调用的那个函数</p>
-<pre><code>baz() -&gt; bar() -&gt; foo()
+<li><p>模块：闭包能很好的将模块的公有属性、方法暴露出来</p>
+<pre><code>var myModule = (function(window, undefined){
+    let name=&apos;test&apos;;
+    function getName(){
+        return name;
+    }
+    return {
+        name,
+        getName
+    }
+})(window);
+console.log(myModule.name); //test
 </code></pre></li>
 </ul>
-<p>尾调用用于是函数的最后一步操作，所有不需要保留外层函数的调用记录，只要直接用内层函数的调用取代外层函数的调用就可以了，调用栈中始终只保持一条调用帧。–尾调用优化，节省一大部分内存。  </p>
-<p><strong>3. 尾递归：</strong>当一个函数尾调用自身，就叫做尾递归。</p>
-<pre><code>function factorial (num) {
-    if (num === 1) return 1;
-    return num * factorial(num - 1);
-}
-factorial(10);           // 3628800
-factorial(500000);       // Uncaught RangeError: Maximum call stack size exceeded
-</code></pre><p>操作系统为JS引擎调用栈分配的内存是有大小限制的，如果计算的数字足够大，超出了内存最大范围，就会出现栈溢出错误。</p>
-<pre><code>function factorial (num, total = 1) {
-    if (num === 1) return total;
-    return factorial(num - 1, num * total);
-}
-factorial(5)
-</code></pre><p>再如斐波那契数列值  </p>
-<pre><code>function fibonacci(n, ac1, ac2){
-    (ac1 = ac1 ||1), (ac2 = ac2 || 1);
-    return n&lt;= 1 ? ac2 : fibonacci(n-1, ac2, ac1+ac2)
-}
+<p>return关键字将对象引用导出赋值给myModule，从而应用到闭包</p>
+<ul>
+<li>存储变量<ul>
+<li>保存外部函数的变量，原理是基于JavaScript中函数作用域链的特点，内部函数保留了对外部函数的活动变量的引用，所有变量不会被释放。</li>
+</ul>
+</li>
+<li>结果缓存  </li>
+</ul>
+<p>设想我们有一个处理过程很耗时的函数对象，每次调用都会花费很长时间，那么我们就需要将计算出来的值存储起来，当调用这个函数的时候，首先在缓存中查找，如果找不到，则进行计算，然后更新缓存并返回值，如果找到了，直接返回查找到的值即可。闭包正是可以做到这一点，因为它不会释放外部的引用，从而函数内部的值可以得以保留。</p>
+<pre><code>var CachedSearchBox = (function(){
+    var cache = {}, count = [];
+    return {
+        attachSearchBox: function(dsid){
+            if(dsid in cache){
+                return cache[dsid]
+            }
+            var fsb = new SearchBox(dsid);//新建
+            cache[dsid] = fsb; //更新缓存
+            if(count.length&gt;100){
+                delete cache[count.shift()]
+            }
+            return fsb;
+        }
+    }
+})
 </code></pre>
           
         

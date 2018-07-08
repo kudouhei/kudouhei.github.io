@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="响应式布局常用解决方案 px和视口 媒体查询 百分比 自适应场景下的rem解决方案 通过vw、vh实现自适应    1. px和视口在静态网页中，我们经常用像素（px）作为单位，来描述一个元素的宽高以及定位信息。在pc端，通常认为css中,1px所表示的真实长度是固定的。 我们在js或者css代码中使用的px单位就是指的是css像素，物理像素也称设备像素，只与设备或者说硬件有关，同样尺寸的屏幕，设">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-08T22:42:41.000Z">
+<meta property="og:updated_time" content="2018-07-08T22:54:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用响应式布局">
 <meta name="twitter:description" content="响应式布局常用解决方案 px和视口 媒体查询 百分比 自适应场景下的rem解决方案 通过vw、vh实现自适应    1. px和视口在静态网页中，我们经常用像素（px）作为单位，来描述一个元素的宽高以及定位信息。在pc端，通常认为css中,1px所表示的真实长度是固定的。 我们在js或者css代码中使用的px单位就是指的是css像素，物理像素也称设备像素，只与设备或者说硬件有关，同样尺寸的屏幕，设">
@@ -388,7 +388,19 @@ win.addEventListener(&apos;resize&apos;, refreshRem)
 <p>绝大多数的浏览器支持vw单位</p>
 <p><strong>vw单位换算</strong><br>只需要确定视图的窗口大小，将布局视口设置成分辨率大小，例如iPhone6 375*667的分辨率，那么px换成vw：  </p>
 <pre><code>1px = (1/375) * 100 vw
-</code></pre>
+</code></pre><p><strong>实例</strong>  </p>
+<ul>
+<li>网易转换rem</li>
+</ul>
+<p>首先网易的设计稿是基于iPhone5设计的也就是宽度640px。（先不考虑dpr的问题下面会说）然后设置1rem等于100px（ HTML font-size为100px），相当于6.4rem = 100%宽度 = 设备的宽度。</p>
+<p>由于iPhone5的物理像素是320px（dpr是2）,此时如果还想让6.4rem等于设备宽度只能调整1rem对应的font-size比例，320/6.4 = 50，让1rem = 50px。</p>
+<pre><code>document.documentElement.style.fontSize = document.documentElement.clientWidth /6.4 +&apos;px&apos;
+</code></pre><ul>
+<li>淘宝转换rem</li>
+</ul>
+<p>淘宝的思想是无论当前页面多宽，让10rem = 页面宽度 = 100%，所有1rem = 64px，然后通过dpr设置缩放整个页面。</p>
+<p>iPhone5的宽度是640px，页面最终完成效果也是640px，iPhone的dpr是2，所以设置  <code>&lt;meta name=&quot;viewport&quot; content=&quot;initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no&quot;&gt;</code> 就可以了适配iPhone5了</p>
+
       
     </div>
     
@@ -418,8 +430,8 @@ win.addEventListener(&apos;resize&apos;, refreshRem)
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/04/Vue方法计算属性/" rel="next" title="Vue中methods，computed，watch">
-                <i class="fa fa-chevron-left"></i> Vue中methods，computed，watch
+              <a href="/2018/07/04/理解nextTick/" rel="next" title="理解Vue.nextTick">
+                <i class="fa fa-chevron-left"></i> 理解Vue.nextTick
               </a>
             
           </div>
