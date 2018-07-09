@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+
+
+  <meta name="keywords" content="webpack," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {">
+<meta name="keywords" content="webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webpack整理">
+<meta property="og:url" content="http://yoursite.com/2018/07/10/webpack/index.html">
+<meta property="og:site_name" content="FE_hei">
+<meta property="og:description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {   &amp;quot;name&amp;quot;: &amp;quot;mydemo&amp;quot;,">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-09T22:57:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webpack整理">
+<meta name="twitter:description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {   &amp;quot;name&amp;quot;: &amp;quot;mydemo&amp;quot;,">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/10/webpack/"/>
+
+
+
+
+
+  <title>webpack整理 | FE_hei</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">FE_hei</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">认真的你 势不可挡</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/webpack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">webpack整理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-10T00:00:00+08:00">
+                2018-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="webpack"><a href="#webpack" class="headerlink" title="webpack"></a>webpack</h2><h4 id="webpack安装与配置"><a href="#webpack安装与配置" class="headerlink" title="webpack安装与配置"></a>webpack安装与配置</h4><p>在当前文件夹初始化npm的package.json文件，<code>npm init</code>。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。</p>
+<p>当init后，有如下package.json  </p>
+<pre><code>//package.json
+{
+  &quot;name&quot;: &quot;mydemo&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+  },
+  &quot;author&quot;: &quot;&quot;,
+  &quot;license&quot;: &quot;ISC&quot;
+}
+</code></pre><ul>
+<li>name,version必须，表示包的名称和版本，构成了包的唯一标示。</li>
+<li>description main author license属性，仅在需要制作工具包时关注。main表示当别人引入require你的工具包时，入口文件在哪。</li>
+<li>scripts则与实际开发过程有关，通过它，可以定义npm脚本。  </li>
+</ul>
+<p>例如：  </p>
+<pre><code>&quot;scripts&quot;: {
+  &quot;build&quot;: &quot;webpack&quot;,
+  &quot;dev&quot;: &quot;webpack-dev-server --devtool eval --progress --colors --hot --content-base build&quot;
+}
+</code></pre><p>当我们在命令行npm run build时，就等于webpack，原理很简单，在执行npm run命令时，会新创建一个Shell，并将当前目录的/node_modules/.bin/加入到PATH变量(环境变量)，之后运行脚本命令，结束后，将PATH恢复原样。</p>
+<h4 id="webpack-1"><a href="#webpack-1" class="headerlink" title="webpack"></a>webpack</h4><p>一个项目通常都会有，开发，发布这两种状态。为了分别管理，npm在package.json提供了这样的字段。</p>
+<ul>
+<li>devDependencies声明–仅开发依赖</li>
+<li>dependencies依赖包</li>
+</ul>
+<p><strong>开发与部署</strong><br>开发到一定阶段需要发布一个版本，我们往往需要一个文件夹来保存整合后的项目。这个过程，就叫做部署”deploy”。这也是webpack的工作，会用到一个和开发阶段不同的webpack配置文件，它只是将输出目录换成了另一个而已。</p>
+<p><strong>构建目录</strong>  </p>
+<ul>
+<li>app文件夹，所有手写文件存放的地方。</li>
+<li>build文件夹，经过webpack打包，自动生成文件的去处。在build文件夹下，新建index.html用来表示索引页。</li>
+<li>dist文件夹，用来保存发布版。在app中写东西，打包到build中调试，最后发布到dist文件夹里。</li>
+</ul>
+<p><strong>配置webpack</strong><br>三种途径：  </p>
+<ul>
+<li>cli-即命令行形式，一般都会通过package.json中写入scripts字段形式。</li>
+<li>配置文件webpack.config.js文件中写入字段，webpack在启动时会读取它，并依据其工作。</li>
+<li>node api，配置文件也算node api，node api是一套配置文件的生成系统，根据不同的输入，实现不同的配置。</li>
+</ul>
+<p>注：因为要往两个地方打包，所有两个配置文件  </p>
+<ul>
+<li>webpack.config.js 目标build</li>
+<li>webpack.production.config.js目标dist</li>
+</ul>
+<p>1.开始配置webpack，目标是把这两个js文件合并成一个文件. 我们可以自己在build文件夹里面手动建一个index.html文件，然后再把合并以后的js引用在里面，但是这样有些麻烦，所以我们这里安装一个plugin，可以自动快速的帮我们生成HTML。</p>
+<pre><code>npm install html-webpack-plugin --save-dev//此模块帮我们生成html
+</code></pre><p>2.配置webpack-dev-server，自动刷新浏览器  </p>
+<pre><code>npm install webpack-dev-server --save-dev
+</code></pre><p>3.再package.json里配置运行命令</p>
+<pre><code>&quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;webpack-dev-server --hot --inline&quot;
+}
+</code></pre><p>4.在webpack中配置Babel，Babel 把用最新标准编写的 JavaScript 代码向下编译成可以在今天随处可用的版本。</p>
+<pre><code>npm install --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react  
+</code></pre><p>5.安装React和React-DOM  </p>
+<pre><code>npm install --save react react-dom
+</code></pre><p>在webpack.config.js中  </p>
+<pre><code>var path = require(&quot;path&quot;)
+var HtmlwebpackPlugin = require(&apos;html-webpack-plugin&apos;);
+module.exports = {
+  //项目的文件夹 可以直接用文件夹名称 默认会找index.js 也可以确定是哪个文件名字
+  entry: __dirname + &quot;/app/index.js&quot;,
+  //输出的文件名 合并以后的js会命名为bundle.js
+  output: {
+    path: __dirname + &quot;/build&quot;,
+    filename: &quot;bundle.js&quot;
+  },
+  //添加我们的插件会自动生成一个html文件
+  plugins: [
+    new HtmlwebpackPlugin({
+       title: &quot;My app&quot;,
+       showErrors: true
+     })
+  ],
+  //node服务器，实时预览
+  devServer: {
+    contentBase: __dirname + &quot;/build&quot;,//本地服务器所加载的页面所在的目录
+    historyApiFallback: true,//不跳转
+    inline: true,//当源文件改变时会自动刷新页面
+    port:8080//端口
+  },
+  //babel 的配置， ES6 与React
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: &apos;babel-loader&apos;,
+        query: {
+          presets: [&apos;es2015&apos;,&apos;react&apos;]
+        }
+      }
+    ]
+  }
+};
+</code></pre><p><strong>webpack</strong><br>模块化打包工具，分析项目结构，处理模块化依赖，转换成浏览器可运行的代码。  </p>
+<ul>
+<li>代码转换：scss,less编译成css</li>
+<li>文件优化：压缩JavaScript、css、HTML，压缩合并图片</li>
+<li>代码分割：提取多个页面的公共代码、提取首屏不需要执行部分的代码让其异步加载</li>
+<li>模块合并：在采用模块化的项目里多个模块，需要构建功能把模块分类合并成一个文件</li>
+<li>自动刷新：监听本地源代码的变化，自动重新构建、刷新浏览器</li>
+</ul>
+<p><strong>优化webpack构建速度思路</strong>  </p>
+<ul>
+<li>优化本身项目结构，模块的引入、拆分、共用</li>
+<li>优化结构路径、让webpack接管的文件能够快速定位</li>
+<li>优化uglify编译速度</li>
+<li>优化webpack本身编译速度</li>
+</ul>
+<p><strong>作用最大的有这几个</strong>   </p>
+<ul>
+<li>开启webpack的cache</li>
+<li>开启babel-loader的cache</li>
+<li>指定modules以及配置项目相关的alias<ul>
+<li>通过编写alias，既能让webpack查找文件定位更快，在开发的时候，也能少些很多相对路径的../..，在引入模块的时候很方便。</li>
+</ul>
+</li>
+<li>配置loader的include和exclude</li>
+<li><p>用CommonsChunkPlugin提取公用模块</p>
+<pre><code>    plugins: [
+      new webpack.optimize.CommonsChunkPlugin({
+        async: &apos;shared-module&apos;,
+        minChunks: (module, count) =&gt; (
+          count &gt;= 2    // 当一个模块被重复引用2次或以上的时候单独打包起来。 
+        )
+      }),
+
+  //...
+]
+</code></pre></li>
+<li>换用happypack多进程构建</li>
+<li>换用webpack-uglify-parallel并行压缩代码</li>
+</ul>
+<p><strong>webpack打包</strong><br>webpack 在打包过程中会针对不同的资源类型使用不同的loader处理，然后将所有静态资源整合到一个bundle里，以实现所有静态资源的加载。webpack最初的主要目的是在浏览器端复用符合CommonJS规范的代码模块，而CommonJS模块每次修改都需要重新构建(rebuild)后才能在浏览器端使用。</p>
+<p><strong>webpack是如何进行资源的打包的呢</strong>  </p>
+<ul>
+<li>对于单入口文件，每个入口文件把自己所依赖的资源全部打包到一起，即使一个资源循环加载的话，也只会打包一份</li>
+<li>对于多入口文件的情况，分别独立执行单个入口的情况，每个入口文件各不相干</li>
+</ul>
+<p><strong>插件</strong> </p>
+<ul>
+<li>使用UgligyJsPlugin压缩JavaScript代码</li>
+<li>使用HtmlWebpackPlugin生成一个HTML5文件，该文件的body中使用script标记引用了所有webpack bundle</li>
+<li>css module</li>
+<li>ExtractTextPlugin提取css文件</li>
+<li>DefinePlugin插件，允许你创建一个在编译时可以配置的全局常量。</li>
+<li>CleanWebpackPlugin清除输出目录，避免每次手动删除</li>
+</ul>
+<h3 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h3><ul>
+<li>基础配置<ul>
+<li>entry：入口</li>
+<li>module：Loaders是用来告诉webpack如何转化处理某一类型的文件，并且引入到打包出的文件中。</li>
+<li>plugins：(插件用于扩展 loader 的能力）你可以用插件进行定义环境变量对代码进行打包压缩。</li>
+<li>output：出口</li>
+</ul>
+</li>
+<li><p>进阶配置</p>
+<ul>
+<li>resolve</li>
+<li>devtool</li>
+<li>devServer</li>
+</ul>
+</li>
+<li><p>配置webpack.config.js</p>
+</li>
+<li>如何使用webpack？</li>
+<li>webpack打包原理</li>
+<li>dev-server的原理？</li>
+<li>有没有实现一个webpack的loader？</li>
+<li>vue异步加载，（改进空间）</li>
+</ul>
+<p><strong>webpack-dev-server和http服务器区别</strong><br>webpack-dev-server使用内存来存储webpack开发环境下的打包文件，并且可以使用模块热更新，它比传统的http服务器对开发更加简单高效。</p>
+<p><strong>模块热更新</strong><br>模块热更新是webpack的一个功能，可以使得代码修改过后不用刷新浏览器就可以更新。</p>
+<p><strong>什么是(持久化缓存)长缓存？在webpack中如何做到长缓存优化</strong><br>浏览器在用户访问页面的时候，为了加快加载速度，会对用户访问的静态资源进行存储，但是每一次代码升级或是更新，都需要浏览器去下载新的代码，最方便和简单的更新方式就是引入新的文件名称。</p>
+<p>比较成熟的持久化缓存方案就是在静态资源的名字后面加 hash 值，因为每次修改文件生成的 hash 值不一样，这样做的好处在于增量式发布文件，避免覆盖掉之前文件从而导致线上的用户访问失效。</p>
+<h4 id="webpack如何做持久化缓存"><a href="#webpack如何做持久化缓存" class="headerlink" title="webpack如何做持久化缓存"></a>webpack如何做持久化缓存</h4><ul>
+<li>保证hash值的唯一性，即为每个打包后的资源生成一个独一无二的hash值，只要打包内容不一致，那么hash值就不一样。</li>
+<li>保证hash值的稳定性，需要修改某个模块的时候，只有受影响的打包后文件hash值改变，与该模块无关的打包文件hash值不变。</li>
+</ul>
+<p><strong>webpack打包原理</strong><br>通常 webpack 将所有处理文件全部打包成一个 bundle 文件。</p>
+<p>1.配置webpack.config.js  </p>
+<pre><code>module.exports = {
+  entry: {
+    bundle: &apos;./index.js&apos;
+  },
+  output: {
+    path: __dirname,
+    filename: &apos;[name].js&apos;
+  }
+};
+</code></pre><p>2.创建 index.js  </p>
+<pre><code>var aText = require(&quot;./a.js&quot;);
+var bText = require(&quot;./b.js&quot;);
+var str = &apos;This is Moudle Index. I depends (&apos; + aText +&apos;) and (&apos;+ bText + &apos;).&apos;;
+document.write(str);
+</code></pre><p>3.创建 a.js和 b.js  </p>
+<pre><code>//a.js
+var bText = require(&quot;./b.js&quot;);
+var str = &apos;This is Moudle A. I depends (&apos; + bText + &apos;).&apos;;
+module.exports = str;
+//b.js
+module.exports = &quot;This is Moudle B.&quot;;
+</code></pre><p>4.执行webpack，生成的 bundle.js  </p>
+<pre><code>(function(modules) {
+  // modules 存储的是模块函数
+  // installedModules 存储的是模块对象
+  var installedModules = {};
+  // 定义 require 函数 
+  // require的功能是执行 modules[id] 里的模块函数，并将返回的结果放在 installedModules[id].exports
+  function __webpack_require__(moduleId) {
+      // 检测当前模块是否已添加，防止重复添加
+      if (installedModules[moduleId]) {
+          return installedModules[moduleId].exports;
+      }
+      // 创建一个模块对象，用于存放模块相关的信息
+      var module = installedModules[moduleId] = {
+          i: moduleId, // 模块id
+          l: false, // 是否加载完成
+          exports: {} // 模块内容
+      };
+      // 执行模块函数，此时会在 module.exports 添加模块内容
+      // 保证了模块加载时 this 的指向 module.exports 并且传入默认参数
+      modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+      // 标记模块加载完成
+      module.l = true;
+      // 返回模块内容
+      return module.exports;
+  }
+  return __webpack_require__(1);
+})([
+  /* 0 */
+  (function(module, exports) {
+      module.exports = &quot;This is Moudle B.&quot;;
+  }),
+  /* 1 */
+  (function(module, exports, __webpack_require__) {
+      var aText = __webpack_require__(2);
+      var bText = __webpack_require__(0);
+      var str = &apos;This is Moudle Index. I depends (&apos; + aText + &apos;) and (&apos; + bText + &apos;).&apos;;
+      document.write(str);
+  }),
+  /* 2 */
+  (function(module, exports, __webpack_require__) {
+      var bText = `__webpack_require__(0)`;
+      var str = &apos;This is Moudle A. I depends (&apos; + bText + &apos;).&apos;;
+      module.exports = str;
+  })
+])    
+</code></pre><p>注：  </p>
+<ol>
+<li>三个文件生成三个模块，将他们放入modules数组，通过数组的下标来作为moduleId</li>
+<li>将modules传入一个自执行函数中，自执行函数中包含一个installModules已经加载过的模块和一个模块加载函数，最后加载模块入口并返回</li>
+<li><code>__webpack_require__</code>模块加载，先判断installModules是否已加载，加载过了就直接返回exports数据，没有加载过该模块就通过<code>modules[moduleId].call(module.exports, module, module.exports, __webpack_require__)</code>执行模块并且将 module.exports 给返回。</li>
+</ol>
+<p><strong>实现一个webpack loader</strong><br>A loader is a node module exporting a function.    loader是一个node模块，导出一个函数，该函数的参数是require的源模块，处理source后把返回值交给下一个loader。</p>
+<p>处理结果(不止一个)返回给下一个Loader，需要调用webpack提供的Loader API。支持返回多个内容的结果给下一个Loader。</p>
+<pre><code>module.exports = function(source){    
+    // this.callback(null, source); 
+    return source;
+}
+</code></pre><p>实现思路：  </p>
+<ul>
+<li>从右到左，链式执行</li>
+<li>上一个Loader的处理结果给下一个接着处理</li>
+<li>node module写法</li>
+<li>module依赖</li>
+<li>return &amp;&amp; this.callback()</li>
+</ul>
+<p><strong>webpack实现按需加载</strong><br>在最开始使用Webpack的时候, 都是将所有的js文件全部打包到一个build.js文件中(文件名取决与在webpack.config.js文件中output.filename), 但是在大型项目中, build.js可能过大, 导致页面加载时间过长. 这个时候就需要code splitting, code splitting就是将文件分割成块(chunk), 我们可以定义一些分割点(split point), 根据这些分割点对文件进行分块, 并实现按需加载.</p>
+<pre><code>output: {
+    path: path.resolve(__dirname, &apos;./dist&apos;),
+    publicPath: &apos;/dist/&apos;,
+    filename: &apos;build.js&apos;,
+    //添加chundkFilename
+    chunkFilename: &apos;[name].[chunkhash:5].chunk.js&apos;
+}
+
+//AMD风格的异步加载
+// const ComA = resolve =&gt; require([&apos;./components/A.vue&apos; ], resolve);
+// const ComB = resolve =&gt; require([&apos;./components/B.vue&apos; ], resolve);
+// const ComC = resolve =&gt; require([&apos;./components/C.vue&apos; ], resolve);
+
+//CMD风格的异步加载
+const ComA = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/A.vue&apos;)));
+const ComB = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/B.vue&apos;)));
+const ComC = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/C.vue&apos;)));
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/webpack/" rel="tag"><i class="fa fa-tag"></i> webpack</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/09/响应式/" rel="next" title="常用响应式布局">
+                <i class="fa fa-chevron-left"></i> 常用响应式布局
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpeg"
+                alt="FE_Hei" />
+            
+              <p class="site-author-name" itemprop="name">FE_Hei</p>
+              <p class="site-description motion-element" itemprop="description">Keep for all</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/kudouhei" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#webpack"><span class="nav-number">1.</span> <span class="nav-text">webpack</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#webpack安装与配置"><span class="nav-number">1.0.1.</span> <span class="nav-text">webpack安装与配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#webpack-1"><span class="nav-number">1.0.2.</span> <span class="nav-text">webpack</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建工具"><span class="nav-number">1.1.</span> <span class="nav-text">构建工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#webpack如何做持久化缓存"><span class="nav-number">1.1.1.</span> <span class="nav-text">webpack如何做持久化缓存</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  © 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">FE_Hei</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
