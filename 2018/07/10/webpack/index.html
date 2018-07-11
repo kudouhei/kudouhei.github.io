@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {   &amp;quot;name&amp;quot;: &amp;quot;mydemo&amp;quot;,">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-09T22:57:28.000Z">
+<meta property="og:updated_time" content="2018-07-11T13:20:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="webpack整理">
 <meta name="twitter:description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {   &amp;quot;name&amp;quot;: &amp;quot;mydemo&amp;quot;,">
@@ -606,6 +606,74 @@ module.exports = &quot;This is Moudle B.&quot;;
 const ComA = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/A.vue&apos;)));
 const ComB = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/B.vue&apos;)));
 const ComC = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/C.vue&apos;)));
+</code></pre><p><strong>webpack打包分析与性能优化</strong><br><strong>webpack打包分析</strong><br>webpack在打包过程中会针对不同的资源类型使用不同的loader处理，然后将所有静态资源整合到一个bundle里，以实现所有静态资源的加载。webpack最初的主要目的是在浏览器端复用符合CommonJS规范的代码模块，而CommonJS模块每次修改都需要重新构建后才能在浏览器端使用。</p>
+<p>webpack如何进行资源打包  </p>
+<ul>
+<li>对于单入口文件，每个入口文件把自己所依赖的资源全部打包到一起，即使一个资源循环加载的话，也只会打包一份。</li>
+<li>对于多入口文件的情况，分别独立执行单个入口的情况，每个入口文件各不相干</li>
+</ul>
+<p><strong>webpack打包优化</strong><br>1.减小打包文件体积  </p>
+<p>原因： </p>
+<ol>
+<li>import css文件的时候，会直接作为模块一并打包到js文件中<ul>
+<li>使用extract-text-webpack-plugin，缺点是产生更长时间编译，会增加额外的HTTP请求</li>
+</ul>
+</li>
+<li><p>所有js模块+依赖都会打包到一个文件</p>
+<ul>
+<li><p>提取公共代码块 </p>
+<pre><code>new webpack.optimize.CommonChunkPlugin(&apos;common.js&apos;)
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<p>2.代码压缩<br>webpack提供的UglifyJS插件由于采用单线程压缩，速度很慢。  </p>
+<p>webpack-parallel-uglify-plugin插件可以并行运行UglifyJS插件，这可以有效减少构建时间，当然，该插件应用于生产环境而非开发环境，配置如下：  </p>
+<pre><code>var ParallelUglifyPlugin = require(&apos;webpack-parallel-uglify-plugin&apos;);
+new ParallelUglifyPlugin({
+    cacheDir: &apos;.cache/&apos;,
+    uglifyJS: {
+        output: {
+            comments: false
+        },
+        compress: {
+            warnings: false
+        }
+    }
+})
+</code></pre><p>3.happypack<br>happypack的原理是让loader可以多进程去处理文件。  </p>
+<p>在webpack.config.js中  </p>
+<pre><code>const HappyPack = require(&apos;happypack&apos;);
+const os = require(&apos;os&apos;);
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        //把对.js 的文件处理交给id为happyBabel 的HappyPack 的实例执行
+        loader: &apos;happypack/loader?id=happyBabel&apos;,
+        //排除node_modules 目录下的文件
+        exclude: /node_modules/
+      },
+    ]
+  },
+plugins: [
+    new HappyPack({
+        //用id来标识 happypack处理那里类文件
+      id: &apos;happyBabel&apos;,
+      //如何处理  用法和loader 的配置一样
+      loaders: [{
+        loader: &apos;babel-loader?cacheDirectory=true&apos;,
+      }],
+      //共享进程池
+      threadPool: happyThreadPool,
+      //允许 HappyPack 输出日志
+      verbose: true,
+    })
+  ]
+}
 </code></pre>
       
     </div>
