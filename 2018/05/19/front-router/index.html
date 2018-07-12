@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升  1. hash路由hash路由明显的标志是带有#，主要是通过监听">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-19T06:43:08.000Z">
+<meta property="og:updated_time" content="2018-07-11T13:46:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端路由">
 <meta name="twitter:description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升  1. hash路由hash路由明显的标志是带有#，主要是通过监听">
@@ -324,7 +324,7 @@
 <li>服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟</li>
 <li>前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升</li>
 </ul>
-<p><strong>1. hash路由</strong><br>hash路由明显的标志是带有#，主要是通过监听url中的hash变化来进行路由跳转。优势就是兼容性好</p>
+<p><strong>1. hash路由</strong><br>hash路由明显的标志是带有#，主要是通过监听url中的hash变化来进行路由跳转。hash值变化，并不会导致浏览器向服务器发出请求，浏览器不发出请求，也就不会刷新页面。每次hash值的变化，还会触发hashchange事件，通过这个事件就可以知道hash值发生了哪些变化。优势就是兼容性好</p>
 <pre><code>class Routers {
           constructor(){
               // 以键值对的形式储存路由

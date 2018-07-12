@@ -93,7 +93,7 @@
 <meta property="og:description" content="ajax跨域ajax跨域属于浏览器“同源策略”中的一部分。 原因：    浏览器限制 跨域（同源策略） XHR请求  当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。  跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的 如何解决">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/ajax/jsonp.jpg">
-<meta property="og:updated_time" content="2018-06-13T15:12:10.000Z">
+<meta property="og:updated_time" content="2018-07-12T12:56:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="解决跨域">
 <meta name="twitter:description" content="ajax跨域ajax跨域属于浏览器“同源策略”中的一部分。 原因：    浏览器限制 跨域（同源策略） XHR请求  当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。  跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的 如何解决">
@@ -532,7 +532,11 @@ baidu.sug = function(data){
 jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
 //Request URL: http://suggestion.baidu.com/su?wd=baidu&amp;callback=my_json_cb_07050386954155996
 //window.baidu.sug({q:&quot;baidu&quot;,p:false,s:[&quot;百度翻译&quot;,&quot;百度网盘&quot;,&quot;百度地图&quot;,&quot;百度云盘&quot;,&quot;百度学术&quot;,&quot;百度&quot;,&quot;百度云&quot;,&quot;百度文库&quot;,&quot;百度贴吧&quot;,&quot;百度翻译在线&quot;]});
-</code></pre>
+</code></pre><h4 id="Ajax中什么时候用同步，什么时候用异步"><a href="#Ajax中什么时候用同步，什么时候用异步" class="headerlink" title="Ajax中什么时候用同步，什么时候用异步"></a>Ajax中什么时候用同步，什么时候用异步</h4><p><strong>同步请求</strong><br>同步请求即当前发出请求后，浏览器什么都不能做，必须等到请求完成返回数据之后，才会执行后续的代码。即当ajax返回数据后，才执行后面的function。</p>
+<p><strong>异步请求</strong><br>异步请求是当发出请求的同时，浏览器可以继续做任何事，Ajax发送请求并不会影响页面的加载与用户操作，相当于两条线互不影响。</p>
+<p><strong>ajax默认是异步的，async的值是true</strong>  </p>
+<p><strong>如何选择同步还是异步模式</strong><br>在发送ajax请求后，还需要继续处理服务器的响应结果，如果这是使用异步请求模式同时未将结果的处理交由另一个JS函数进行处理。会导致异步请求的响应还没有到达，函数已经执行完了return，会导致return的结果为空字符串。  </p>
+
       
     </div>
     
@@ -720,7 +724,7 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#ajax跨域"><span class="nav-number">1.</span> <span class="nav-text">ajax跨域</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#如何解决ajax跨域"><span class="nav-number">1.1.</span> <span class="nav-text">如何解决ajax跨域</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#手写原生ajax请求"><span class="nav-number">2.</span> <span class="nav-text">手写原生ajax请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完全不同源的跨域-两个页面之间的通信"><span class="nav-number">3.</span> <span class="nav-text">完全不同源的跨域(两个页面之间的通信)</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#ajax跨域"><span class="nav-number">1.</span> <span class="nav-text">ajax跨域</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#如何解决ajax跨域"><span class="nav-number">1.1.</span> <span class="nav-text">如何解决ajax跨域</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#手写原生ajax请求"><span class="nav-number">2.</span> <span class="nav-text">手写原生ajax请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完全不同源的跨域-两个页面之间的通信"><span class="nav-number">3.</span> <span class="nav-text">完全不同源的跨域(两个页面之间的通信)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ajax中什么时候用同步，什么时候用异步"><span class="nav-number">4.</span> <span class="nav-text">Ajax中什么时候用同步，什么时候用异步</span></a></li></ol></div>
             
 
           </div>
