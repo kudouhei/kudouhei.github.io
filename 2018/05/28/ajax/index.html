@@ -93,7 +93,7 @@
 <meta property="og:description" content="ajax跨域ajax跨域属于浏览器“同源策略”中的一部分。 原因：    浏览器限制 跨域（同源策略） XHR请求  当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。  跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的 如何解决">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/ajax/jsonp.jpg">
-<meta property="og:updated_time" content="2018-07-12T12:56:19.000Z">
+<meta property="og:updated_time" content="2018-07-16T14:00:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="解决跨域">
 <meta name="twitter:description" content="ajax跨域ajax跨域属于浏览器“同源策略”中的一部分。 原因：    浏览器限制 跨域（同源策略） XHR请求  当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。  跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的 如何解决">
@@ -365,6 +365,18 @@ function foo(data){
 <li>只支持GET</li>
 <li>发送的不是XHR请求</li>
 </ul>
+<p><strong>jsonp两点疑问</strong>  </p>
+<ul>
+<li>问题一：jsonp是需要动态创建script标签的，我们需不需要处理这些script元素？怎么处理？<ul>
+<li>jsonp动态创建的节点是需要删除的。</li>
+<li>jsonp创建script节点后，通常还会挂上onload、onreadystatechange、onerror等事件，需要考虑的是在实现jsonp时，一般都会生成一个uuid，然后将它挂载到window上，用以包装用户的callback。这些挂载到window上的callback也是需要释放的。</li>
+</ul>
+</li>
+<li>问题二：jsonp请求的时候，服务器发生错误该怎么办，比如服务器崩掉，比如返回404页面，前端该怎么处理这个错误？<ul>
+<li>在JSONP的返回中嵌入状态码，前端根据状态码判断成功或失败然后调用不同的回调函数。还有比如用jquery的话，用$.getJSON()或$.ajax()方法在发生错误时可以用error回调函数来捕获错误，前端对用户进行提示。</li>
+</ul>
+</li>
+</ul>
 <p><strong>2. 代理请求方式</strong><br>前端对接口进行代理  </p>
 <ul>
 <li>前端ajax请求的是本地接口</li>
@@ -566,8 +578,8 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/19/front-router/" rel="next" title="前端路由">
-                <i class="fa fa-chevron-left"></i> 前端路由
+              <a href="/2018/05/28/性能优化/" rel="next" title="前端性能优化">
+                <i class="fa fa-chevron-left"></i> 前端性能优化
               </a>
             
           </div>
@@ -576,8 +588,8 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/28/性能优化/" rel="prev" title="前端性能优化">
-                前端性能优化 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/02/js二叉树/" rel="prev" title="javascript二叉树">
+                javascript二叉树 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
