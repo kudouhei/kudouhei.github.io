@@ -247,6 +247,723 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/03/promise/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/03/promise/" itemprop="url">Promise整理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-03T00:00:00+08:00">
+                2018-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h4><p>Promise是一种异步解决方案，它有resolve和reject两个回调参数，resolve是Promise从pending状态变为fulfilled状态后触发的回调函数。而reject则是状态从pending状态变为rejected后触发的。 而且一个Promise对象的状态只能从pending-&gt;fulfilled或者从pending-&gt;reject,不可能同时达到两种状态,  </p>
+<p>Promise基本使用：  </p>
+<pre><code>let promise = new Promise((resolve,reject)=&gt;{
+    resolve(&apos;success&apos;);
+});
+promise.then((res)=&gt;{
+    console.log(res);
+},(err)=&gt;{
+    console.log(err);
+})
+</code></pre><p>实现一个Promise类  </p>
+<pre><code>class Promise{
+  constructor(executor){
+    this.status = &apos;pending&apos;;
+    this.value = undefined;
+    this.reason = undefined;
+    this.successStore = []; // 定义一个存放成功函数的数组
+    this.failStore = []; // 定义一个存放失败函数的数组
+    let resolve = (value) =&gt; {
+      if(this.status === &apos;pending&apos;){
+        this.value = value;
+        this.status = &apos;resolved&apos;;
+        this.successStore.forEach(fnc =&gt; fnc()); // 执行数组中的成功函数
+      }
+    }
+    let reject = (reason) =&gt; {
+      if(this.status === &apos;pending&apos;){
+        this.reason = reason;
+        this.status = &apos;rejected&apos;;
+        this.failStore.forEach(fnc =&gt; fnc()); // 依次执行数组中的失败函数
+      }
+    }
+    try{
+      executor(resolve, reject);
+    }catch(e){
+      reject(e)
+    }
+  }
+  then(onFulfilled, onRejected){
+    if(this.status === &apos;resolved&apos;){
+      onFulfilled(this.value);
+    }
+    if(this.status === &apos;rejectd&apos;){
+      onRejected(this.reason);
+    }
+    if (this.status === &apos;pending&apos;) { //此处增加一种状态判断
+      this.successStore.push(() =&gt; { //当状态为pending时将成功的函数存放到数组里
+        onFulfilled(this.value);
+      })
+      this.failStore.push(() =&gt; { //当状态为pending时将失败的函数存放到数组中
+        onRejected(this.reason);
+      })
+    }
+  }
+}
+</code></pre><p><strong>then的链式调用</strong><br>then是Promise类原型对象的一个方法，它主要是为Promise对象实例添加状态改变时的回调函数。then()方法返回的必须是Promise实例，可以理解成返回的必须是一个新的Promise实例。所有then()方法后面可以继续跟另一个then()方法进行链式调用。<strong>then()方法里可能发挥一个值或者返回的是一个Promise实例</strong>。  </p>
+<p>第一种：  </p>
+<p>在then()方法的回调里返回一个普通值，无论是成功还是失败的回调，都会进入到下一个then()的成功态里。  </p>
+<pre><code>let promise = new Promise((resolve, reject) =&gt; {
+    reject(&apos;fail&apos;);
+})
+promise.then((res) =&gt; {
+    console.log(res);
+},(err)=&gt; {
+    console.log(err); // fail
+    return &apos;fail&apos;;
+}).then((res) =&gt; {
+    console.log(res); // fail此时走的是成功回调，并非失败的回调
+}, (err)=&gt;{
+    console.log(err);
+})
+</code></pre><p>第二种：  </p>
+<pre><code>let promise = new Promise((resolve, reject) =&gt; {
+    resolve();
+})
+promise.then((res)=&gt;{
+    return new Promise((resolve,reject)=&gt;{ //返回一个新的Promise
+        resolve(&apos;hello world&apos;); 
+    })
+},(err)=&gt;{
+    console.log(err); 
+}).then((res)=&gt;{
+    console.log(res); //hello world    
+},(err)=&gt;{
+    console.log(err);
+})
+</code></pre><p>要考虑到上述两种情况：  </p>
+<pre><code>function handlePromise(promise2,x,resolve,reject){
+    if(promise2 === x){ // promise2是否等于x，也就是判断是否将自己本身返回
+        return reject(new TypeError(&apos;circular reference&apos;)); 
+    }
+    // 判断x不是null且x是对象或函数
+    if(x!=null &amp;&amp; (typeof x === &apos;object&apos; || typeof x === &apos;function&apos;)){
+        let called; // called控制resolve或reject只执行一次，多次调用没有任何作用
+        try{
+            let then = x.then; //取x.then()方法
+            if(typeof then === &apos;function&apos;){
+                then.call(x, y =&gt; {
+                    if(called) return;
+                    called = true;
+                    handlePromise(promise2,y,resolve,reject); //递归解析Promise
+                }, r=&gt;{
+                    if(called)return;
+                    called = true;
+                    reject(r)
+                })
+            }else{ 
+                resolve(x)
+            }
+        }catch(e){
+            if(called)return;
+            called = true;
+            reject(e);
+        }
+    }else{ //x是普通值，直接走then的成功回调
+        resolve(x)
+    }
+}
+// 修改then中方法
+let promise2; // 返回的新的promise
+    if (this.status === &apos;resolved&apos;) {
+        promise2 = new Promise((resolve, reject) =&gt; {
+            try {
+                let x = onFulfilled(this.value);
+                handlePromise(promise2, x, resolve, reject);
+            } catch (e) {
+                reject(e);
+            }
+
+        })
+    }
+</code></pre><p><strong>处理值穿透</strong>  </p>
+<pre><code>var promise = new Promise((resolve, reject) =&gt; {
+  setTimeout(() =&gt; {
+    resolve(&apos;haha&apos;)
+  }, 1000)
+})
+promise
+  .then(&apos;hehe&apos;)
+  .then(console.log) // 打印haha
+
+    Promise.resolve(&apos;foo&apos;).then(Promise.resolve(&apos;bar&apos;)).then(function (result) {
+      console.log(result);
+    }); // foo
+</code></pre><p>因为给then方法传递了一个非函数（比如Promise对象）的值，代码会理解成then(null),因此会导致前一个Promise的结果产生了坠落的效果。</p>
+<p>改为： </p>
+<pre><code>Promise.resolve(&apos;foo&apos;).then(function(){
+    return Promise.resolve(&apos;bar&apos;);
+}).then(function(result){
+    console.log(result)
+})
+</code></pre><p><strong>Promise实践</strong><br>1.已知长度的关联串行：场景类似于：taskB要依赖taskA的数据去请求，taskC又要依靠taskBFC返回的数据来请求数据。  </p>
+<pre><code>// A、B、C结构类似
+let taskA = new Promise((resolve,reject) =&gt; {
+    return Promise(urlA).then((res) =&gt; {
+        resolve(res)
+    })
+})
+taskA().then((res1) =&gt; {
+    return taskB(res1)
+}).then((res2)=&gt;{
+    return taskC(res2)
+}).then((res3) =&gt; {
+    console.log(res3);
+})
+</code></pre><p>2.未知长度的关联串行：在请求某个接口数据时，需要分页去请求，传递offset值和count值去请求，每次请求返回的结果是数据以及nextOffset，这种情况下，就是判断最终这个nextOffset是否为-1来终止循环次数，从而形成了一种有关联的但是是未知长度的串行请求。</p>
+<pre><code>function eachTask(offset) {
+    let option = {
+        url: &apos;yourUrl&apos;,
+        offset: offset,
+        count: 30
+    }
+
+    return new Promise((resolve, reject) =&gt; {
+        rp(option).then(function (res) {
+            resolve(res);
+        })
+    })
+}
+
+let list = [];
+const allTask = (offset = 0) =&gt; eachTask(offset).then(res =&gt; {
+    res &amp;&amp; (list = list.concat(res.data));
+    if (res.nextOffset &amp;&amp; res.nextOffset != -1) {
+        return eachTask(res.nextOffset);
+    } else {
+        return Promise.resolve(list);
+    }
+})
+
+allTask(0).then(res =&gt; {
+    console.log(res)
+}).catch((err) =&gt; {
+    console.log(&apos;err&apos;, err);
+}) 
+</code></pre><p>3.并行请求：使用Promise实现并行请求，需要使用到Promsie.all()  </p>
+<pre><code>getPromiseArr()
+    .then((arr) =&gt; {
+        return Promise.all(arr);
+    })
+    .then((res) =&gt; {
+        console.log(res);
+    }).catch((err) =&gt; {
+        console.log(&apos;err&apos;, err);
+    })
+</code></pre><p>其中getPromiseArr()可以返回一个Promise类型的数组。</p>
+<p><strong>Promise与循环</strong><br>如果需要同时执行一组异步操作？比如，删除指定项目ID下的所有子模块。  </p>
+<pre><code>getModules(projectID).then(function(modules){
+    var tasks = [];
+    modules.forEach(function(module){
+        tasks.push(removeModule(module.moduleID))
+    })
+    return Promise.all(tasks); // 一定要有return
+}).then(function(result){
+    ...
+})
+</code></pre><h4 id="Promise-A"><a href="#Promise-A" class="headerlink" title="Promise/A+"></a>Promise/A+</h4><p><code>[[Resolve]](promise, x)</code>中  </p>
+<ul>
+<li>如果x是一个promise实例， 则以x的状态作为promise的状态  <ul>
+<li>如果x的状态为pending， 那么promise的状态也为pending， 直到x的状态变化而变化。</li>
+<li>如果x的状态为fulfilled， promise的状态也为fulfilled， 并且以x的不可变值作为promise的不可变值。</li>
+<li>如果x的状态为rejected， promise的状态也为rejected， 并且以x的不可变原因作为promise的不可变原因。</li>
+</ul>
+</li>
+<li><p>如果x不是对象或函数，则将promise状态转换为fulfilled并且以x作为promise的不可变值。</p>
+<pre><code>var d=new Date();
+
+// 创建一个promise实例，该实例在2秒后进入fulfilled状态
+var promise1 = new Promise(function(resolve, reject) {
+    setTimeout(resolve, 2000, &apos;resolve from promise 1&apos;);
+});
+
+// 创建一个promise实例，该实例在1秒后进入fulfilled状态
+var promise2 = new Promise(function(resolve, reject) {
+    setTimeout(resolve, 1000, promise1); // resolve(promise1)
+});
+
+promise2.then(
+    result =&gt; console.log(&apos;result:&apos;, result,new Date()-d),
+    error =&gt; console.log(&apos;error:&apos;, error)
+)
+// 打印result：resolve from Promise 1 2002
+</code></pre></li>
+</ul>
+<p>因为promise2中调用了resolve(promise1)，此时promise1的状态会传递给promise2，或者说promise1的状态决定了promise2的状态。</p>
+<h4 id="Promise-A-1"><a href="#Promise-A-1" class="headerlink" title="Promise/A+"></a>Promise/A+</h4><ul>
+<li>then方法必须返回一个promise实例<code>promise2 = promise1.then(onFulfilled, onRejected);</code><ul>
+<li>如果 <code>onFulfilled</code> 或 <code>onRejected</code> 函数返回值为x，那么执行Promise处理过程 <code>[[Resolve]](promise2, x)</code>。</li>
+<li>如果 <code>onFulfilled</code> 或 <code>onRejected</code> 函数抛出异常e，那么promise2将执行 <code>reject(e)</code></li>
+<li>如果 promise1的 onFulfilled 不是函数，那么promise1的不可变值将传递到promise2并作为promise2的不可变值。</li>
+<li>如果 promise1的 onRejected不是函数，那么promise1的不可变原因将传递到promise2并作为promise2的不可变原因，并作为promise2的 onRejected 的入参。</li>
+</ul>
+</li>
+</ul>
+<p>在promise1的回调方法中返回x的时候，相当于调用<code>promise2.resolve(x)</code>。  </p>
+<ul>
+<li>当x为值的时候，promise2直接进入fulfilled状态，无论promise1的状态是fulfilled或者是rejected，并把x传给onFulfilled回调方法；</li>
+<li>当x为promise实例的时候，x的状态决定了promise2的状态。</li>
+<li>如果Promise1的回调方法中没有返回语句，那相当于x为undefined。在回调方法中一定要有return语句，放弃在回调方法中使用return，相当于放弃获取在该回调方法中的所有操作结果。</li>
+</ul>
+<p><strong>注意：</strong>  </p>
+<ul>
+<li>回调方法中一定要使用return语句，避免调用者丢失其处理状态与结果。</li>
+<li>在Promise实例的最后使用catch方法，用来做整体的异常捕获与处理</li>
+<li>利用promise.then方法对回调函数返回结果封装。</li>
+</ul>
+<p><strong>从数据到渲染实践</strong><br>1.高效切换策略：运用不同的策略来展示数据。  </p>
+<p>例如，在保证用户体验的情况下，希望更快的把页面内容展示给用户。那么请求接口数据的耗时是一个优化点。如果，通过优先展示本地储存数据，先让用户看到页面（可能数据是1分钟前的），如果缓存没有数据，再请求业务数据接口。  </p>
+<pre><code>function getData(){
+    var dataPromise = getDataFromWebStorage()
+        .then(parseData)
+        .catch(function(){
+            return requestData(&apos;data_api_path&apos;).then(parseData);
+        }).then({
+            function(data){
+                if(window.localStorage){
+                    window.localStorage[&apos;DATA&apos;] = JSON.stringify(data);
+                }
+                return data;
+            }
+        })
+        .catch(function(err){
+            handleKindsOfError(err);
+        })
+}
+</code></pre><h5 id="异步任务的分组调度"><a href="#异步任务的分组调度" class="headerlink" title="异步任务的分组调度"></a>异步任务的分组调度</h5><p>[[1,2,3],[4,5,6],[7,8,9]]，每个数字都代表“一个异步计算任务”， 每个子数组把1个或多个计算任务划分成组，要求是：每组内的计算任务并行执行，但是各个组间要顺序执行。具体说来就是先执行1，2，3 等获得全部的结果以后再执行4，5，6以此类推。最后返回的结果跟执行顺序相同。  </p>
+<pre><code>function dispatch(groups){
+    var results = []
+    return (function(){
+        var fun = arguments.callee,
+            group = groups.shift()
+        if(!group){
+            return Promise.resolve(results);
+        }
+        var promises = []
+        group.forEach(function(task){
+            promise.push(Promise.resolve(task))
+        })
+        return Promise.all(promises).then(function(rets){
+            results.push(rets)
+            return fun()
+        })
+    }())
+
+}
+</code></pre><h5 id="10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。"><a href="#10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。" class="headerlink" title="10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。"></a>10个Ajax同时发起请求，全部返回展示结果，并且至多允许三次失败，设计思路。</h5><p>1.Promise写法  </p>
+<pre><code>let errorCount = 0;
+let p = new Promise((resolve, reject) =&gt; if(success){
+    resolve(res.data)
+}else{
+    errorCount++;
+    if(errorCount &gt; 3){
+        reject(error)
+    }else{
+        resolve(error)
+    }
+})
+Promise.all([p]).then(v=&gt;{
+    console.log(v)
+})
+</code></pre><p>2.非Promise写法  </p>
+<pre><code>let successCount = 0;
+let errorCount = 0;
+let datas = [];
+ajax(url, (res)=&gt;{
+    if(success){
+        success++;
+        if(success + errorCount===10){
+            console.log(datas)
+        }else{
+            datas.push(res.data)
+        }
+    }else{
+        errorCount++;
+        if(errorCount &gt; 3){
+            throw Error(&apos;失败三次&apos;)
+        }
+    }
+})
+</code></pre><h4 id="Generator函数异步应用"><a href="#Generator函数异步应用" class="headerlink" title="Generator函数异步应用"></a>Generator函数异步应用</h4><p>Generator函数也叫生成器函数：  </p>
+<ul>
+<li>形式上，Generator函数是一个普通函数，有两个特征，一是在function关键字和函数声明之间多了*号，二是函数内部使用了yield表达式，用于定义Generator函数中的每个状态。</li>
+<li>语法上，Generator函数封装了多个内部状态(通过yield表达式定义内部状态)。执行Generator函数时会返回一个遍历器对象(Iterator对象)。Generator是遍历器对象生成函数，函数内部封装了多个状态。通过返回的Iterator对象，可以依次遍历（调用next方法）Generator函数的每个内部状态。</li>
+<li>调用上，普通函数在调用之后会立即执行，而Generator函数调用之后不会立即执行。</li>
+</ul>
+<p><strong>函数实现流程控制</strong><br>使得回调函数只执行一次  </p>
+<pre><code>const thunkify = fn =&gt; {
+    return function(){
+        const args = Array.from(arguments);
+        return function(callback){
+            let called = false;
+            args.push(function(){
+                if(called) return
+                called = true;
+                callback.apply(this,arguments);
+            })
+            try{
+                fn.apply(this,args)
+            }catch(err){
+                callback(err)
+            }
+        }
+    }
+}
+</code></pre><p><strong>async/await</strong><br>async函数是Generator函数的语法糖，使用关键字async来表示，在函数内部使用await来表示异步。Generator函数的执行必须依靠执行器，而async函数自带执行器。async函数返回值是Promise对象，可以直接使用then()方法进行调用。</p>
+<pre><code>fn = () =&gt;{
+    return new Promise((resolve,reject) =&gt; {
+        setTimeout(() =&gt; {
+            resolve(1)
+        }, 2000)
+    })
+}
+const Fn = async () =&gt; {
+    await fn().then((res) =&gt; {
+        console.log(res)
+    })
+    console.log(2)
+}
+Fn();
+</code></pre><p>问题描述：  </p>
+<pre><code>var getNumbers = () =&gt; {
+  return Promise.resolve([1, 2, 3])
+}
+var multi = num =&gt; {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      if (num) {
+        resolve(num * num)
+      } else {
+        reject(new Error(&apos;num not specified&apos;))
+      }
+    }, 1000)
+  })
+}
+// 改造forEach，确保每一个异步的回调执行完成后，才执行下一个
+async function asyncForEach(array,callback){
+    for(let index=0;index&lt;array.length;index++){
+        await callback(array[index], index, array)
+    }
+}
+async function test(){
+    var nums = await getNumbers();
+    asyncForEach(nums, async x =&gt; {
+        var res = await multi(x);
+        console.log(res)
+    })
+}
+</code></pre><p><strong>业务场景：一个业务分多个步骤完成，每个步骤都是异步的，每一个步骤都需要之前每个步骤的结果</strong>  </p>
+<pre><code>// 传入参数n，表示这个函数执行的时间
+// 执行的结果是n+200，这个值将用于下一个步骤
+function takeLongTime(n){
+    return new Promise(resolve =&gt; {
+        setTimeout(()=&gt; resolve(n+200), n);
+    })
+}
+function step1(n){
+    console.log(`step1 with ${n}`);
+    return takeLongTime(n)
+}    
+function step2(m,n){
+    console.log(`step2 with ${m} and ${n}`);
+    return takeLongTime(m+n)
+}
+function step3(k,m,n){
+    console.log(`step3 with ${k},${m} and ${n}`);
+    return takeLongTime(k+m+n)
+}
+async function doIt(){
+    console.log(&quot;doIt&quot;);
+    const time1 = 300;
+    const time2 = await step1(time1);
+    const time3 = await step2(time1,time2);
+    const result = await step3(time1, time2, time3);
+    console.log(`result is ${result}`);
+    console.log(&quot;doIt&quot;)
+}
+</code></pre><h4 id="生成器用途"><a href="#生成器用途" class="headerlink" title="生成器用途"></a>生成器用途</h4><p><strong>返回随机数函数</strong>  </p>
+<pre><code>function *randomFrom(...arr){
+    while(true){
+        yield arr[Math.floor(Math.random()*arr.length)]
+    }
+}
+const getRandom = randomFrom(1,2,5,9,4);
+getRandom.next().value; //返回随机的一个数
+</code></pre><p><strong>用生成器来操作HTML</strong>  </p>
+<pre><code>const strings = document.querySelectorAll(&apos;.string&apos;);
+const btn = document.querySelector(&apos;#btn&apos;);
+const className = &apos;darker&apos;;
+function *addClassToEach(elements, className){
+    for(const el of Array.from(elements))
+        yield el.classList.add(className)
+};
+const addClassToStrings = addClassToEach(strings, className);    
+btn.addEventListener(&apos;click&apos;, (el) =&gt; {
+  if (addClassToStrings.next().done)
+    el.target.classList.add(className);
+});
+</code></pre><p><strong>用generator和Promise实现async函数</strong>  </p>
+<pre><code>// async函数
+async function init(){
+    const res1 = await doTask1();
+    console.log(res1);
+    const res2 = await doTask2(res1);
+    console.log(res2);
+    const res3 = await doTask3(res2);
+    console.log(res3);
+    return res3;
+}
+</code></pre><p>函数体中依次执行三个异步任务，每个任务依赖前一个任务的完成。最后，函数返回最后一个任务的结果。</p>
+<pre><code>// generator
+function runner(genFn){
+    const itr = genFn();
+    function run(arg){
+        const result = itr.next(arg);
+        if(result.done){
+            return result.value;
+        }else{
+            return Promise.resolve(result.value).then(run);
+        }
+    }
+    return run();
+}
+runner(function(){
+    const res1 = await doTask1();
+    console.log(res1);
+    const res2 = await doTask2(res1);
+    console.log(res2);
+    const res3 = await doTask3(res2);
+    console.log(res3);
+    return res3;
+})
+</code></pre><p><strong>需求：实现一个函数，在多次异步请求全部结束之后再进行处理，即使有一次或多次失败，在失败时我们可以处理这些失败的情况，但是不会阻塞其他请求</strong>  </p>
+<p>Promise.all()其中的一个请求失败了就会走catch，无法满足请求全部结束的需求。</p>
+<p>思路让所有的promises都走resolve，把error的信息扔到resolve中。基于这个思路把所有的promises转成resolve。</p>
+<pre><code>const p1 = new Promise((res,rej) =&gt; {
+    setTimeout(() =&gt; {
+        res(1)
+    }, 1000)
+})
+const p2 = new Promise((res,rej) =&gt; {
+    setTimeout(() =&gt; {
+        rej(&apos;err 2&apos;)
+    },2000)
+})
+const p3 = new Promise((res,rej) =&gt; {
+    setTimeout(() =&gt; {
+        res(3)
+    },3000)
+})
+let promises = [p1,p2,p3]
+
+let transferedPromises = (promise =&gt; {
+    //返回一个处理之后的Promise数组
+    return promises.map(promise =&gt; {
+        return promise.then(res =&gt; res).catch(err =&gt; err)
+    })
+})
+let promiseArr = transferedPromises(promises)
+Promise.all(promiseArr).then(resArr =&gt; {
+    console.log(resArr)
+}) // [1, &apos;err 2&apos;,3]
+</code></pre><p>增加了需求：5(n)次异步请求最多允许失败2(m,m&lt;n)次  </p>
+<pre><code>const dealPromises = (promises, count) =&gt;{
+    let errorCount = 0;
+    let thenHandler = function(res){
+        return {
+            res: res,
+            status: &apos;success&apos;
+        }
+    }
+    let catchHandler = function(err){
+        errorCount++;
+        if(errorCount &gt;= count){
+            return Promise.reject(`catch 超过了${count}次`)
+        }else{
+            return {
+                err: err,
+                status: &apos;failed&apos;
+            }
+        }
+    }
+    let transferedPromises = (promises) =&gt; { // 返回一个处理之后的promise数组
+return promises.map(promise =&gt; {
+     return promise.then(thenHandler).catch(catchHandler)
+    })
+  }
+  let promiseArr = transferedPromises(promises)
+  Promise.all(promiseArr).then(resArr =&gt; {
+    console.log(&apos;来到了then&apos;, resArr)
+  }).catch(err =&gt; {
+    console.log(&apos;来到了catch&apos;, err)
+  })
+}    
+dealPromises(promises, 3)
+// 输出: 来到了catch catch 超过了3次
+</code></pre><h4 id="抛开Promise，了解异步操作流程"><a href="#抛开Promise，了解异步操作流程" class="headerlink" title="抛开Promise，了解异步操作流程"></a>抛开Promise，了解异步操作流程</h4><p>假设有一个异步任务模板，使用setTimeout模拟异步，在每个异步任务中先打印这个参数arg，然后以2*arg作为参数传入回调函数中。</p>
+<pre><code>asyncFn = (arg, cb) =&gt; {
+    setTimeout(function(){
+        console.log(`参数为${arg}`)
+        cb(arg*2)
+    })
+}
+//要执行异步任务的参数队列
+let items = [1,2,3,4,5,6];
+</code></pre><p>串行任务：在每个异步任务的回调方法中通过shift()方法，每次从任务队列中取出一个值，并且更新剩余任务的数组，实现任务的接力进行。</p>
+<pre><code>let results = [];
+final =(value) =&gt; {
+    console.log(`完成：${value}`);
+}
+series=(item)=&gt;{
+    if(item){
+        asyncFn(item, function(res){
+            results.push(res);
+            return series(items.shift());
+        })
+    }else{
+        final(results);
+    }
+}
+series(items.shift())
+</code></pre><p>并行任务：一开始就将所有任务都执行，然后监测负责保存异步任务执行结果的数组的长度，若等于任务队列长度时，则是所有异步任务都执行完毕。</p>
+<pre><code>let len = items.length;
+items.forEach((item) =&gt; {
+    asyncFn(item, function(res){
+        results.push(res);
+        if(results.length===len){
+            final(results);
+        }
+    })
+})
+</code></pre><p><strong>场景：从两个不同的来源获取数据，然后把响应组合在一起以形成第三个请求，最终把最后一条响应打印出来</strong>  </p>
+<pre><code>function *foo(){
+    var results = yield Promise.all([request(&quot;http://some.url.1&quot;), request(&quot;http://some.url.2&quot;)]);
+    var r1 = results[0];
+    var r2 = results[1];
+    var r3 = yield request(&quot;http://some.url.3/?v=&quot;+r1+&quot;,&quot;+r2);
+    console.log(r3)
+}
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/02/js二叉树/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2445,141 +3162,6 @@ p {font-size:16px;}
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/float/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/28/float/" itemprop="url">理解float & display：inline-block</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T00:00:00+08:00">
-                2018-04-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="理解分析float"><a href="#理解分析float" class="headerlink" title="理解分析float"></a>理解分析float</h4><p>float即为浮动，使用float，该浮动元素便会脱离正常的文档流，使其浮动到父元素的行的一端（元素向右或向左移动，直到碰到浮动元素，或者达到父元素内容的边界），并且其他元素将忽略该浮动元素并填补其原先的空间。</p>
-<p><strong>文档流：</strong>元素按照自上向下，自左到右的顺序依次排放。</p>
-<h5 id="float特性"><a href="#float特性" class="headerlink" title="float特性"></a>float特性</h5><p><strong>1.包裹性</strong><br>block元素不指定width的话，默认是100%，一旦让该div浮动起来，就会产生类似inline元素的包裹性，宽度会跟随内容自适应。（通常float元素需要手动指定width）</p>
-<p>浮动能设定为左浮和右浮，但display:inline-block都是从左到右排列的。</p>
-<p><strong>对比 inline-block</strong><br>inline-block的元素是宽高可设置，相邻的元素会在一行显示，直到本行排满，也就是让元素的容器属性为block，内容为inline。</p>
-<ol>
-<li>inline-block: 水平排列一行，即使元素高度不一，也会以高度最大的元素高度为行高，即使高度小的元素周围留空，也不回有第二行元素上浮补位。可以设置默认的垂直对齐基线。inline-block的元素仍然在仍在文档流中占据位置。</li>
-<li>float: 让元素脱离当前文档流，呈环绕状排列，如遇上行有空白，而当前元素大小可以挤进去，这个元素会在上行补位排列。默认是顶部对齐。脱离文档流。</li>
-<li>当我们要设置某些元素在一行显示，并且排列方向一致的情况下，我们尽可能去用inline-block。<br>因为inline-block的元素仍然在仍在文档流中占据位置。，这样就减少了程序对DOM的更改操作，因为DOM的每一次更改，浏览器会重绘DOM树。会增加性能消耗。这样也不用像float那样麻烦，需要清除flaot.</li>
-</ol>
-<p><strong>2.高度欺骗</strong>  </p>
-<pre><code>&lt;div style=&quot;border:4px solid red;&quot;&gt;
-    &lt;img style=&quot;border:4px solid yellow;float:left;&quot; src=&quot;img/25/2.jpg&quot; /&gt;
-&lt;/div&gt;
-</code></pre><p><img src="/images/float/img1.jpg" alt="">  </p>
-<p>外层div没有了浮动，因此红色边框宽度默认是100%全屏。其内容img由于加上了float，使得该img具有了欺骗性。float给img施了个障眼法，让该img的inline-height高度塌陷为0了。这样外层div计算高度时，认为img的高度为0，相当于div的content的高度为0，因此红色边框看起来是一条直线。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2634,7 +3216,7 @@ p {font-size:16px;}
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

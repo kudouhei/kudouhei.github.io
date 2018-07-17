@@ -247,6 +247,141 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/float/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/28/float/" itemprop="url">理解float & display：inline-block</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T00:00:00+08:00">
+                2018-04-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="理解分析float"><a href="#理解分析float" class="headerlink" title="理解分析float"></a>理解分析float</h4><p>float即为浮动，使用float，该浮动元素便会脱离正常的文档流，使其浮动到父元素的行的一端（元素向右或向左移动，直到碰到浮动元素，或者达到父元素内容的边界），并且其他元素将忽略该浮动元素并填补其原先的空间。</p>
+<p><strong>文档流：</strong>元素按照自上向下，自左到右的顺序依次排放。</p>
+<h5 id="float特性"><a href="#float特性" class="headerlink" title="float特性"></a>float特性</h5><p><strong>1.包裹性</strong><br>block元素不指定width的话，默认是100%，一旦让该div浮动起来，就会产生类似inline元素的包裹性，宽度会跟随内容自适应。（通常float元素需要手动指定width）</p>
+<p>浮动能设定为左浮和右浮，但display:inline-block都是从左到右排列的。</p>
+<p><strong>对比 inline-block</strong><br>inline-block的元素是宽高可设置，相邻的元素会在一行显示，直到本行排满，也就是让元素的容器属性为block，内容为inline。</p>
+<ol>
+<li>inline-block: 水平排列一行，即使元素高度不一，也会以高度最大的元素高度为行高，即使高度小的元素周围留空，也不回有第二行元素上浮补位。可以设置默认的垂直对齐基线。inline-block的元素仍然在仍在文档流中占据位置。</li>
+<li>float: 让元素脱离当前文档流，呈环绕状排列，如遇上行有空白，而当前元素大小可以挤进去，这个元素会在上行补位排列。默认是顶部对齐。脱离文档流。</li>
+<li>当我们要设置某些元素在一行显示，并且排列方向一致的情况下，我们尽可能去用inline-block。<br>因为inline-block的元素仍然在仍在文档流中占据位置。，这样就减少了程序对DOM的更改操作，因为DOM的每一次更改，浏览器会重绘DOM树。会增加性能消耗。这样也不用像float那样麻烦，需要清除flaot.</li>
+</ol>
+<p><strong>2.高度欺骗</strong>  </p>
+<pre><code>&lt;div style=&quot;border:4px solid red;&quot;&gt;
+    &lt;img style=&quot;border:4px solid yellow;float:left;&quot; src=&quot;img/25/2.jpg&quot; /&gt;
+&lt;/div&gt;
+</code></pre><p><img src="/images/float/img1.jpg" alt="">  </p>
+<p>外层div没有了浮动，因此红色边框宽度默认是100%全屏。其内容img由于加上了float，使得该img具有了欺骗性。float给img施了个障眼法，让该img的inline-height高度塌陷为0了。这样外层div计算高度时，认为img的高度为0，相当于div的content的高度为0，因此红色边框看起来是一条直线。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/22/js-array-weighting/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -795,7 +930,7 @@ body &gt; .content {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
