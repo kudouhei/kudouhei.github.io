@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {   &amp;quot;name&amp;quot;: &amp;quot;mydemo&amp;quot;,">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-11T13:20:41.000Z">
+<meta property="og:updated_time" content="2018-07-17T12:35:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="webpack整理">
 <meta name="twitter:description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {   &amp;quot;name&amp;quot;: &amp;quot;mydemo&amp;quot;,">
@@ -673,6 +673,61 @@ plugins: [
       verbose: true,
     })
   ]
+}
+</code></pre><p><strong>webpack4.0配置</strong>  </p>
+<pre><code>const path = require(&apos;path&apos;)
+const webpack = require(&apos;webpack&apos;);
+const HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;); // 将html打包
+const ExtractTextPlugin = require(&apos;extract-text-webpack-plugin&apos;);// 打包的css拆分，将一部分抽离出来
+module.exports = {
+    entry: &apos;./src/index.js&apos;,
+    output: {
+        path: path.resolve(__dirname, &apos;dist&apos;), // 定位，输出文件的目标路径
+        filename: &apos;[name].js&apos;
+    },
+    module: { // 模块的相关配置
+        rules: [  // 根据文件的后缀提供一个loader，解析规则
+            {
+                test: /\.js$/,
+                include: [ path.resolve(__dirname, &apos;src&apos;) ],
+                use: &apos;babel-loader&apos;
+            },
+            {
+                test: /\.less$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: &apos;style-loader&apos;,
+                    use: [
+                        &apos;css-loader&apos;,
+                        &apos;less-loader&apos;
+                    ]
+                })
+            }
+        ]
+    },
+    resolve: { // 解析模块的可选项
+        extensions: [&quot;.js&quot;, &quot;.json&quot;, &quot;.jsx&quot;, &quot;.less&quot;, &quot;.css&quot;],
+        alias: {
+            utils: path.resolve(__dirname, &apos;src/utils&apos;)
+        }
+    },
+    plugins: [ // 插件的引用，压缩，分离美化
+        new ExtractTextPlugin(&apos;[name].css&apos;),
+        new HtmlWebpackPlugin({
+            file: &apos;index.html&apos;, // 将模板的头部和尾部添加css，js模板，dist目录发布到服务器上
+            template: &apos;src/index.html&apos;
+        })
+    ],
+    devServer: { // 服务于webpack-dev-server 内部封装了一个express
+        port: &apos;8080&apos;,
+        before(app){
+            app.get(&apos;/api/test.json&apos;,(req, res)=&gt;{
+                res.json({
+                    code: 200,
+                    message: &apos;Hello&apos;
+                })
+            })
+        }        
+    }    
 }
 </code></pre>
       
