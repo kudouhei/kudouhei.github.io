@@ -247,6 +247,324 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/18/实现new/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/18/实现new/" itemprop="url">js实现new</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-18T00:00:00+08:00">
+                2018-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="js模拟实现new"><a href="#js模拟实现new" class="headerlink" title="js模拟实现new"></a>js模拟实现new</h4><p>new的结果是一个新对象。实例的<strong>proto</strong>属性会指向构造函数的prototype，也正因为此，实例可以访问原型上的属性。</p>
+<p>步骤：  </p>
+<ol>
+<li>创建一个新对象</li>
+<li>取出第一个参数，就是要传入的构造函数，因为shift会修改原数组，所有arguments会被去除第一个参数</li>
+<li>将obj的原型指向构造函数，这样obj就可以访问到构造函数原型中的属性。</li>
+<li>使用apply，改变构造函数this的指向到新建的对象，这样obj就可以访问到构造函数中的属性</li>
+<li><p>返回obj</p>
+<pre><code>function objectFactory(){
+    var obj = new Object();
+    Constructor = [].shift.call(arguments);
+    obj.__proto__ = Constructor.prototype;
+    Constructor.apply(obj, arguments);
+    return obj;
+}
+</code></pre></li>
+</ol>
+<p>测试代码：  </p>
+<pre><code>function Person(name, age){
+    this.name = name;
+    this.age = age;
+}
+Person.prototype.strength = 60;
+var person = objectFactory(Person, &apos;Kevin&apos;, &apos;18&apos;);
+console.log(person.name) // Kevin
+console.log(person.strength) //60
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
+                2018-07-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
+<p><strong>攻击分类</strong>  </p>
+<ul>
+<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
+<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
+<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
+</ul>
+<p><strong>如何防御XSS</strong>  </p>
+<ul>
+<li>转义： 转义嵌入HTML中的动态内容</li>
+<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
+<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
+</ul>
+</li>
+</ul>
+<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
+<p><strong>攻击原理</strong>  </p>
+<ol>
+<li>浏览器C浏览并登录信任网站A</li>
+<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
+<li>用户在没有登出A网站的情况下，访问危险网站B</li>
+<li>B要求访问第三方站点A，发出一个请求request</li>
+<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
+<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
+</ol>
+<p><strong>常见的防御方式</strong>  </p>
+<ul>
+<li>添加验证码</li>
+<li>验证HTTP Referer字段</li>
+<li>在HTTP头中自定义属性并验证</li>
+</ul>
+<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
+<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
+<p><strong>https作用</strong>  </p>
+<ul>
+<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
+<li>身份认证确认网站的真实性</li>
+<li>数据完整性防止内容被第三方冒充或篡改</li>
+</ul>
+<p><strong>HTTPS流程解析</strong>  </p>
+<ol>
+<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
+<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
+<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
+<li>将加密后的对称密钥发送给HTTPS服务端</li>
+<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
+</ol>
+<p><strong>https和http区别</strong>  </p>
+<ul>
+<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
+<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
+<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
+</ul>
+<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/http/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -424,179 +742,6 @@
 </ul>
 <p><strong>https</strong>  </p>
 <p>https与http的区别就是： 在请求前，会建立ssl链接，确保接下来的通信都是加密的，无法被轻易截取分析。https=http+ssl</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
-                2018-07-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
-<p><strong>攻击分类</strong>  </p>
-<ul>
-<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
-<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
-<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
-</ul>
-<p><strong>如何防御XSS</strong>  </p>
-<ul>
-<li>转义： 转义嵌入HTML中的动态内容</li>
-<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
-<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
-</ul>
-</li>
-</ul>
-<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
-<p><strong>攻击原理</strong>  </p>
-<ol>
-<li>浏览器C浏览并登录信任网站A</li>
-<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
-<li>用户在没有登出A网站的情况下，访问危险网站B</li>
-<li>B要求访问第三方站点A，发出一个请求request</li>
-<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
-<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
-</ol>
-<p><strong>常见的防御方式</strong>  </p>
-<ul>
-<li>添加验证码</li>
-<li>验证HTTP Referer字段</li>
-<li>在HTTP头中自定义属性并验证</li>
-</ul>
-<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
-<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
-<p><strong>https作用</strong>  </p>
-<ul>
-<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
-<li>身份认证确认网站的真实性</li>
-<li>数据完整性防止内容被第三方冒充或篡改</li>
-</ul>
-<p><strong>HTTPS流程解析</strong>  </p>
-<ol>
-<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
-<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
-<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
-<li>将加密后的对称密钥发送给HTTPS服务端</li>
-<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
-</ol>
-<p><strong>https和http区别</strong>  </p>
-<ul>
-<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
-<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
-<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
-</ul>
-<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
 
           
         
@@ -1664,6 +1809,141 @@ win.addEventListener(&apos;resize&apos;, refreshRem)
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
+<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
+<p>常用的场景例如：</p>
+<ul>
+<li>在用户输入时更新大量的信息，例如过滤列表。</li>
+<li>从Vuex商店中收集信息</li>
+<li>表单验证</li>
+<li>数据可视化需要依赖于用户查看的内容而变化</li>
+</ul>
+<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
+<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
+<p>1.计算属性VSmethod方法  </p>
+<ul>
+<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
+<li>method则每次都会重新计算</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/理解nextTick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1763,141 +2043,6 @@ Vue.nextTick(function(){
     })
 }
 </code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
-                2018-07-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
-<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
-<p>常用的场景例如：</p>
-<ul>
-<li>在用户输入时更新大量的信息，例如过滤列表。</li>
-<li>从Vuex商店中收集信息</li>
-<li>表单验证</li>
-<li>数据可视化需要依赖于用户查看的内容而变化</li>
-</ul>
-<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
-<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
-<p>1.计算属性VSmethod方法  </p>
-<ul>
-<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
-<li>method则每次都会重新计算</li>
-</ul>
-
           
         
       
@@ -2221,150 +2366,6 @@ Vue.component(&apos;base-component&apos;, Vue.extend(baseOptions))
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/29/千分符/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/29/千分符/" itemprop="url">给数字添加千分符</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-29T00:00:00+08:00">
-                2018-06-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="给数字添加千分符"><a href="#给数字添加千分符" class="headerlink" title="给数字添加千分符"></a>给数字添加千分符</h4><p>方法一：  </p>
-<pre><code>function formatNumber(str){
-  let arr =[],
-      count = str.length;
-  while(count &gt;= 3){
-    arr.unshift(str.slice(count-3, count))
-    count -= 3
-  }
-  str.length % 3 &amp;&amp; arr.unshift(str.slice(0, str.length % 3))
-  return arr.toString()
-}
-console.log(formatNumber(&quot;123456789&quot;)) 
-</code></pre><p>方法二：  </p>
-<pre><code>function formatNumber1(str){
-  return str.replace(/\B(?=(\d{3})+(?!\d))/g, &apos;,&apos;)
-}
-console.log(formatNumber1(&quot;999456789&quot;)) // 1,234,567,890
-</code></pre><ul>
-<li><code>/B(?=)/</code>,除<code>\B</code>以外的部分都不属于匹配结果，也就是说整个表达式里，真正参与最后的匹配到替换成<code>,</code>的是前面这个<code>\B</code></li>
-<li>先行断言(?=)，如<code>x(?=y)</code>，如果x后面跟的是y，则匹配x。字符串xyz中的x会被匹配，而后面的y是不会被匹配的 </li>
-<li>后行断言(?!\d),表示后面不能跟相应的内容，这里表示后面不能跟数字了。</li>
-</ul>
-<p>方法三：  </p>
-<p>把得到的数据转成数字</p>
-<pre><code>parseInt(&apos;11123123231.3213&apos;).toLocaleString()；//千位分隔符
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2419,7 +2420,7 @@ console.log(formatNumber1(&quot;999456789&quot;)) // 1,234,567,890
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -247,6 +247,255 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/HTTP缓存/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/06/HTTP缓存/" itemprop="url">http缓存</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-06T00:00:00+08:00">
+                2018-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="浏览器缓存"><a href="#浏览器缓存" class="headerlink" title="浏览器缓存"></a>浏览器缓存</h4><p>当发送一个服务器请求时，浏览器首先会进行缓存过期判断。浏览器根据缓存过期时间判断缓存文件是否过期。</p>
+<p>情景一、利用(Expires或者Cache-Control表示资源在客户端缓存的有效期)若没有过期，则不向服务器发送请求，直接使用缓存中的结果，此时可以在控制台看到200 OK(from cache),此时完全使用缓存，浏览器和服务器没有任何交互。</p>
+<ul>
+<li>Chrome浏览器状态码表现为：200 OK(from disk cache)或是200 OK(from memory cache)</li>
+<li>在浏览器中，浏览器会在js和图片等文件解析执行后直接存入内存缓存中，那么当刷新页面时只需直接从内存缓存中读取(from memory cache)；而css文件则会存入硬盘文件中，所以每次渲染页面都需要从硬盘读取缓存(from disk cache)。</li>
+</ul>
+<p>情景二、若已过期，则向服务器发送请求，此时请求中带上1中设置的文件修改时间和Etag，进行资源更新判断。服务器根据浏览器传过来的文件修改时间，判断自浏览器上一次请求之后，文件是否被修改过；根据Etag，判断文件内容自上一次请求之后，有没有发生变化。</p>
+<ul>
+<li>若两种判断的结果都是文件没有被修改过，则服务器服务器告诉浏览器文件没有被修改过，可以用浏览器的缓存–请求响应返回304 Not Modified。此情况为协商缓存，浏览器和服务器之间有一次请求交互。</li>
+</ul>
+<p><strong>强缓存</strong><br>浏览器在加载资源时，先根据这个资源的一些http header：(Expires或Cache-Control)判断它是否命中强缓存，强缓存如果命中，浏览器直接从自己的缓存中读取资源，不会发请求到服务器。</p>
+<p>Expires是http1.0提出的一个表示资源过期时间的header，描述一个绝对时间，由服务器返回，用GMT格式的字符串表示。原理是：  </p>
+<ol>
+<li>浏览器第一次跟服务器请求一个资源，服务器在返回这个资源的同时，在response的header加上Expires的header。</li>
+<li>浏览器在接到这个资源后，会把这个资源连同所有response header一起缓存下来（所以缓存命中的请求返回的header并不是来自服务器，而是来自之前缓存的header）</li>
+<li>浏览器再请求这个资源时，先从缓存中寻找，找到这个资源后，拿出它的Expires跟当前的请求时间比较，如果请求时间在Expires指定的时间之前，就能命中缓存，否则就不行。</li>
+<li>如果缓存没有命中，浏览器会直接从服务器加载资源，Expires Header在重新加载的时候会被更新。</li>
+</ol>
+<p>Cache-Control是http1.1提出的，相对时间，在配置缓存的时候，以秒为单位。Cache-Control:max-age:3600。原理：  </p>
+<p>第三步时：根据它第一次的请求时间和Cache-Control设定的有效期，计算出一个资源过期时间，再拿这个过期时间跟当前的请求时间比较，如果请求时间在过期时间之前，就能命中缓存，否则不行。</p>
+<p><strong>Cache-Control在进行缓存命中的时候，利用客户端时间进行判断，对比Expires，Cache-Control的缓存管理更有效，更安全</strong></p>
+<h5 id="强缓存应用"><a href="#强缓存应用" class="headerlink" title="强缓存应用"></a>强缓存应用</h5><p>性能优化之一：对于大量静态资源的网页，要利用强缓存，提高响应速度。做法：为这些静态资源全部配置一个超时时间超长的Expires或Cache-Control，这样用户在访问网页时，只会在第一次加载时从服务器请求静态资源，其他时候只要缓存没有失效并且用户没有强制刷新的条件下都会从自己的缓存中加载。例如淘宝、京东首页缓存。</p>
+<p>这种缓存配置方式会有一个新问题，就是在发布时资源更新问题，网站发布新版本，由于缓存，会导致默认情况下不会请求服务器最新的图片资源，除非清除或禁用缓存</p>
+<p><strong>协商缓存</strong><br>协商缓存利用的是<code>Last-Modified</code>、<code>If-Modified-Since</code>和<code>Etag</code>、<code>If-None-Match</code>这两对Header来管理的。</p>
+<p>【Last-Modified，If-Modified-Since】的控制缓存的原理是：  </p>
+<ol>
+<li>浏览器第一次跟服务器请求一个资源，服务器在返回这个资源的同时，在response的header加上<strong>Last-Modified</strong>，这个header表示这个资源在服务器上的最后修改时间。</li>
+<li>浏览器再次跟服务器请求这个资源时，在request的header中加上<strong>If-Modified-Since</strong>，这个header的值就是上一次请求时返回的Last-Modified的值。</li>
+<li>服务器再次收到资源请求时，根据浏览器传过来If-Modified-Since和资源在服务器上的最后修改时间判断资源是否有变化，如果没有变化则返回304 Not Modified，但是不会返回资源内容；如果有变化，就正常返回资源内容。</li>
+<li>浏览器收到304的响应后，就会从缓存中加载资源。</li>
+<li>如果协商缓存没有命中，浏览器直接从服务器加载资源时，Last-Modified Header在重新加载的时候会被更新，下次请求时，If-Modified-Since会启用上次返回的Last-Modified值。</li>
+</ol>
+<p>有时候服务器上资源其实有变化，但是最后修改时间却没有变化，这是需要【ETag、If-None-Match】。它们的缓存管理的方式是：</p>
+<ol>
+<li>浏览器第一次跟服务器请求一个资源，服务器在返回这个资源的同时，在respone的header加上ETag的header，这个header是服务器根据当前请求的资源生成的一个唯一标识，这个唯一标识是一个字符串，只要资源有变化这个串就不同，跟最后修改时间没有关系</li>
+<li>浏览器再次跟服务器请求这个资源时，在request的header上加上If-None-Match的header，这个header的值就是上一次请求时返回的ETag的值</li>
+<li>服务器再次收到资源请求时，根据浏览器传过来If-None-Match和然后再根据资源生成一个新的ETag，如果这两个值相同就说明资源没有变化，否则就是有变化；如果没有变化则返回304 Not Modified，但是不会返回资源内容；如果有变化，就正常返回资源内容。</li>
+<li>浏览器收到304的响应后，就会从缓存中加载资源。</li>
+</ol>
+<p><strong>使用Etag解决Last-Modified存在的一些问题</strong>  </p>
+<ul>
+<li>某些服务器不能精确得到资源的最后修改时间，这样就无法通过最后修改时间判断资源是否更新</li>
+<li>如果资源修改非常频繁，在秒以下的时间内进行修改，而Last-Modified只能精确到秒</li>
+<li>一些资源的最后修改时间改变了，但是内容没改变，使用Etag就认为资源还是没有修改的。</li>
+</ul>
+<p><strong>缓存流程</strong>  </p>
+<p><img src="/images/cache/cache.png" alt="">  </p>
+<h4 id="cookie、localStorage和sessionStorage"><a href="#cookie、localStorage和sessionStorage" class="headerlink" title="cookie、localStorage和sessionStorage"></a>cookie、localStorage和sessionStorage</h4><p>使用场景</p>
+<ul>
+<li>cookie的作用是与服务器进行交互</li>
+<li>localStorge可以用于存储该浏览器对该页面的访问次数，还可以用来存储一些固定不变的页面信息，这样不需要每次重新加载，值也可以进行覆盖</li>
+<li>sessionStorage进行页面传值</li>
+</ul>
+<p>三者异同：  </p>
+<ul>
+<li>生命周期：<ul>
+<li>cookie：可设置失效时间，没有设置的话，默认是关闭浏览器后失效</li>
+<li>localstorge：除非手动清除，否则将会永久保存</li>
+<li>sessionStorage：仅在当前网页会话下有效，关闭页面或浏览器后就会被清除</li>
+</ul>
+</li>
+<li>存放数据大小：<ul>
+<li>cookie: 4KB左右</li>
+<li>localStorge和sessionStorage可以保存5MB信息</li>
+</ul>
+</li>
+<li>http请求：<ul>
+<li>cookie：每次都会携带在http头中，如果使用cookie保存过多数据会带来性能问题<ul>
+<li>localStorge和sessionStorage：仅在浏览器中保存，不参与和服务器通信</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>关于缓存问答</strong>  </p>
+<ol>
+<li>请求被缓存，导致新代码未生效  <ul>
+<li>修改请求头<code>If-modified-since:0</code>或<code>If-none-match</code></li>
+<li>修改请求URL，请求URL后加随机数，随机数可以是时间戳，哈希值</li>
+</ul>
+</li>
+<li>服务端缓存导致本地代码未更新<ul>
+<li>合理设置Cache-Control：s-maxage</li>
+<li>设置Cache-Control:private指令，防止代理服务器缓存资源</li>
+</ul>
+</li>
+<li>Cache-Control:max-age=0和no-cache区别  <ul>
+<li>max-age=0和no-cache应该是从语气上不同。max-age=0是告诉客户端资源的缓存到期应该向服务器验证缓存的有效性。而no-cache则告诉客户端使用缓存前必须向服务器验证缓存的有效性。</li>
+</ul>
+</li>
+</ol>
+<p><strong>关于localStorge问答</strong> </p>
+<ol>
+<li>a.meituan.com和b.meituan.com这两个域能够共享同一个localStorge吗  <ul>
+<li>同一个域名共享同一个localStorge，上述为两个域名，所以不能共享</li>
+</ul>
+</li>
+<li>在 webview 中打开一个页面：i.meituan.com/home.html，点击一个按钮，调用 js 桥打开一个新的 webview：i.meituan.com/list.html，这两个分属不同 webview 的页面能共享同一个 localStorage 吗？<ul>
+<li>能，相当于同一个浏览器的不同标签页</li>
+</ul>
+</li>
+<li>如果localStorge存满了，再往里面存东西，或者要存的东西超过了剩余容量，会发生什么<ul>
+<li>存不进去并报错</li>
+</ul>
+</li>
+</ol>
+<p>同一个域名共享同一个 localStorage，而同一个域名下存在过多独立的业务线，业务线之间各自为政，毫无节制的攫取公共资源，这就是 localStorage 溢出问题的根源。</p>
+<p><strong>本地存储容量有限，那么就整个站点而言，使用本地存储的策略是什么</strong>  </p>
+<ul>
+<li>只保存重要页面的重要数据<ul>
+<li>典型的，首页首屏。对业务庞大的站点尤为重要</li>
+</ul>
+</li>
+<li>极大提高用户体验的数据<ul>
+<li>比如表单的状态，可以提交之前保存，当用户刷新页面时可以还原</li>
+<li>静态资源，如js和css</li>
+</ul>
+</li>
+<li>一个请求一个key值<ul>
+<li>避免请求链接加参数的key</li>
+</ul>
+</li>
+</ul>
+<p><strong>本地存储注意事项</strong>  </p>
+<ul>
+<li>localStorge只能作为提升用户体验的手段，而不能成为客户端逻辑的可靠，唯一的依赖。</li>
+<li>key过多，页面path作为key值，该页面上的数据统一在value处理</li>
+<li>序列化，过于依赖JOSN.stringify，性能问题，移动端尤为明显。</li>
+<li>避免频繁set/get,尽量将数据缓存进内存，然后页面卸载的时候一次写入。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/timezone/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1391,248 +1640,6 @@ console.log(result)
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/性能优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/28/性能优化/" itemprop="url">前端性能优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
-                2018-05-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="前端性能优化"><a href="#前端性能优化" class="headerlink" title="前端性能优化"></a>前端性能优化</h4><p><strong>1. 网络方面（网络传输性能）</strong><br>浏览器同一时间所发送的网络请求数是有限的。浏览器处理用户请求的过程：<strong>浏览器在得到用户请求之后，经历了下面阶段：重定向-&gt;拉取缓存-&gt;DNS查询-&gt;建立TCP链接-&gt;发起请求-&gt;接收响应-&gt;处理HTML元素-&gt;元素加载完成</strong></p>
-<ul>
-<li>减少http请求，必要的资源合并</li>
-<li>减小资源体积，资源压缩(图片体积，雪碧图，使用字体图标，使用webp格式)</li>
-<li>缓存<ul>
-<li>DNS缓存：浏览器会在DNS解析步骤中消耗一定的时间<ul>
-<li>DNS预解析<ul>
-<li><code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;A.com&quot;&gt;</code></li>
-<li><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</code></li>
-</ul>
-</li>
-<li>当浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行DNS解析，减少用户的等待时间，提高用户体验</li>
-</ul>
-</li>
-<li>CDN部署与缓存：CDN作为静态资源文件的分发网络，本身就已经提升了，网站静态资源的获取速度，加快网站的加载速度，同时也给静态资源做好缓存工作，有效的利用已缓存的静态资源，加快获取速度</li>
-<li>http缓存：给资源设定缓存时间，防止在有效的缓存时间内对资源进行重复的下载，从而提升整体网页的加载速度</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/css/c1.png" alt="">  </p>
-<p>浏览器默认的缓存是放在内存里，内存里的缓存会因为进程的结束或浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。<code>from memory cache</code>和<code>from dis cache</code>，通过在服务器上设置的Etag字段控制缓存存放的位置，在浏览器接收到服务器响应后，会检测响应头部Header，如果有Etag字段，那么浏览器就会将本次缓存写入磁盘中。</p>
-<p>拉取缓存会出现200、304两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回304状态码。</p>
-<p><strong>2. 渲染和DOM操作方面</strong>  </p>
-<ul>
-<li>减少重排和重绘<ul>
-<li>DOM渲染层与GPU硬件加速：布局是由CPU处理的，绘制则是由GPU完成的<ul>
-<li>浏览器会先获取DOM树并依据样式将其分割成多个独立的渲染层</li>
-<li>CPU将每个层绘制进绘图中</li>
-<li>将位图作为纹理上传至GPU绘制</li>
-<li>GPU将所有的渲染层缓存，如果下次上传的渲染层没有发生变化，GPU就不需要对其进行重绘，并复合多个渲染层最终形成图像</li>
-</ul>
-</li>
-<li>重排：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加DOM元素，修改了影响元素盒子大小的CSS属性。获取某些属性，浏览器为了获得正确的值也会触发重排。<ul>
-<li>offset</li>
-<li>scroll</li>
-<li>client(top/left/width/height)</li>
-<li>width,height</li>
-<li>调用了getComputedStyle()或者IE的currentStyle</li>
-</ul>
-</li>
-<li>重绘：绘制，即渲染上色，所有对元素的视觉表现属性的修改，会引发重绘</li>
-</ul>
-</li>
-<li>优化网页渲染<ul>
-<li>css的文件放在头部，js文件放在尾部或者异步加载<ul>
-<li>动态脚本加载</li>
-<li>defer：defer是在HTML解析完之后才执行，如果是多个，按照加载的顺序依次执行</li>
-<li>async：async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</li>
-</ul>
-</li>
-<li>尽量避免内联样式 </li>
-</ul>
-</li>
-<li>DOM操作优化<ul>
-<li>避免在document上直接进行频繁的DOM操作</li>
-<li>使用classname代替大量的内联样式修改</li>
-<li>使用requestAnimationFrame代替setInterval操作</li>
-<li>使用事件代理</li>
-</ul>
-</li>
-</ul>
-<p><strong>async和defer区别</strong>  </p>
-<ul>
-<li>没有defer或async，浏览器会立即加载并执行指定脚本，所有script元素都会按照在页面出现的先后顺序依次被解析，只有在解析完前面的script代码后，才会解析后面的script代码。</li>
-<li>async标志，使用async属性表示当前脚本不必等待其他脚本，也不必阻塞文档呈现。但是不能保证异步脚本按照他们在页面出现的顺序执行。</li>
-<li>defer，使用defer属性可以让脚本在文档完成呈现之后再执行，延迟脚本总是按照指定的顺序执行。</li>
-</ul>
-<p><strong>3. 数据方面</strong>  </p>
-<ul>
-<li>图片加载处理（懒加载，预加载）</li>
-<li>json数据格式交互</li>
-<li>部分常用数据的缓存</li>
-</ul>
-<h5 id="浏览器显示页面的原理"><a href="#浏览器显示页面的原理" class="headerlink" title="浏览器显示页面的原理"></a>浏览器显示页面的原理</h5><p>流程  </p>
-<ol>
-<li>获取HTML文档及样式表文件</li>
-<li>解析成对应的树形数据结构<ul>
-<li>DOM tree</li>
-<li>CSSOM tree</li>
-</ul>
-</li>
-<li>计算可见节点形成render tree</li>
-<li>计算DOM的形状及位置进行布局</li>
-<li>将每个节点转化为实际像素绘制到视口上</li>
-</ol>
-<p><strong>资源加载：</strong>  </p>
-<ul>
-<li>执行JavaScript会阻止DOM tree构建</li>
-<li>加载CSS会阻止render tree构建</li>
-</ul>
-<p>默认情况下，JavaScript脚本会在引入它的位置执行，这是会阻断DOM tree的构建；如果在运行脚本时浏览器尚未完成CSS的下载和CSSOM tree的构建，浏览器会将脚本执行延迟到这些操作结束之后。</p>
-<p><strong>影响性能的因素</strong>  </p>
-<ul>
-<li>白屏<ul>
-<li>HTML和CSS的加载及解析速度</li>
-<li><code>&lt;head&gt;</code>内的脚本加载及执行</li>
-</ul>
-</li>
-<li>首屏<ul>
-<li>图片加载</li>
-<li><code>&lt;body&gt;</code>内的脚本加载及执行</li>
-</ul>
-</li>
-</ul>
-<p><strong>提高前端性能</strong>  </p>
-<ul>
-<li>缩短白屏时间</li>
-<li>加快首屏显示</li>
-<li>尽快监听主要操作的事件  </li>
-</ul>
-<h4 id="对移动端的认识"><a href="#对移动端的认识" class="headerlink" title="对移动端的认识"></a>对移动端的认识</h4><p>从兼容上讲  </p>
-<ul>
-<li>PC要兼容IE6+，Firefox，chrome，Safari</li>
-<li>mobile的网页开发，只需要考虑webkit内核的浏览器和chrome，uc，qq，小米手机浏览器，兼容的东西少了些</li>
-</ul>
-<p>从开发上讲  </p>
-<ul>
-<li>mobile端的网页开发比PC页面小了，装的东西要少些，相对交互稍简单些（滑动，触屏，手势） </li>
-</ul>
-<p>移动端前端开发：分为移动端web app和移动端网页</p>
-<p><strong>移动端网页布局和PC差异</strong><br>主要是css方面，外加如何做到同一url，不同客户端展现不一致的做法，俗称pc和mobile都兼容。</p>
-<p>rem在移动端布局  </p>
-<p>移动端的字体默认为16px，那么1rem我想表示为10px的话，我们就需要 10 % 16 = 0.625 即为62.5%，这样就可以比较方便的把设计稿里的px转换成rem单位来做到自适应了。这样无论用户如何设置电脑或者手机的默认字体大小，设置为rem的单位的长度都会随比例变化。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/ajax/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1935,6 +1942,248 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
 <p><strong>异步请求</strong><br>异步请求是当发出请求的同时，浏览器可以继续做任何事，Ajax发送请求并不会影响页面的加载与用户操作，相当于两条线互不影响。</p>
 <p><strong>ajax默认是异步的，async的值是true</strong>  </p>
 <p><strong>如何选择同步还是异步模式</strong><br>在发送ajax请求后，还需要继续处理服务器的响应结果，如果这是使用异步请求模式同时未将结果的处理交由另一个JS函数进行处理。会导致异步请求的响应还没有到达，函数已经执行完了return，会导致return的结果为空字符串。  </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/性能优化/" itemprop="url">前端性能优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="前端性能优化"><a href="#前端性能优化" class="headerlink" title="前端性能优化"></a>前端性能优化</h4><p><strong>1. 网络方面（网络传输性能）</strong><br>浏览器同一时间所发送的网络请求数是有限的。浏览器处理用户请求的过程：<strong>浏览器在得到用户请求之后，经历了下面阶段：重定向-&gt;拉取缓存-&gt;DNS查询-&gt;建立TCP链接-&gt;发起请求-&gt;接收响应-&gt;处理HTML元素-&gt;元素加载完成</strong></p>
+<ul>
+<li>减少http请求，必要的资源合并</li>
+<li>减小资源体积，资源压缩(图片体积，雪碧图，使用字体图标，使用webp格式)</li>
+<li>缓存<ul>
+<li>DNS缓存：浏览器会在DNS解析步骤中消耗一定的时间<ul>
+<li>DNS预解析<ul>
+<li><code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;A.com&quot;&gt;</code></li>
+<li><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</code></li>
+</ul>
+</li>
+<li>当浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行DNS解析，减少用户的等待时间，提高用户体验</li>
+</ul>
+</li>
+<li>CDN部署与缓存：CDN作为静态资源文件的分发网络，本身就已经提升了，网站静态资源的获取速度，加快网站的加载速度，同时也给静态资源做好缓存工作，有效的利用已缓存的静态资源，加快获取速度</li>
+<li>http缓存：给资源设定缓存时间，防止在有效的缓存时间内对资源进行重复的下载，从而提升整体网页的加载速度</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/css/c1.png" alt="">  </p>
+<p>浏览器默认的缓存是放在内存里，内存里的缓存会因为进程的结束或浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。<code>from memory cache</code>和<code>from dis cache</code>，通过在服务器上设置的Etag字段控制缓存存放的位置，在浏览器接收到服务器响应后，会检测响应头部Header，如果有Etag字段，那么浏览器就会将本次缓存写入磁盘中。</p>
+<p>拉取缓存会出现200、304两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回304状态码。</p>
+<p><strong>2. 渲染和DOM操作方面</strong>  </p>
+<ul>
+<li>减少重排和重绘<ul>
+<li>DOM渲染层与GPU硬件加速：布局是由CPU处理的，绘制则是由GPU完成的<ul>
+<li>浏览器会先获取DOM树并依据样式将其分割成多个独立的渲染层</li>
+<li>CPU将每个层绘制进绘图中</li>
+<li>将位图作为纹理上传至GPU绘制</li>
+<li>GPU将所有的渲染层缓存，如果下次上传的渲染层没有发生变化，GPU就不需要对其进行重绘，并复合多个渲染层最终形成图像</li>
+</ul>
+</li>
+<li>重排：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加DOM元素，修改了影响元素盒子大小的CSS属性。获取某些属性，浏览器为了获得正确的值也会触发重排。<ul>
+<li>offset</li>
+<li>scroll</li>
+<li>client(top/left/width/height)</li>
+<li>width,height</li>
+<li>调用了getComputedStyle()或者IE的currentStyle</li>
+</ul>
+</li>
+<li>重绘：绘制，即渲染上色，所有对元素的视觉表现属性的修改，会引发重绘</li>
+</ul>
+</li>
+<li>优化网页渲染<ul>
+<li>css的文件放在头部，js文件放在尾部或者异步加载<ul>
+<li>动态脚本加载</li>
+<li>defer：defer是在HTML解析完之后才执行，如果是多个，按照加载的顺序依次执行</li>
+<li>async：async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</li>
+</ul>
+</li>
+<li>尽量避免内联样式 </li>
+</ul>
+</li>
+<li>DOM操作优化<ul>
+<li>避免在document上直接进行频繁的DOM操作</li>
+<li>使用classname代替大量的内联样式修改</li>
+<li>使用requestAnimationFrame代替setInterval操作</li>
+<li>使用事件代理</li>
+</ul>
+</li>
+</ul>
+<p><strong>async和defer区别</strong>  </p>
+<ul>
+<li>没有defer或async，浏览器会立即加载并执行指定脚本，所有script元素都会按照在页面出现的先后顺序依次被解析，只有在解析完前面的script代码后，才会解析后面的script代码。</li>
+<li>async标志，使用async属性表示当前脚本不必等待其他脚本，也不必阻塞文档呈现。但是不能保证异步脚本按照他们在页面出现的顺序执行。</li>
+<li>defer，使用defer属性可以让脚本在文档完成呈现之后再执行，延迟脚本总是按照指定的顺序执行。</li>
+</ul>
+<p><strong>3. 数据方面</strong>  </p>
+<ul>
+<li>图片加载处理（懒加载，预加载）</li>
+<li>json数据格式交互</li>
+<li>部分常用数据的缓存</li>
+</ul>
+<h5 id="浏览器显示页面的原理"><a href="#浏览器显示页面的原理" class="headerlink" title="浏览器显示页面的原理"></a>浏览器显示页面的原理</h5><p>流程  </p>
+<ol>
+<li>获取HTML文档及样式表文件</li>
+<li>解析成对应的树形数据结构<ul>
+<li>DOM tree</li>
+<li>CSSOM tree</li>
+</ul>
+</li>
+<li>计算可见节点形成render tree</li>
+<li>计算DOM的形状及位置进行布局</li>
+<li>将每个节点转化为实际像素绘制到视口上</li>
+</ol>
+<p><strong>资源加载：</strong>  </p>
+<ul>
+<li>执行JavaScript会阻止DOM tree构建</li>
+<li>加载CSS会阻止render tree构建</li>
+</ul>
+<p>默认情况下，JavaScript脚本会在引入它的位置执行，这是会阻断DOM tree的构建；如果在运行脚本时浏览器尚未完成CSS的下载和CSSOM tree的构建，浏览器会将脚本执行延迟到这些操作结束之后。</p>
+<p><strong>影响性能的因素</strong>  </p>
+<ul>
+<li>白屏<ul>
+<li>HTML和CSS的加载及解析速度</li>
+<li><code>&lt;head&gt;</code>内的脚本加载及执行</li>
+</ul>
+</li>
+<li>首屏<ul>
+<li>图片加载</li>
+<li><code>&lt;body&gt;</code>内的脚本加载及执行</li>
+</ul>
+</li>
+</ul>
+<p><strong>提高前端性能</strong>  </p>
+<ul>
+<li>缩短白屏时间</li>
+<li>加快首屏显示</li>
+<li>尽快监听主要操作的事件  </li>
+</ul>
+<h4 id="对移动端的认识"><a href="#对移动端的认识" class="headerlink" title="对移动端的认识"></a>对移动端的认识</h4><p>从兼容上讲  </p>
+<ul>
+<li>PC要兼容IE6+，Firefox，chrome，Safari</li>
+<li>mobile的网页开发，只需要考虑webkit内核的浏览器和chrome，uc，qq，小米手机浏览器，兼容的东西少了些</li>
+</ul>
+<p>从开发上讲  </p>
+<ul>
+<li>mobile端的网页开发比PC页面小了，装的东西要少些，相对交互稍简单些（滑动，触屏，手势） </li>
+</ul>
+<p>移动端前端开发：分为移动端web app和移动端网页</p>
+<p><strong>移动端网页布局和PC差异</strong><br>主要是css方面，外加如何做到同一url，不同客户端展现不一致的做法，俗称pc和mobile都兼容。</p>
+<p>rem在移动端布局  </p>
+<p>移动端的字体默认为16px，那么1rem我想表示为10px的话，我们就需要 10 % 16 = 0.625 即为62.5%，这样就可以比较方便的把设计稿里的px转换成rem单位来做到自适应了。这样无论用户如何设置电脑或者手机的默认字体大小，设置为rem的单位的长度都会随比例变化。</p>
 
           
         
@@ -2908,234 +3157,6 @@ var p = new Person() // 0 1 2...
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/01/line-height/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/01/line-height/" itemprop="url">line-height属性值</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T00:00:00+08:00">
-                2018-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="line-height"><a href="#line-height" class="headerlink" title="line-height"></a>line-height</h4><p>行高指文本行基线间的垂直距离。</p>
-<p><img src="/images/line-height/line.jpg" alt="">  </p>
-<p>图中两条红线之间的距离就是行高（line-height），上一行的底线和下一行的顶线之间的距离就是行距，而同一行顶线和底线之间的距离是font-size的大小，行距的一半是半行距.  </p>
-<pre><code>半行距 = (line-height - font-size)/2
-</code></pre><p><strong>取值</strong><br>一般情况下，浏览器默认的line-height为1.2。</p>
-<table>
-<thead>
-<tr>
-<th>值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>normal</td>
-<td>默认1.2。设置合理的行间距</td>
-</tr>
-<tr>
-<td>number</td>
-<td>设置数字，此数字会与当前的字体尺寸相乘来设置行间距，即number为当前font-size的倍数</td>
-</tr>
-<tr>
-<td>length</td>
-<td>设置固定的行间距</td>
-</tr>
-<tr>
-<td>%</td>
-<td>基于当前字体尺寸的百分比行间距</td>
-</tr>
-<tr>
-<td>inherit</td>
-<td>规定应该从父元素继承line-height属性的值</td>
-</tr>
-</tbody>
-</table>
-<pre><code>body { font-size:16px; line-height:XXX; }    
-h1 {font-size:32px;}    
-p {font-size:16px;} 
-</code></pre><p><strong>（1）值百分比</strong>  </p>
-<pre><code>body { font-size: 16px; line-height: 120%;}  
-</code></pre><p>line-height的百分比和body的文字大小用来计算，这个计算值会被层叠下去的元素所继承。line-height不会随着相关的font-size做相应的比例缩放。  </p>
-<table>
-<thead>
-<tr>
-<th>element</th>
-<th>font-size</th>
-<th>line-height</th>
-<th>计算后的line-height  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>body</td>
-<td>16px</td>
-<td>120%</td>
-<td>16*120% =19.2px  </td>
-</tr>
-<tr>
-<td>h1</td>
-<td>32px</td>
-<td>继承计算后的值19.2px</td>
-<td>19.2px</td>
-</tr>
-<tr>
-<td>p</td>
-<td>16px</td>
-<td>继承计算后的值19.2px</td>
-<td>19.2px</td>
-</tr>
-</tbody>
-</table>
-<p><strong>（2）值 length</strong>  </p>
-<pre><code>body { font-size: 16px; line-height:20px}
-</code></pre><p>line-height的20px会被后代继承，所有继承下来的元素会忽略本身的font-size，而使用相同的，继承的line-height。</p>
-<p><strong>（3）值 normal</strong><br>line-height被设置为normal，约为1.2</p>
-<pre><code>body { font-size:16px; line-height:normal}
-</code></pre><p>所有继承下来的元素不会忽略本身的font-size，而使用基于font-size算出来的line-height。此时line-height会随着相关的font-size做相应的比例缩放。 </p>
-<table>
-<thead>
-<tr>
-<th>element</th>
-<th>font-size</th>
-<th>line-height</th>
-<th>计算后的line-height </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>body</td>
-<td>16px</td>
-<td>normal</td>
-<td>16*1.2 =19.2px  </td>
-</tr>
-<tr>
-<td>h1</td>
-<td>32px</td>
-<td>normal</td>
-<td>32*1.2=38.4px  </td>
-</tr>
-<tr>
-<td>p</td>
-<td>16px</td>
-<td>normal</td>
-<td>16px*1.2 =19.2px</td>
-</tr>
-</tbody>
-</table>
-<p><strong>值：数字</strong><br>所有继承下来的元素使用基于font-size算出来的line-height。line-height会随着相关的font-size做相应的比例缩放</p>
-<p>参考文章<br><a href="https://segmentfault.com/a/1190000003038583" target="_blank" rel="noopener">css中的line-height</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3190,7 +3211,7 @@ p {font-size:16px;}
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
