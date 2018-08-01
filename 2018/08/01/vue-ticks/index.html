@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="JavaScript," />
+  <meta name="keywords" content="vue," />
 
 
 
@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于docu">
-<meta name="keywords" content="JavaScript">
+<meta name="description" content="Vue实践技巧1. 多个页面都使用到的方法，可以放在vue.prototype上   在vue的入口文件(vue-cli生成的项目的话，默认/src/main.js)   import port from &amp;apos;./xxx/xxx/post&amp;apos; vue.prototype.$post = ">
+<meta name="keywords" content="vue">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图片懒加载">
-<meta property="og:url" content="http://yoursite.com/2018/06/26/图片懒加载/index.html">
+<meta property="og:title" content="vue-ticks">
+<meta property="og:url" content="http://yoursite.com/2018/08/01/vue-ticks/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
+<meta property="og:description" content="Vue实践技巧1. 多个页面都使用到的方法，可以放在vue.prototype上   在vue的入口文件(vue-cli生成的项目的话，默认/src/main.js)   import port from &amp;apos;./xxx/xxx/post&amp;apos; vue.prototype.$post = post 这样就可以在所有的vue组件页面使用this.post()方法了。把方法挂载到prot">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-28T14:25:01.000Z">
+<meta property="og:updated_time" content="2018-08-01T03:58:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="图片懒加载">
-<meta name="twitter:description" content="图片懒加载原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。 判断图片是否进入可视区域方法一：    通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。  document.documentElement.c">
+<meta name="twitter:title" content="vue-ticks">
+<meta name="twitter:description" content="Vue实践技巧1. 多个页面都使用到的方法，可以放在vue.prototype上   在vue的入口文件(vue-cli生成的项目的话，默认/src/main.js)   import port from &amp;apos;./xxx/xxx/post&amp;apos; vue.prototype.$post = post 这样就可以在所有的vue组件页面使用this.post()方法了。把方法挂载到prot">
 
 
 
@@ -125,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/06/26/图片懒加载/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/01/vue-ticks/"/>
 
 
 
 
 
-  <title>图片懒加载 | FE_hei</title>
+  <title>vue-ticks | FE_hei</title>
   
 
 
@@ -248,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/图片懒加载/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-ticks/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -265,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">图片懒加载</h1>
+          <h1 class="post-title" itemprop="name headline">vue-ticks</h1>
         
 
         <div class="post-meta">
@@ -277,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T00:00:00+08:00">
-                2018-06-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
+                2018-08-01
               </time>
             
 
@@ -315,123 +315,128 @@
       
 
       
-        <h4 id="图片懒加载"><a href="#图片懒加载" class="headerlink" title="图片懒加载"></a>图片懒加载</h4><p>原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。</p>
-<p><strong>判断图片是否进入可视区域</strong><br>方法一：  </p>
-<ul>
-<li><p>通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。</p>
-<ul>
-<li>document.documentElement.clientHeight获取屏幕可视窗口高度</li>
-<li>通过element.offsetTop获取元素相对于文档顶部的距离</li>
-<li><p>通过document.documentElement.scrollTop获取浏览器窗口顶部与文档顶部之间的距离，也就是滚动条滚动的距离。</p>
-<pre><code>var lazyLoad = {
-    // 获取元素到页面顶部的距离
-    getoffsetTop: function(elem){
-        var offTop = 0;
-        while(elem!=null){
-            offTop += elem.offsetTop; //获取元素到其上一级元素顶部的距离
-            elem = elem.offsetParent; //元素上一级元素
-        }
-        return offTop;
+        <h4 id="Vue实践技巧"><a href="#Vue实践技巧" class="headerlink" title="Vue实践技巧"></a>Vue实践技巧</h4><p><strong>1. 多个页面都使用到的方法，可以放在vue.prototype上</strong>  </p>
+<p>在vue的入口文件(vue-cli生成的项目的话，默认/src/main.js)  </p>
+<pre><code>import port from &apos;./xxx/xxx/post&apos;
+vue.prototype.$post = post
+</code></pre><p>这样就可以在所有的vue组件页面使用this.post()方法了。把方法挂载到prototype上的时候，最好加一个$前缀，避免跟其他变量冲突。不要挂载太多方法到prototype上，只挂载一些使用频率高的。</p>
+<p><strong>封装全局基于Promise的异步请求方法</strong><br>大部分的异步请求都是直接使用axios之类的方法。  </p>
+<pre><code>axios({
+    method: &apos;post&apos;,
+    url: &apos;/user/12345&apos;,
+    data: {
+        firstName: &apos;Fred&apos;
     }
-    // 判断是否加载图片
-    isLoad: function(elem){
-        var cHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight; //可视窗口的高度
-        var sx = window.pageXOffset || document.body.scrollTop || document.documentElement.scrollTop; //浏览器可视窗口距离页面顶部的距离
-        var oTop = this.getoffsetTop(elem); //元素到页面顶部的距离
-        var viewHeight = oTop-sx; //元素到页面顶部的距离
-        // 图片进入浏览器可视区域，加载图片
-        if(cHeight &gt;= viewHeight){
-            return true;
-        }else{
-            //图片没进入浏览器可视区域，不加载图片
-            return false;
-        }
-    },
-    loadImg: function(elems){
-        for(var i=0,len=elems.length; i&lt;len;i++){
-            if(this.isLoad(elems[i])){
-                if(elems[i].className !== &apos;loaded&apos;){
-                    //针对使用data-自定义的属性，要使用getAttribute()获取值
-                    elems[i].src = elems[i].getAttribute(&apos;data-url&apos;);//实际的url替换原来的url
-                    elems[i].className = &quot;loaded&quot;; //被加载的图片，添加class属性
-                }
-            }else{
-                return; //下一个图片没有进入加载区域，不循环
-            }
-        }
-    }
-}
-//使用
-window.onscroll = function(){
-    lazyLoad.loadImg(document.getElementsByTagName(&apos;img&apos;))
-}
-//html,src指向为占位符，data-url为图片的实际url
-&lt;img src=&apos;img/17.jpg&apos; data-url=&apos;img/11.jpg&apos;&gt;
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<p>方法二：  </p>
-<ul>
-<li>使用element.getBoundindClientRect()直接得到top值。</li>
-<li>该函数返回一个Object对象，该对象有6个属性：top，left，right，bottom，width，height</li>
-<li><p>浏览器兼容性，IE67的left、top会少2px，并且没有width、height属性</p>
-<pre><code>function isElementInView(el){
-    var react = el.getBoundingClientRect();
-    return (
-        rect.top &gt;=0 &amp;&amp; 
-        rect.left &gt;=0 &amp;&amp;
-        rect.bottom &lt;=(window.innerHeight || document.documentElement.clientHeight) &amp;&amp;
-        rect.right &lt;=(window.innerWidth || document.documentElement.clientWidth)    
-    )
-}
-</code></pre><p>  方法三：  </p>
-</li>
-<li><p>HTML5新的IntersectionObserver，可以自动观察元素是否可见</p>
-</li>
-</ul>
-<p>用法：  </p>
-<pre><code>var observer = new IntersectionObserver(callback, option)
-// 开始观察
-observer.observe(document.getElementById(&apos;first&apos;))
-// 停止观察
-observer.unobserve(document.getElementById(&apos;first&apos;))
-// 关闭观察器
-observer.disconnect()
-</code></pre><p>回调方法，每当期望被监视的元素进入或者退出另外一个元素的时候，该回调方法将会被执行，或者两个元素的交集部分大小发生变化的时候回调方法会被执行。</p>
-<pre><code>function query(tag){
-    return Array.from(document.getElementsByTagName(tag));
-} 
-var observer = new IntersectionObserver((changes) =&gt; {
-    changes.forEach((change) =&gt; {
-        if(change.intersectionRatio &gt; 0){
-            var img = change.target;
-            img.src = img.dataset.src;
-            observer.unobserve(img)
-        }
-    })
 })
-query(&apos;img&apos;).forEach((item) =&gt; {
-    observer.observe(item)
-})        
-</code></pre><p><strong>图片懒加载优化</strong><br>使用节流函数  </p>
-<pre><code>function throttle(func, delay, time){
-    var timeout, startTime=new Date();
-    return function(){
-        var context = this,
-            args = arguments,
-            curTime = new Date();
-            clearTimeout(timeout);
-        if(curTime - startTime &gt;= time){
-            func.apply(context, args);
-            startTime = curTime;
-            // 没到触发间隔，重新设定定时器
-        }else{
-            timeout = setTimeout(func, delay)
+.then(function(response){
+    console.log(response)
+})
+.catch(function(error){
+    console.log(error)
+})
+</code></pre><p>如果有跨域，或者需要设置 http 头等，还需要加入更多的配置，而这些配置，对于同一个项目来说，基本都是一样的，不一样的只有 url 跟参数，可以把它封装成一个方法。</p>
+<pre><code>function post(url, param){
+    return new Promise((resolve, reject) =&gt; {
+        axios({
+            method: &apos;post&apos;,
+            url: url,
+            data: param
+        })
+        .then(function(response){
+            resolve(response);
+        })
+        .catch(function(error){
+            reject(error);
+        })
+    })
+}
+</code></pre><p>结合第一点，可以这样使用  </p>
+<pre><code>let param = { firstName: &apos;Fred&apos;}
+this.post(&apos;/user/1234&apos;, param).then(...).catch(...)
+</code></pre><p><strong>路由参数变化组件不更新</strong><br>路由参数变化，但是组件没有对应的更新，主要是因为一般获取参数写在了created路由钩子函数中，路由参数变化的时候，这个生命周期不会重新执行。  </p>
+<p>解决方案： <strong>watch监听router</strong>  </p>
+<pre><code>watch: {
+    // 方法1
+    &apos;$route&apos;(to, from){ // 监听路由是否变化
+        if(this.$route.params.articleId){ // 判断传递值的变化
+            // 获取文章数据
+        }
+    }
+    // 方法2
+    &apos;$route&apos;(to, from){
+        if(to.path ==&quot;/page&quot;){ // 监听路由名 监听你从什么路由跳转过来的
+            this.message = this.$route.query.msg
         }
     }
 }
-window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))                
+</code></pre><p><strong>动态懒加载组件</strong><br>在webpack的新特性中支持组件的懒加载，我们可以在加载到该路由的时候再把这部分脚本进行加载，同时这个项目进行打包时，对应的文件也会被单独打包，对于首屏优化及其他页面资源加载优化都很好。  </p>
+<pre><code>const Foo = () =&gt; import(&apos;./Foo.vue&apos;)
+// 使用
+const router = new VueRouter({
+    routes: [
+        { path: &apos;/foo&apos;, component:Foo}
+    ]
+})
+</code></pre><p><strong>vue中data属性为什么不能是一个对象</strong><br>因为组件可能被用来创建多个实例，如果data是一个对象，则所有的实例将共享引用同一个数据对象。通过提供data函数，每次创建一个新实例后，我们能够调用data函数，从而返回初始数据的一个全新副本数据对象。</p>
+<p><strong>列表进入详情页的传参问题</strong><br>商品列表页面前往商品详情页面，需要传一个商品id  </p>
+<pre><code>&lt;router-link :to=&quot;{path: &apos;detail&apos;, query: {id:1}}&quot;&gt;前往detail页面&lt;/router-link&gt;
+</code></pre><p>c页面的路径为<code>http://localhost:8080/#/detail?id=1</code>，可以看到传了一个参数id=1，并且就算刷新页面id也还会存在。此时在c页面可以通过id来获取对应的详情数据，获取id的方式是<code>this.$route.query.id</code></p>
+<pre><code>// query通过path切换路由
+&lt;router-link :to=&quot;{path: &apos;Detail&apos;, query: { id: 1 }}&quot;&gt;前往Detail页面&lt;/router-link&gt;
+// params通过name切换路由
+&lt;router-link :to=&quot;{name: &apos;Detail&apos;, params: { id: 1 }}&quot;&gt;前往Detail页面&lt;/router-link&gt;
+</code></pre><p><strong>本地开发环境请求服务器接口跨域问题</strong>  </p>
+<pre><code>// 本地开发环境的跨域代理
+proxyTable: {
+    &apos;/api&apos;: {
+        target: &apos;http://jr01.0791jr.com&apos;, // 设置调用接口域名和端口号
+        changeOrigin: true,
+        pathRewrite: {
+            &apos;^/api&apos;: &apos;&apos; // 理解为用&apos;/api&apos;代替target里面的地址
+        }
+    }
+}
+</code></pre><p><strong>定时器问题</strong><br>我在a页面写一个定时，让他每秒钟打印一个1，然后跳转到b页面，此时可以看到，定时器依然在执行。这样是非常消耗性能的。</p>
+<p>方法1：<br>首先在data函数里面进行定义定时器名称：  </p>
+<pre><code>data(){
+    return {
+        timer: null
+    }
+}
+</code></pre><p>使用定时器：  </p>
+<pre><code>this.timer = (() =&gt; {
+    // 某些动作
+}, 1000)
+</code></pre><p>最后在beforeDestroy()生命周期内清除定时器  </p>
+<pre><code>beforeDestroy() {
+    clearInterval(this.timer);
+    this.timer = null;
+}
+</code></pre><p>方案2：<br>通过$once这个事件侦听器在定义完定时器之后的位置来清除定时器。  </p>
+<pre><code>const timer = setInterval(() =&gt; {
+    // 某些定时器操作
+}, 500)
+// 通过$once来监听定时器，在beforeDestroy钩子可以被清除
+this.$once(&apos;hookl:beforeDestroy&apos;, ()=&gt;{
+    clearInterval(timer)
+})
+</code></pre><p><strong>化繁为简的Watchers</strong>  </p>
+<pre><code>created(){
+    this.fetchPostList();
+},
+watch: {
+    searchInputValue(){
+        this.fetchPostList();
+    }
+}
+</code></pre><p>组件创建的时候获取一次列表，同时监听input框，每当发生变化的时候重新获取一次筛选后的列表，优化方法？</p>
+<p>在watcher中，可以直接使用函数的字面量名称；其次，声明immediate:true表示创建组件时立马执行一次。</p>
+<pre><code>watch: {
+    searchInputValue: {
+        handler: &apos;fetchPostList&apos;,
+        immediate: true
+    }
+}
 </code></pre>
       
     </div>
@@ -449,7 +454,7 @@ window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))
       
         <div class="post-tags">
           
-            <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
+            <a href="/tags/vue/" rel="tag"><i class="fa fa-tag"></i> vue</a>
           
         </div>
       
@@ -462,8 +467,8 @@ window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/25/js闭包/" rel="next" title="闭包">
-                <i class="fa fa-chevron-left"></i> 闭包
+              <a href="/2018/08/01/js事件/" rel="next" title="javascript事件">
+                <i class="fa fa-chevron-left"></i> javascript事件
               </a>
             
           </div>
@@ -471,10 +476,6 @@ window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/06/26/模块化/" rel="prev" title="js模块化">
-                js模块化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -620,7 +621,7 @@ window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#图片懒加载"><span class="nav-number">1.</span> <span class="nav-text">图片懒加载</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue实践技巧"><span class="nav-number">1.</span> <span class="nav-text">Vue实践技巧</span></a></li></ol></div>
             
 
           </div>

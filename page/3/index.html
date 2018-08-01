@@ -247,6 +247,349 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/15/css/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/15/css/" itemprop="url">前端性能</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T00:00:00+08:00">
+                2018-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><h4 id="css处理内容溢出"><a href="#css处理内容溢出" class="headerlink" title="css处理内容溢出"></a>css处理内容溢出</h4><p>对于单行省略  </p>
+<pre><code>overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+</code></pre><p>对于多行省略<br>WebKit内核的浏览器实现起来比较简单，可以通过添加一个-webkit-line-clamp的私有属性来实现，-webkit-line-clamp是用来限制在一个块元素显示的文本的行数。</p>
+<pre><code>overflow : hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;    
+</code></pre><p>其他浏览器，利用相对定位在最后面加上一个省略号。  </p>
+<pre><code>&lt;p&gt;XX&lt;/p&gt;
+p{
+    position: relative;
+    line-height:1.5em;
+    /*高度为要显示的行数x行高*/
+    height: 3em;
+    overflow: hidden;
+}
+p:after{
+    content: &apos;...&apos;;
+    position: absolute;
+    bottom: 0;
+    right:0;
+    padding:0 5px;
+    background-color: #fff;
+}
+</code></pre><h4 id="行内元素视觉格式化"><a href="#行内元素视觉格式化" class="headerlink" title="行内元素视觉格式化"></a>行内元素视觉格式化</h4><ul>
+<li>非替换元素：将内容直接告诉浏览器，将其显示出来，例如包含文字的段落</li>
+<li>替换元素：浏览器根据其标签的元素与属性来判断显示的具体内容。例如img、textarea、input<ul>
+<li>这些元素拥有内在尺寸，可以设置width/height属性</li>
+<li>内容区高度值=padding-top + padding-bottom + margin-top + margin-bottom + height。</li>
+</ul>
+</li>
+<li>行间距：行间距为line-height和font-size值之差。<strong>行间距只应用于非替换元素，可为负。</strong>    </li>
+<li>行内框：行内框是通过向内容区增加行间距来描述。<strong>对于非替换元素，元素行内框的高度刚好等于line-height值。对于替换元素，元素行内框的高度等于内容区高度</strong>。</li>
+</ul>
+<h4 id="offsetWidth、clientWidth、scrollWidth如何计算"><a href="#offsetWidth、clientWidth、scrollWidth如何计算" class="headerlink" title="offsetWidth、clientWidth、scrollWidth如何计算"></a>offsetWidth、clientWidth、scrollWidth如何计算</h4><ul>
+<li>offsetWidth,offsetHeight:包含所有边框的可视框的大小。可以通过添加宽高和padding、边框。</li>
+<li>clientWidth,clientHeight:框内容的视觉部分，不包括边框或滚动条，但包括填充。</li>
+<li>scrollWidth，scrollHeight：所有框的内容大小，包括当前在滚动区域之外隐藏的部分。</li>
+</ul>
+<p><img src="/images/css/off.png" alt=""></p>
+<h4 id="css实现自适应正方形"><a href="#css实现自适应正方形" class="headerlink" title="css实现自适应正方形"></a>css实现自适应正方形</h4><p><strong>1. CSS3 vw单位</strong><br>vw是相对于视口宽度百分比的单位，1vw = 1% viewport width</p>
+<pre><code>&lt;div class=&quot;placeholder&quot;&gt;&lt;/div&gt;
+.placeholder{
+  width:50vw;
+  height:50vw;
+}
+</code></pre><p><strong>2. 设置垂直方向的padding撑开容器</strong><br>margin, padding 的百分比数值是相对父元素宽度的宽度计算的。由此可以发现只需将元素垂直方向的一个 padding 值设定为与 width 相同的百分比就可以制作出自适应正方形。  </p>
+<pre><code>.placeholder{
+  width:100%;
+  padding:bottom:100%;
+}
+</code></pre><p>缺点：如果正方形中有内容，容器的高度就会被拉伸，可以通过设置height：0解决。</p>
+<p><strong>3. 利用伪元素的margin(padding)-top撑开容器</strong><br>利用百分比数值的 padding-bottom 属性撑开容器内部空间，但是这样做会导致在元素上设置的 max-height 属性失效。失效的原因是max-height 属性只限制于 height，也就是只会对元素的 content height 起作用。</p>
+<pre><code>.placeholder {
+  width: 100%;
+  overflow: hidden;
+}
+.placeholder:after {
+  content: &apos;&apos;;
+  display: block;
+  margin-top: 100%; /* margin 百分比相对父元素宽度计算 */
+}
+</code></pre><h4 id="列表数据展示优化"><a href="#列表数据展示优化" class="headerlink" title="列表数据展示优化"></a>列表数据展示优化</h4><p>某用户有 1000 条交易数据需要在客户端全部展示，那么，这种场景下，该怎么去优化列表数据的展示呢？</p>
+<p><strong>按需显示</strong><br>按需显示是指根据容器元素的高度以及列表项元素的高度来显示数据。    </p>
+<pre><code>const demandData = originalData.slice(0, Math.ceil(containerHeight / itemHeight))
+</code></pre><blockquote>
+<p>originalData 表示原始数据，containerHeight 表示容器元素高度，itemHeight 表示列表项高度，demandData 表示按需显示需要的数据，scrollTop 表示容器元素的 Y 轴滚动值。</p>
+</blockquote>
+<p>当页面发生滚动时，重新计算容器元素内所能展示的第一个数据项和最后一个数据项，然后根据originalData进行对应的数据项截取。  </p>
+<pre><code>const from = Math.floor(scrollTop / itemHeight);
+const to = Math.ceil((scrollTop + containerHeight) / itemHeight);
+
+const demandData = originalData.slice(from, to)    
+</code></pre><p><strong>延迟显示</strong><br>延迟加载是一种常见的首屏优化方案，其基本思路是应用初始化时，首屏根据客户端的 Viewport 只加载用户可见的部分，当用户滚动对应位置时，才去加载对应元素，以缩减首屏的加载时间。</p>
+<p>列表初始化时，根据容器元素的高度以及列表项元素的高度，依然只是加载列表初始化所需的数据项。</p>
+<pre><code>const demandData = originalData.slice(0, Math.ceil(containerHeight / itemHeight))
+</code></pre><p>当用户往下滚动时，再动态计算需要往列表后追加的数据项。 </p>
+<pre><code>const from = demandData.length; 
+const to = Math.ceil((scrollTop + containerHeight) / itemHeight);    
+const demandData = [].concat(demandData, originalData.slice(from, to))    
+</code></pre><p>与按需显示不同的是，延迟显示不再是对 originalData 进行截取，而是对 demandData 进行追加，直到用户滚动到底部，所有数据全部显示完毕为止。</p>
+<pre><code>页面上有个空的无序列表节点，用 &lt;ul&gt;&lt;/ul&gt; 表示，要往列表中插入 30000个 &lt;li&gt;，每个列表项的文本内容是列表项的插入顺序，取值 1, 2, 3, ... ,30000，怎么用原生的 JS 实现这个需求？
+</code></pre><p>思路：可以从减少 DOM 操作次数、缩短循环时间两个方面减少主线程阻塞的时间。减少 DOM 操作次数的良方是 DocumentFragment；而缩短循环时间则需要考虑使用分治的思想把 30000 个 <li> 分批次插入到页面中，每次插入的时机是在页面重新渲染之前。</li></p>
+<pre><code>(()=&gt;{
+    const ndContainer = document.getElementById(&apos;js-list&apos;);
+    if(!ndContainer){
+        return;
+    }
+    const total = 30000;
+    const batchSize = 4 //每批插入的节点次数
+    const batchCount = total/batchSize //需要批处理次数
+    let batchDone = 0 //已经完成批处理个数
+    function appendItems(){
+        const fragement = document.createDocumentFragment();
+        for(let i=0;i&lt;batchSize;i++){
+            const ndItem = document.createElement(&apos;li&apos;);
+            ndItem.innerText = (batchDone * batchSize)+i+1;
+            fragment.appendChild(ndItem);
+        }
+        ndContainer.appendChild(fragment);
+        batchDone +=1;
+        doBatchAppend();
+    }
+    function doBatchAppend(){
+        if(batchDone &lt; batchCount){
+            window.requestAnimationFrame(appendItems);
+        }
+    }
+    doBatchAppend();
+    ndContainer.addEventListener(&apos;click&apos;,function(e){
+        const target = e.target;
+        if(target.tagName === &apos;LI&apos;){
+            alert(target.innerHTML);
+        }
+    })
+})()
+</code></pre><h4 id="CSS3主要新特性"><a href="#CSS3主要新特性" class="headerlink" title="CSS3主要新特性"></a>CSS3主要新特性</h4><p><strong>盒模型</strong>  </p>
+<ul>
+<li>可以通过设置盒模型属性<code>box-sizing:border-box</code>（默认值：content-box）来让W3C兼容传统的IE盒模型。</li>
+<li>box-shadow增加阴影</li>
+<li>边框圆角：border-radius</li>
+</ul>
+<p><strong>CSS3选择器</strong>  </p>
+<ul>
+<li><code>E[foo^=&quot;bar&quot;]</code>，选择匹配E的元素，且该元素定义了foo属性，foo属性值以“bar”开始。</li>
+<li><code>E[foo$=&quot;bar&quot;]</code>,foo属性值以“bar”结束</li>
+<li><code>E[foo*=&quot;bar&quot;]</code>,foo属性值包含“bar”</li>
+<li>:first-child,选中的元素集合中的第一个元素</li>
+<li>:not,否定选择器</li>
+<li><strong>:nth-child</strong>,选择器匹配属于其父元素的第N个子元素，不论元素的类型。如果第N个子元素与选择的元素类型不同则样式无效！（div+空格，只根据父元素选择）</li>
+<li><strong>:nth-of-type</strong>,选择器匹配属于父元素的特定类型的第N个子元素的每个元素。</li>
+</ul>
+<p><strong>CSS3变形：transform</strong>  </p>
+<p><strong>CSS3过渡：transition</strong>  </p>
+<ul>
+<li>每组transition包含四个属性：transition-property，transition-duration，transition-time-function，transition-delay</li>
+<li>transition是异步的</li>
+</ul>
+<p><strong>CSS3动画：通过设置@keyframes来定义一种动画效果</strong>，动画的实现用animation。</p>
+<p><strong>CSS3伸缩布局</strong>  </p>
+<ul>
+<li>display：flex|inline-flex。值为flex时将会按block元素进行渲染。</li>
+<li>伸缩容器属性<ul>
+<li>伸缩主轴方向：flex-direction</li>
+<li>伸缩容器内项目是否换行：flex-wrap</li>
+<li>主轴对齐方式：justify-content</li>
+<li>侧轴对齐方式：align-items</li>
+</ul>
+</li>
+<li>伸缩项目的属性<ul>
+<li>显示顺序：order</li>
+<li>伸缩性放大缩小比例：flex：none|flex-grow|flex-shrink|flex-basis</li>
+</ul>
+</li>
+</ul>
+<p><strong>CSS3背景</strong>  </p>
+<ul>
+<li>background-size：规定背景图片的尺寸</li>
+<li>background-origin：规定背景图片的定位区域(content-box|padding-box|border-box)</li>
+<li>background-clip:规定背景的绘制区域，参数同上。</li>
+</ul>
+<h4 id="CSS盒模型"><a href="#CSS盒模型" class="headerlink" title="CSS盒模型"></a>CSS盒模型</h4><ul>
+<li>标准盒模型<ul>
+<li>width/height指的是content区域的宽度和高度</li>
+<li>一个块的总宽度=width+margin+padding+border</li>
+</ul>
+</li>
+<li>IE盒模型<ul>
+<li>width/height指的是content+padding+border</li>
+<li>一个块的总宽度=width+margin</li>
+</ul>
+</li>
+</ul>
+<p>如何设置这两种模型：<br>box-sizing: content-box(默认)，border-box(IE模型)</p>
+<p><strong>js如何设置获取盒模型对应的宽高</strong>  </p>
+<ol>
+<li><code>dom.style.width/height</code>只能取内联样式的宽和高</li>
+<li><code>dom.currentStyle.width/height</code>只能IE浏览器</li>
+<li><code>window.getComputedStyle(dom).width/height</code>通用性最好<ul>
+<li>getComputedStyle会获取当前元素所有最终使用的css属性值，以数组形式返回，只读。</li>
+<li>getComputedStyle会引起回流，因为它需要获取祖先节点的一些信息进行计算(譬如宽高等)。其他一些会引发回流的操作，如offsetXXX，scrollXXX，clientXXX，currentStyle等</li>
+</ul>
+</li>
+<li><code>dom.getBoundingClientRect().width/height</code>返回元素的大小及其相对于视口的位置。</li>
+</ol>
+<h4 id="BFC"><a href="#BFC" class="headerlink" title="BFC"></a>BFC</h4><p>块级格式化上下文，BFC是一个独立的布局环境，其中的元素布局是不受外界的影响，并且在一个BFC中，块盒与行盒都会垂直的沿着其父元素的边框排列。<br><strong>原理</strong>：  </p>
+<ul>
+<li>垂直方向会发生边距重叠</li>
+<li>BFC区域不会与浮动元素的box重叠，可以用来清除浮动</li>
+<li>BFC在页面上是一个容器，外面的元素不会影响里面的元素</li>
+<li>计算BFC高度的时候，浮动元素也会参与计算</li>
+</ul>
+<p><strong>如何创建一个BFC</strong>  </p>
+<ul>
+<li>float值不为none</li>
+<li>position的值不是static或relative</li>
+<li>display属性为inline-box，table相关</li>
+<li>overflow为auto，hidden</li>
+</ul>
+<p><strong>使用场景</strong>  </p>
+<ul>
+<li>利用BFC避免外边距折叠<ul>
+<li>BFC可能会造成外边距折叠，也可以利用它来避免这种情况</li>
+<li>BFC产生外边距折叠要满足一个条件：两个相邻元素要处于同一个BFC中。所有若两个相邻元素在不同的BFC中，就能避免外边距折叠。</li>
+</ul>
+</li>
+<li>BFC包含浮动<ul>
+<li>浮动元素会脱离文档流，如果一个没有高度或者height为auto的容器的子元素是浮动元素，则该容器的高度是不会被撑开的。通常会利用伪元素(:after或:before)来解决这个问题</li>
+<li>BFC能包含浮动，也能解决容器高度不会被撑开的问题</li>
+</ul>
+</li>
+<li>使用BFC避免文字环绕<ul>
+<li>在BFC上下文中，每个盒子的左外侧紧贴包含块的左侧，有浮动也是如此，除非盒子创建了一个新的BFC。</li>
+</ul>
+</li>
+<li>在多列布局中使用BFC<ul>
+<li>如果创建一个占满整个容器宽度的多列布局，在某些浏览器中最后一列有时会掉到下一行。可能是因为浏览器四舍五入了列宽从而所有列的总宽度会超出容器</li>
+<li>如果我们在多列布局中的最后一列里创建一个新的BFC，它将总是占据其他列先占位完毕后剩下的空间。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/07/js引擎机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2975,159 +3318,6 @@ Person.__proto__ === Function.prototype  // true
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/this/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/07/this/" itemprop="url">箭头函数this</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T00:00:00+08:00">
-                2018-05-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="箭头函数this"><a href="#箭头函数this" class="headerlink" title="箭头函数this"></a>箭头函数this</h4><p>箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName: () =&gt; console.log(this.name)
-}
-person.getName() // undefined
-</code></pre><p>事实上，箭头函数的this是其所在上下文的this决定的。这里的箭头函数<code>()=&gt;console.log(this.name)</code>的上下文是全局上下文也就是<code>window</code>。<code>person.getName()</code>调用getName函数时，this指向全局上下文，而此时全局上下文中没有name（因为箭头函数没有自己的this上下文，那么当它作为对象的方法函数运行时，this并不指向这个对象）</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName(){
-    return () =&gt; console.log(this.name)
-  }
-}
-person.getName()(); // test
-</code></pre><p>此时，<code>()=&gt;console.log(this.name)</code>中的this是由getName()的上下文的this决定的，当调用person.getName()时，getName()的上下文是person对象，因此箭头函数的上下文为person对象。所以<code>person.getName()()</code>虽然执行时的上下文是window，但是箭头函数的this却是指向person对象。</p>
-<pre><code>function Person(){
-  this.count = 0;
-  setInterval(()=&gt; {
-    console.log(this.count++);
-  },1000)
-}
-var p = new Person() // 0 1 2...
-</code></pre><p>如果定时器内部的函数是普通函数，那么函数的上下文是全局window，改为箭头函数之后，<code>()=&gt;{this.count++}</code>的this是由所在的上下文决定的，当执行 var p = new Person()时，Person函数内部的上下文的this便指向p，因此箭头函数内部的上下文也必定是p，this.count++可正常执行。</p>
-<h4 id="this对象的理解"><a href="#this对象的理解" class="headerlink" title="this对象的理解"></a>this对象的理解</h4><p>this是js的一个关键字，随着函数使用场合不同，this的值会发生变化。但是有一个总原则，this是运行时绑定的，总是指向函数的直接调用者。</p>
-<p>作为方法调用时，this就是这这个对象。如果有new关键字，this指向new出来的那个对象；在事件中，this指向触发这个事件的对象，但是IE中的attachEvent中的this总是指向全局对象Window</p>
-<p><strong>箭头函数与普通函数区别</strong>  </p>
-<ul>
-<li>箭头函数没有this，所以需要通过查找作用域链来确定this的值。</li>
-<li>箭头函数没有自己的arguments对象，因为箭头函数可以访问外围函数的arguments对象。</li>
-<li>不能通过new关键字调用</li>
-<li>没有new.target</li>
-<li>没有原型，由于不能使用new调用箭头函数，所有没有构建原型的需求。</li>
-<li>没有super，由于没有原型，所有不能通过super来访问原型的属性，所有箭头函数也没有super</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3182,7 +3372,7 @@ var p = new Person() // 0 1 2...
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
