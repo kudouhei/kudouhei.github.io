@@ -92,13 +92,13 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="Vue源码学习Vue的核心可以分为三个大块：数据处理和双向绑定、模板编译、虚拟dom。 1.vue响应式原理基本概念    data: vue实例中的数据项 observer：数据属性的观察者，监控对象的读写操作 dep：消息订阅器，拥有收集订阅者、发布更新的功能 watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。   vue的数据响应式实现分为两">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2018/08/01/vue-source/vueSource/source.png">
-<meta property="og:image" content="http://yoursite.com/2018/08/01/vue-source/vueSource/diff.jpg">
-<meta property="og:updated_time" content="2018-08-01T14:04:18.000Z">
+<meta property="og:image" content="http://yoursite.com/images/vue/source.png">
+<meta property="og:image" content="http://yoursite.com/images/vue/diff.jpg">
+<meta property="og:updated_time" content="2018-08-01T14:08:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vue-source">
 <meta name="twitter:description" content="Vue源码学习Vue的核心可以分为三个大块：数据处理和双向绑定、模板编译、虚拟dom。 1.vue响应式原理基本概念    data: vue实例中的数据项 observer：数据属性的观察者，监控对象的读写操作 dep：消息订阅器，拥有收集订阅者、发布更新的功能 watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。   vue的数据响应式实现分为两">
-<meta name="twitter:image" content="http://yoursite.com/2018/08/01/vue-source/vueSource/source.png">
+<meta name="twitter:image" content="http://yoursite.com/images/vue/source.png">
 
 
 
@@ -326,7 +326,7 @@
 <li>dep：消息订阅器，拥有收集订阅者、发布更新的功能</li>
 <li>watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。</li>
 </ul>
-<p><img src="vueSource/source.png" alt=""></p>
+<p><img src="/images/vue/source.png" alt=""></p>
 <p>vue的数据响应式实现分为两个部分：  </p>
 <ol>
 <li>把数据转化为getter和setter</li>
@@ -490,7 +490,7 @@ export default {
 <p>diff的过程就是调用名为patch的函数，比较新旧节点，一边比较一边给真实的DOM打补丁。</p>
 <p><strong>diff流程图</strong>  </p>
 <p>当数据发生改变时，set方法会让调用Dep.notify通知所有订阅者Watcher，订阅者就会调用patch给真实的DOM打补丁，更新相应的视图。  </p>
-<p><img src="vueSource/diff.jpg" alt="">  </p>
+<p><img src="/images/vue/diff.jpg" alt="">  </p>
 <p><strong>patch打补丁(核心)</strong>  </p>
 <pre><code>function patch(oldVnode, vnode){
     if(sameVnode(oldVnode, vnode)){
@@ -612,6 +612,10 @@ export default {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/01/js事件/" rel="prev" title="javascript事件">
+                javascript事件 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
