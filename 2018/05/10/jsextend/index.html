@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="javascript实现继承的方式1. 类式继承 function A(){   this.name = &amp;quot;A&amp;quot;; } A.prototype.getName = function(name){   console.log(name) }  function a(){   this.name = &amp;quot;a&amp;quot;; } a.prototype = new A(); v">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-31T13:57:07.000Z">
+<meta property="og:updated_time" content="2018-08-01T02:42:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="javascript实现继承的方式">
 <meta name="twitter:description" content="javascript实现继承的方式1. 类式继承 function A(){   this.name = &amp;quot;A&amp;quot;; } A.prototype.getName = function(name){   console.log(name) }  function a(){   this.name = &amp;quot;a&amp;quot;; } a.prototype = new A(); v">
@@ -494,6 +494,17 @@ Person.__proto__ === Function.prototype  // true
 </ul>
 <p>相互关联的原型组成的链状结构就是原型链。当读取实例的属性时，如果找不到，就会查找与对象关联的原型中的属性，如果还查不到，就去找原型的原型，一直找到最顶层Object.prototype为止。    </p>
 <p>原型链的作用用于对象继承，函数A的原型属性是一个对象，当这个函数被用作构造函数来创建实例时，该函数的原型属性将被作为原型赋值给所有对象实例，比如新建一个数组，数组的方法便从数组原型上继承而来。</p>
+<p><strong>ES5中的prototype与ES6中class继承的比较</strong><br>ES5继承：  </p>
+<ul>
+<li>通过原型链实现继承。子类的prototype为父类对象的一个实例，因此子类的原型对象包含指向父类的原型对象的指针，父类的实例属性成为子类原型属性。</li>
+<li>ES5的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面。</li>
+</ul>
+<p>ES6继承：  </p>
+<ul>
+<li>子类没有自己的this对象，因此必须在constructor中通过super继承父类的this对象，而后对此this对象进行加工。super关键字在构造函数中表示父类的构造函数，用来新建父类的this对象。</li>
+<li>ES6的继承机制完全不同，实质是先创造父类的实例对象this（必须先调用super方法），然后在用子类的构造函数修改this。</li>
+<li>super可作为函数和对象使用。当作为函数使用时，只可在子类的构造函数中使用，表示父类的构造函数，但是super中的this指向的是子类的实例，因此在子类中super()表示的是Parent.prototype.consturctor.call(this)。当作为对象使用时，super表示父类原型对象，即Parent.prototype</li>
+</ul>
 
       
     </div>
