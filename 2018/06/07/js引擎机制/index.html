@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="JS引擎解析过程1.解释阶段js是解释型语言，所有无需提前编译，而是解释器实时运行。  读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token） 对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree） 使用翻译器（translator），将代码转为字节码（bytecode） 使用字节码解释器（bytecode interpret">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-01T03:11:39.000Z">
+<meta property="og:updated_time" content="2018-08-01T03:43:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JS引擎解析过程">
 <meta name="twitter:description" content="JS引擎解析过程1.解释阶段js是解释型语言，所有无需提前编译，而是解释器实时运行。  读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token） 对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree） 使用翻译器（translator），将代码转为字节码（bytecode） 使用字节码解释器（bytecode interpret">
@@ -432,7 +432,7 @@ foo(22);
 </ol>
 <p>不同的异步任务被分为两类：微任务（micro task）和宏任务（macro task）<br>宏任务： setInterval() 、setTimeout()<br>微任务： new Promise() 、new MutationObserver()  </p>
 <p>当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈…如此反复，进入循环。</p>
-<p>当当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
+<p>当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
 
       
     </div>
@@ -556,7 +556,7 @@ foo(22);
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -247,6 +247,243 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/07/js引擎机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/07/js引擎机制/" itemprop="url">JS引擎解析过程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-07T00:00:00+08:00">
+                2018-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="JS引擎解析过程"><a href="#JS引擎解析过程" class="headerlink" title="JS引擎解析过程"></a>JS引擎解析过程</h4><p><strong>1.解释阶段</strong><br>js是解释型语言，所有无需提前编译，而是解释器实时运行。</p>
+<ol>
+<li>读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token）</li>
+<li>对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree）</li>
+<li>使用翻译器（translator），将代码转为字节码（bytecode）</li>
+<li>使用字节码解释器（bytecode interpreter），将字节码转为机器码。最终计算机执行的就是机器码。</li>
+</ol>
+<p><strong>2.js的预处理阶段</strong><br>预处理阶段主要为了确保JS可以正确执行，会做一些事情，诸如变量提升，分号补全。</p>
+<p>变量提升：  </p>
+<ul>
+<li><strong>函数声明提升优先级高于变量声明提升</strong></li>
+<li><p>变量对象/活动对象（VO/AO）填充的顺序也是按照以上顺序：函数的形参-&gt;函数声明-&gt;变量声明；<br>在变量对象/活动对象（VO/AO）中权重高低也按照函数的形参-&gt;函数声明-&gt;变量声明顺序来。</p>
+<pre><code>var a=1;
+function b(a){ console.log(a)}
+var b;
+console.log(b); // function b(a){console.log(a)}
+b();  //undefined
+</code></pre></li>
+</ul>
+<p>按照优先级只要console.log(a)中的a是函数中的形参，就永远不会被函数和变量声明覆盖，就算没有赋值也是默认填充的undefined值。</p>
+<p><strong>3.JS的执行阶段</strong><br>执行流程大概：  </p>
+<ul>
+<li>执行上下文，执行堆栈(全局上下文，当前活动上下文)</li>
+<li>VO(变量对象，会放一些变量信息，如声明的变量，函数，arguments参数等)和AO(活动对象)</li>
+<li>作用域链</li>
+<li>this机制</li>
+</ul>
+<p>VO与AO：  </p>
+<ul>
+<li>VO是执行上下文的属性，但是只有全局上下文的变量对象允许通过VO的属性名称来间接访问。（因为在全局上下文里，全局对象自身就是变量对象）。</li>
+<li>AO当函数被调用者激活，AO就被创建了</li>
+</ul>
+<p>可以理解为：  </p>
+<ul>
+<li>在函数上下文中：VO===AO</li>
+<li>在全局上下文中：VO === this === global</li>
+</ul>
+<p><strong>js执行上下文细节</strong><br>每次调用函数都会创建新的执行上下文，但是在js解释器内部，每次调用执行上下文，分为两个阶段：  </p>
+<ol>
+<li>创建阶段【当函数被调用，但未执行任何其内部代码之前】<ul>
+<li>创建作用域链</li>
+<li>创建变量，函数和参数</li>
+<li>求this的值</li>
+</ul>
+</li>
+<li>激活/代码执行阶段<ul>
+<li>指派变量的值和函数的引用，解释/执行代码。</li>
+</ul>
+</li>
+</ol>
+<p><strong>解释器如何执行代码的伪逻辑</strong>  </p>
+<ol>
+<li>查找调用函数的代码</li>
+<li>执行函数代码之前，先创建执行上下文</li>
+<li>进入创建阶段：<ul>
+<li>初始化作用域链</li>
+<li>创建变量对象<ul>
+<li>创建arguments对象，检查上下文，初始化参数名称和值并创建引用的复制</li>
+<li>扫描上下文的函数声明：为发现的每一个函数，在变量对象上创建一个属性(函数的名字)，其有一个指向函数在内存中的引用。如果函数的名字已经存在，引用指针将被重写。</li>
+<li>扫描上下文的变量声明：为发现的每个变量声明，在变量对象上创建一个属性(变量的名字)，并且将变量的值初始化为undefined。如果变量的名字已经存在，将不会进行任何操作并继续扫描。</li>
+</ul>
+</li>
+<li>求出上下文内部的this值</li>
+</ul>
+</li>
+<li>激活/代码执行阶段<ul>
+<li>在当前上下文上运行/解释函数代码，并随着代码一行行执行指派变量的值</li>
+</ul>
+</li>
+</ol>
+<p><strong>例如</strong>  </p>
+<pre><code>function foo(i){
+    var a = &quot;hello&quot;;
+    var b = function privateB(){};
+    function c(){};
+}    
+foo(22);
+</code></pre><p>当调用foo(22)时，创建状态如下： </p>
+<pre><code>fooExecutionContext = {
+    scopeChain: {...},
+    variableObject: {
+        arguments: {
+            0: 22,
+            length:1
+        },
+        i:22,
+        c: pointer to function c(),
+        a: undefined,
+        b: undefined
+    },
+    this: {...}
+}
+</code></pre><p>函数执行完成后：  </p>
+<pre><code>fooExecutionContext = {
+    scopeChain: {...},
+    variableObject: {
+        arguments: {
+            0: 22,
+            length:1
+        },
+        i:22,
+        c: pointer to function c(),
+        a: &apos;hello&apos;,
+        b: pointer to function privateB()
+    },
+    this: {...}
+}
+</code></pre><h4 id="JS事件循环机制-Event-Loop"><a href="#JS事件循环机制-Event-Loop" class="headerlink" title="JS事件循环机制 Event Loop"></a>JS事件循环机制 Event Loop</h4><p>首先JS语言的一个特点就是单线程，主要是考虑js多是操作dom，否则会带来复杂的同步问题。单线程就意味着任务需要排队，前一个任务结束，后一个任务才会执行。</p>
+<p>所有任务的可分为两种类型，一是同步任务，一个是异步任务。</p>
+<ol>
+<li>同步任务指的是在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务，构成一个执行栈。</li>
+<li>异步任务指的是不进入主线程，而进入任务队列的任务。</li>
+<li>当执行栈中的所有同步任务执行完毕，系统就会读取任务队列，看看里面有哪些事件。此时对应的异步任务，结束等待状态，进入执行栈，开始执行。</li>
+<li>主线程不断重复上面的第三步。只要主线程空了，就会去读取任务队列，这个过程不断重复。</li>
+</ol>
+<p>不同的异步任务被分为两类：微任务（micro task）和宏任务（macro task）<br>宏任务： setInterval() 、setTimeout()<br>微任务： new Promise() 、new MutationObserver()  </p>
+<p>当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈…如此反复，进入循环。</p>
+<p>当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/06/HTTP缓存/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1640,6 +1877,248 @@ console.log(result)
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/性能优化/" itemprop="url">前端性能优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="前端性能优化"><a href="#前端性能优化" class="headerlink" title="前端性能优化"></a>前端性能优化</h4><p><strong>1. 网络方面（网络传输性能）</strong><br>浏览器同一时间所发送的网络请求数是有限的。浏览器处理用户请求的过程：<strong>浏览器在得到用户请求之后，经历了下面阶段：重定向-&gt;拉取缓存-&gt;DNS查询-&gt;建立TCP链接-&gt;发起请求-&gt;接收响应-&gt;处理HTML元素-&gt;元素加载完成</strong></p>
+<ul>
+<li>减少http请求，必要的资源合并</li>
+<li>减小资源体积，资源压缩(图片体积，雪碧图，使用字体图标，使用webp格式)</li>
+<li>缓存<ul>
+<li>DNS缓存：浏览器会在DNS解析步骤中消耗一定的时间<ul>
+<li>DNS预解析<ul>
+<li><code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;A.com&quot;&gt;</code></li>
+<li><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</code></li>
+</ul>
+</li>
+<li>当浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行DNS解析，减少用户的等待时间，提高用户体验</li>
+</ul>
+</li>
+<li>CDN部署与缓存：CDN作为静态资源文件的分发网络，本身就已经提升了，网站静态资源的获取速度，加快网站的加载速度，同时也给静态资源做好缓存工作，有效的利用已缓存的静态资源，加快获取速度</li>
+<li>http缓存：给资源设定缓存时间，防止在有效的缓存时间内对资源进行重复的下载，从而提升整体网页的加载速度</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/css/c1.png" alt="">  </p>
+<p>浏览器默认的缓存是放在内存里，内存里的缓存会因为进程的结束或浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。<code>from memory cache</code>和<code>from dis cache</code>，通过在服务器上设置的Etag字段控制缓存存放的位置，在浏览器接收到服务器响应后，会检测响应头部Header，如果有Etag字段，那么浏览器就会将本次缓存写入磁盘中。</p>
+<p>拉取缓存会出现200、304两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回304状态码。</p>
+<p><strong>2. 渲染和DOM操作方面</strong>  </p>
+<ul>
+<li>减少重排和重绘<ul>
+<li>DOM渲染层与GPU硬件加速：布局是由CPU处理的，绘制则是由GPU完成的<ul>
+<li>浏览器会先获取DOM树并依据样式将其分割成多个独立的渲染层</li>
+<li>CPU将每个层绘制进绘图中</li>
+<li>将位图作为纹理上传至GPU绘制</li>
+<li>GPU将所有的渲染层缓存，如果下次上传的渲染层没有发生变化，GPU就不需要对其进行重绘，并复合多个渲染层最终形成图像</li>
+</ul>
+</li>
+<li>重排：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加DOM元素，修改了影响元素盒子大小的CSS属性。获取某些属性，浏览器为了获得正确的值也会触发重排。<ul>
+<li>offset</li>
+<li>scroll</li>
+<li>client(top/left/width/height)</li>
+<li>width,height</li>
+<li>调用了getComputedStyle()或者IE的currentStyle</li>
+</ul>
+</li>
+<li>重绘：绘制，即渲染上色，所有对元素的视觉表现属性的修改，会引发重绘</li>
+</ul>
+</li>
+<li>优化网页渲染<ul>
+<li>css的文件放在头部，js文件放在尾部或者异步加载<ul>
+<li>动态脚本加载</li>
+<li>defer：defer是在HTML解析完之后才执行，如果是多个，按照加载的顺序依次执行</li>
+<li>async：async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</li>
+</ul>
+</li>
+<li>尽量避免内联样式 </li>
+</ul>
+</li>
+<li>DOM操作优化<ul>
+<li>避免在document上直接进行频繁的DOM操作</li>
+<li>使用classname代替大量的内联样式修改</li>
+<li>使用requestAnimationFrame代替setInterval操作</li>
+<li>使用事件代理</li>
+</ul>
+</li>
+</ul>
+<p><strong>async和defer区别</strong>  </p>
+<ul>
+<li>没有defer或async，浏览器会立即加载并执行指定脚本，所有script元素都会按照在页面出现的先后顺序依次被解析，只有在解析完前面的script代码后，才会解析后面的script代码。</li>
+<li>async标志，使用async属性表示当前脚本不必等待其他脚本，也不必阻塞文档呈现。但是不能保证异步脚本按照他们在页面出现的顺序执行。</li>
+<li>defer，使用defer属性可以让脚本在文档完成呈现之后再执行，延迟脚本总是按照指定的顺序执行。</li>
+</ul>
+<p><strong>3. 数据方面</strong>  </p>
+<ul>
+<li>图片加载处理（懒加载，预加载）</li>
+<li>json数据格式交互</li>
+<li>部分常用数据的缓存</li>
+</ul>
+<h5 id="浏览器显示页面的原理"><a href="#浏览器显示页面的原理" class="headerlink" title="浏览器显示页面的原理"></a>浏览器显示页面的原理</h5><p>流程  </p>
+<ol>
+<li>获取HTML文档及样式表文件</li>
+<li>解析成对应的树形数据结构<ul>
+<li>DOM tree</li>
+<li>CSSOM tree</li>
+</ul>
+</li>
+<li>计算可见节点形成render tree</li>
+<li>计算DOM的形状及位置进行布局</li>
+<li>将每个节点转化为实际像素绘制到视口上</li>
+</ol>
+<p><strong>资源加载：</strong>  </p>
+<ul>
+<li>执行JavaScript会阻止DOM tree构建</li>
+<li>加载CSS会阻止render tree构建</li>
+</ul>
+<p>默认情况下，JavaScript脚本会在引入它的位置执行，这是会阻断DOM tree的构建；如果在运行脚本时浏览器尚未完成CSS的下载和CSSOM tree的构建，浏览器会将脚本执行延迟到这些操作结束之后。</p>
+<p><strong>影响性能的因素</strong>  </p>
+<ul>
+<li>白屏<ul>
+<li>HTML和CSS的加载及解析速度</li>
+<li><code>&lt;head&gt;</code>内的脚本加载及执行</li>
+</ul>
+</li>
+<li>首屏<ul>
+<li>图片加载</li>
+<li><code>&lt;body&gt;</code>内的脚本加载及执行</li>
+</ul>
+</li>
+</ul>
+<p><strong>提高前端性能</strong>  </p>
+<ul>
+<li>缩短白屏时间</li>
+<li>加快首屏显示</li>
+<li>尽快监听主要操作的事件  </li>
+</ul>
+<h4 id="对移动端的认识"><a href="#对移动端的认识" class="headerlink" title="对移动端的认识"></a>对移动端的认识</h4><p>从兼容上讲  </p>
+<ul>
+<li>PC要兼容IE6+，Firefox，chrome，Safari</li>
+<li>mobile的网页开发，只需要考虑webkit内核的浏览器和chrome，uc，qq，小米手机浏览器，兼容的东西少了些</li>
+</ul>
+<p>从开发上讲  </p>
+<ul>
+<li>mobile端的网页开发比PC页面小了，装的东西要少些，相对交互稍简单些（滑动，触屏，手势） </li>
+</ul>
+<p>移动端前端开发：分为移动端web app和移动端网页</p>
+<p><strong>移动端网页布局和PC差异</strong><br>主要是css方面，外加如何做到同一url，不同客户端展现不一致的做法，俗称pc和mobile都兼容。</p>
+<p>rem在移动端布局  </p>
+<p>移动端的字体默认为16px，那么1rem我想表示为10px的话，我们就需要 10 % 16 = 0.625 即为62.5%，这样就可以比较方便的把设计稿里的px转换成rem单位来做到自适应了。这样无论用户如何设置电脑或者手机的默认字体大小，设置为rem的单位的长度都会随比例变化。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/ajax/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1942,248 +2421,6 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
 <p><strong>异步请求</strong><br>异步请求是当发出请求的同时，浏览器可以继续做任何事，Ajax发送请求并不会影响页面的加载与用户操作，相当于两条线互不影响。</p>
 <p><strong>ajax默认是异步的，async的值是true</strong>  </p>
 <p><strong>如何选择同步还是异步模式</strong><br>在发送ajax请求后，还需要继续处理服务器的响应结果，如果这是使用异步请求模式同时未将结果的处理交由另一个JS函数进行处理。会导致异步请求的响应还没有到达，函数已经执行完了return，会导致return的结果为空字符串。  </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/性能优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/28/性能优化/" itemprop="url">前端性能优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
-                2018-05-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="前端性能优化"><a href="#前端性能优化" class="headerlink" title="前端性能优化"></a>前端性能优化</h4><p><strong>1. 网络方面（网络传输性能）</strong><br>浏览器同一时间所发送的网络请求数是有限的。浏览器处理用户请求的过程：<strong>浏览器在得到用户请求之后，经历了下面阶段：重定向-&gt;拉取缓存-&gt;DNS查询-&gt;建立TCP链接-&gt;发起请求-&gt;接收响应-&gt;处理HTML元素-&gt;元素加载完成</strong></p>
-<ul>
-<li>减少http请求，必要的资源合并</li>
-<li>减小资源体积，资源压缩(图片体积，雪碧图，使用字体图标，使用webp格式)</li>
-<li>缓存<ul>
-<li>DNS缓存：浏览器会在DNS解析步骤中消耗一定的时间<ul>
-<li>DNS预解析<ul>
-<li><code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;A.com&quot;&gt;</code></li>
-<li><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</code></li>
-</ul>
-</li>
-<li>当浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行DNS解析，减少用户的等待时间，提高用户体验</li>
-</ul>
-</li>
-<li>CDN部署与缓存：CDN作为静态资源文件的分发网络，本身就已经提升了，网站静态资源的获取速度，加快网站的加载速度，同时也给静态资源做好缓存工作，有效的利用已缓存的静态资源，加快获取速度</li>
-<li>http缓存：给资源设定缓存时间，防止在有效的缓存时间内对资源进行重复的下载，从而提升整体网页的加载速度</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/css/c1.png" alt="">  </p>
-<p>浏览器默认的缓存是放在内存里，内存里的缓存会因为进程的结束或浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。<code>from memory cache</code>和<code>from dis cache</code>，通过在服务器上设置的Etag字段控制缓存存放的位置，在浏览器接收到服务器响应后，会检测响应头部Header，如果有Etag字段，那么浏览器就会将本次缓存写入磁盘中。</p>
-<p>拉取缓存会出现200、304两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回304状态码。</p>
-<p><strong>2. 渲染和DOM操作方面</strong>  </p>
-<ul>
-<li>减少重排和重绘<ul>
-<li>DOM渲染层与GPU硬件加速：布局是由CPU处理的，绘制则是由GPU完成的<ul>
-<li>浏览器会先获取DOM树并依据样式将其分割成多个独立的渲染层</li>
-<li>CPU将每个层绘制进绘图中</li>
-<li>将位图作为纹理上传至GPU绘制</li>
-<li>GPU将所有的渲染层缓存，如果下次上传的渲染层没有发生变化，GPU就不需要对其进行重绘，并复合多个渲染层最终形成图像</li>
-</ul>
-</li>
-<li>重排：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加DOM元素，修改了影响元素盒子大小的CSS属性。获取某些属性，浏览器为了获得正确的值也会触发重排。<ul>
-<li>offset</li>
-<li>scroll</li>
-<li>client(top/left/width/height)</li>
-<li>width,height</li>
-<li>调用了getComputedStyle()或者IE的currentStyle</li>
-</ul>
-</li>
-<li>重绘：绘制，即渲染上色，所有对元素的视觉表现属性的修改，会引发重绘</li>
-</ul>
-</li>
-<li>优化网页渲染<ul>
-<li>css的文件放在头部，js文件放在尾部或者异步加载<ul>
-<li>动态脚本加载</li>
-<li>defer：defer是在HTML解析完之后才执行，如果是多个，按照加载的顺序依次执行</li>
-<li>async：async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</li>
-</ul>
-</li>
-<li>尽量避免内联样式 </li>
-</ul>
-</li>
-<li>DOM操作优化<ul>
-<li>避免在document上直接进行频繁的DOM操作</li>
-<li>使用classname代替大量的内联样式修改</li>
-<li>使用requestAnimationFrame代替setInterval操作</li>
-<li>使用事件代理</li>
-</ul>
-</li>
-</ul>
-<p><strong>async和defer区别</strong>  </p>
-<ul>
-<li>没有defer或async，浏览器会立即加载并执行指定脚本，所有script元素都会按照在页面出现的先后顺序依次被解析，只有在解析完前面的script代码后，才会解析后面的script代码。</li>
-<li>async标志，使用async属性表示当前脚本不必等待其他脚本，也不必阻塞文档呈现。但是不能保证异步脚本按照他们在页面出现的顺序执行。</li>
-<li>defer，使用defer属性可以让脚本在文档完成呈现之后再执行，延迟脚本总是按照指定的顺序执行。</li>
-</ul>
-<p><strong>3. 数据方面</strong>  </p>
-<ul>
-<li>图片加载处理（懒加载，预加载）</li>
-<li>json数据格式交互</li>
-<li>部分常用数据的缓存</li>
-</ul>
-<h5 id="浏览器显示页面的原理"><a href="#浏览器显示页面的原理" class="headerlink" title="浏览器显示页面的原理"></a>浏览器显示页面的原理</h5><p>流程  </p>
-<ol>
-<li>获取HTML文档及样式表文件</li>
-<li>解析成对应的树形数据结构<ul>
-<li>DOM tree</li>
-<li>CSSOM tree</li>
-</ul>
-</li>
-<li>计算可见节点形成render tree</li>
-<li>计算DOM的形状及位置进行布局</li>
-<li>将每个节点转化为实际像素绘制到视口上</li>
-</ol>
-<p><strong>资源加载：</strong>  </p>
-<ul>
-<li>执行JavaScript会阻止DOM tree构建</li>
-<li>加载CSS会阻止render tree构建</li>
-</ul>
-<p>默认情况下，JavaScript脚本会在引入它的位置执行，这是会阻断DOM tree的构建；如果在运行脚本时浏览器尚未完成CSS的下载和CSSOM tree的构建，浏览器会将脚本执行延迟到这些操作结束之后。</p>
-<p><strong>影响性能的因素</strong>  </p>
-<ul>
-<li>白屏<ul>
-<li>HTML和CSS的加载及解析速度</li>
-<li><code>&lt;head&gt;</code>内的脚本加载及执行</li>
-</ul>
-</li>
-<li>首屏<ul>
-<li>图片加载</li>
-<li><code>&lt;body&gt;</code>内的脚本加载及执行</li>
-</ul>
-</li>
-</ul>
-<p><strong>提高前端性能</strong>  </p>
-<ul>
-<li>缩短白屏时间</li>
-<li>加快首屏显示</li>
-<li>尽快监听主要操作的事件  </li>
-</ul>
-<h4 id="对移动端的认识"><a href="#对移动端的认识" class="headerlink" title="对移动端的认识"></a>对移动端的认识</h4><p>从兼容上讲  </p>
-<ul>
-<li>PC要兼容IE6+，Firefox，chrome，Safari</li>
-<li>mobile的网页开发，只需要考虑webkit内核的浏览器和chrome，uc，qq，小米手机浏览器，兼容的东西少了些</li>
-</ul>
-<p>从开发上讲  </p>
-<ul>
-<li>mobile端的网页开发比PC页面小了，装的东西要少些，相对交互稍简单些（滑动，触屏，手势） </li>
-</ul>
-<p>移动端前端开发：分为移动端web app和移动端网页</p>
-<p><strong>移动端网页布局和PC差异</strong><br>主要是css方面，外加如何做到同一url，不同客户端展现不一致的做法，俗称pc和mobile都兼容。</p>
-<p>rem在移动端布局  </p>
-<p>移动端的字体默认为16px，那么1rem我想表示为10px的话，我们就需要 10 % 16 = 0.625 即为62.5%，这样就可以比较方便的把设计稿里的px转换成rem单位来做到自适应了。这样无论用户如何设置电脑或者手机的默认字体大小，设置为rem的单位的长度都会随比例变化。</p>
 
           
         
@@ -2891,360 +3128,6 @@ var p = new Person() // 0 1 2...
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/06/三栏布局/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/06/三栏布局/" itemprop="url">CSS三栏布局</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-06T00:00:00+08:00">
-                2018-05-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-              <!-- 左右定宽，中间自适应三栏布局 -->
-<pre><code>&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
-  &lt;!-- 浮动定位 缺点：需要清除浮动；center盒子必须放在最后，中间层后渲染 优点：兼容性好； --&gt;
-  &lt;!-- 中间div为何要放在最后？ --&gt;
-  &lt;!-- 
-    假如某个div元素A是浮动的，如果A元素上一个元素也是浮动的，那么A元素会跟随
-    在上一个元素的后边（如果一行放不下这两个元素，那么A元素会被挤到下一行）；
-    如果A元素上一个元素是标准流中的元素，那么A的相对垂直位置不会改变，也就是
-    说A的顶部总是和上一个元素的底部对齐。
-  --&gt;
-  &lt;style&gt;
-    .left {
-      border: 1px solid red;
-      float: left;
-      width: 200px;
-    }
-    .center {
-      border: 1px solid blue;
-      margin: 0 200px;
-    }
-    .right {
-      border: 1px solid yellow;
-      float: right;
-      width: 200px;
-    }
-    .box {
-      overflow: hidden;
-      border: 1px solid gray;
-    }
-   .sub {
-      padding-bottom: 2000px;
-      margin-bottom: -2000px;
-    }
-  &lt;/style&gt;
-  &lt;div class=&quot;box&quot;&gt;
-    &lt;div class=&quot;left sub&quot;&gt;left
-      &lt;p&gt;left1&lt;/p&gt;
-      &lt;p&gt;left1&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;right sub&quot;&gt;right&lt;/div&gt;
-    &lt;div class=&quot;center sub&quot;&gt;float布局&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/section&gt;
-
-&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
-  &lt;!-- 绝对定位会让整个布局脱离文档流 --&gt;
-  &lt;style&gt;
-    .wrap {
-      position: relative;
-    }
-    .left1 {
-      position: absolute;
-      top: 0;
-      left: 0;
-      border: 1px solid red;
-      width: 200px;
-    }
-    .right1 {
-      position: absolute;
-      top: 0;
-      right: 0;
-      border: 1px solid blue;
-      width: 200px;
-    }
-    .center1 {
-      margin: 0 200px;
-      border: 1px solid gray;
-    }
-  &lt;/style&gt;
-  &lt;div class=&quot;wrap&quot;&gt;
-    &lt;div class=&quot;left1&quot;&gt;left
-        &lt;p&gt;left1&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;center1&quot;&gt;position：absolute布局&lt;/div&gt;
-    &lt;div class=&quot;right1&quot;&gt;right&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/section&gt;
-
- &lt;!-- table布局 默认会等高 --&gt;
-&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
-  &lt;style&gt;
-    .wrap2 {
-      display: table;
-      width: 100%;
-    }
-    .wrap2 &gt; div {
-      display: table-cell;
-    }
-    .left2 {
-      border: 1px solid pink;
-      width: 200px;
-    }
-    .right2 {
-      border: 1px solid green;
-      width: 200px;
-    }
-    .center2 {
-      border: 1px solid red;
-    }
-  &lt;/style&gt;
-  &lt;div class=&quot;wrap2&quot;&gt;
-    &lt;div class=&quot;left2&quot;&gt;left
-        &lt;p&gt;left1&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;center2&quot;&gt;table布局&lt;/div&gt;
-    &lt;div class=&quot;right2&quot;&gt;right2&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/section&gt;
-
- &lt;!-- flex布局，默认等高 --&gt;
-&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
-  &lt;!-- 兼容性问题；比较主流的移动端布局方式 --&gt;
-  &lt;style&gt;
-    .wrap3 {
-      display: flex;
-      width: 100%;
-    }
-    .left3 {
-      width: 200px;
-      border: 1px solid blue;
-    }
-    .right3 {
-      width: 200px;
-      border: 1px solid red;
-    }
-    .center3 {
-      flex: 1;
-      border: 1px solid yellow;
-    }
-  &lt;/style&gt;
-  &lt;div class=&quot;wrap3&quot;&gt;
-    &lt;div class=&quot;left3&quot;&gt;left
-        &lt;p&gt;left1&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;center3&quot;&gt;flex布局&lt;/div&gt;
-    &lt;div class=&quot;right3&quot;&gt;right3&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/section&gt;
-
- &lt;!-- grid布局 --&gt;
-&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
-  &lt;style&gt;
-    .wrap4 {
-      display: grid;
-      width: 100%;
-      grid-template-columns: 200px auto 200px;
-    }
-    .left4 {
-      border: 1px solid yellow;
-    }
-    .right4 {
-      border: 1px solid green;
-    }
-    .center4 {
-      border: 1px solid red;
-    }
-  &lt;/style&gt;
-  &lt;div class=&quot;wrap4&quot;&gt;
-    &lt;div class=&quot;left4&quot;&gt;left4
-        &lt;p&gt;left1&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;center4&quot;&gt;grid布局&lt;/div&gt;
-    &lt;div class=&quot;right4&quot;&gt;right4&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/section&gt;
-
-&lt;!-- 增加：中间栏优先渲染 --&gt;
-&lt;section style=&quot;margin-bottom: 250px;&quot;&gt;
-  &lt;!-- 圣杯布局 --&gt;
-  &lt;style&gt;
-    .center5 {
-      float: left;
-      width: 100%;
-      background-color: aqua;
-    }
-    .left5 {
-      float: left;
-      width: 200px;
-      margin-left: -100%;
-      background-color: bisque;
-      position: relative;
-      left: -200px;
-    }
-    .right5 {
-      float: left;
-      width: 200px;
-      margin-left: -200px;
-      background-color: blue;
-      position: relative;
-      right: -200px;
-    }
-    .wrap5 {
-      padding-left: 200px;
-      padding-right: 200px;
-      min-width: 700px;
-    }
-  &lt;/style&gt;
-  &lt;div class=&quot;wrap5&quot;&gt;
-    &lt;div class=&quot;center5&quot;&gt;center5&lt;/div&gt;
-    &lt;div class=&quot;left5&quot;&gt;left5
-        &lt;p&gt;left1&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;right5&quot;&gt;right5&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/section&gt;
-
- &lt;!-- 主要应用order属性 --&gt;
-&lt;section style=&quot;margin-bottom: 150px;&quot;&gt;
-  &lt;style&gt;
-    .center6 {
-      background-color: lightpink;
-      flex: 1;
-    }
-    .left6 {
-      background-color: lightgreen;
-      width: 200px;
-      order: -1;
-    }
-    .right6 {
-      background-color: khaki;
-      width: 200px;
-    }
-    .wrap6 {
-      display: flex;
-
-    }
-  &lt;/style&gt;
-  &lt;div class=&quot;wrap6&quot;&gt;
-    &lt;div class=&quot;center6&quot;&gt;center6
-      &lt;p&gt;flex&lt;/p&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;left6&quot;&gt;left6&lt;/div&gt;
-    &lt;div class=&quot;right6&quot;&gt;right6&lt;/div&gt;
-  &lt;/div&gt;
-&lt;/section&gt;
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3299,7 +3182,7 @@ var p = new Person() // 0 1 2...
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

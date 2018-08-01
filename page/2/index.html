@@ -247,6 +247,143 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/01/单例模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/01/单例模式/" itemprop="url">单例模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-01T00:00:00+08:00">
+                2018-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h4><pre><code>var SingleTest = (function(){
+    var _instance = null;
+    var _default = {};
+    function _init(ops){
+        for(var prop in ops){
+            this[prop] = ops[prop];
+        }
+    }
+    return function(ops=_default){
+        if(!_instance){
+            _instance = this;
+            _init.call(_instance, ops)
+        }else{
+            _init.call(_instance, ops)
+        }
+        return _instance;
+    }
+})()
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/29/千分符/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2125,243 +2262,6 @@ const demandData = [].concat(demandData, originalData.slice(from, to))
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/07/js引擎机制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/07/js引擎机制/" itemprop="url">JS引擎解析过程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-07T00:00:00+08:00">
-                2018-06-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="JS引擎解析过程"><a href="#JS引擎解析过程" class="headerlink" title="JS引擎解析过程"></a>JS引擎解析过程</h4><p><strong>1.解释阶段</strong><br>js是解释型语言，所有无需提前编译，而是解释器实时运行。</p>
-<ol>
-<li>读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token）</li>
-<li>对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree）</li>
-<li>使用翻译器（translator），将代码转为字节码（bytecode）</li>
-<li>使用字节码解释器（bytecode interpreter），将字节码转为机器码。最终计算机执行的就是机器码。</li>
-</ol>
-<p><strong>2.js的预处理阶段</strong><br>预处理阶段主要为了确保JS可以正确执行，会做一些事情，诸如变量提升，分号补全。</p>
-<p>变量提升：  </p>
-<ul>
-<li><strong>函数声明提升优先级高于变量声明提升</strong></li>
-<li><p>变量对象/活动对象（VO/AO）填充的顺序也是按照以上顺序：函数的形参-&gt;函数声明-&gt;变量声明；<br>在变量对象/活动对象（VO/AO）中权重高低也按照函数的形参-&gt;函数声明-&gt;变量声明顺序来。</p>
-<pre><code>var a=1;
-function b(a){ console.log(a)}
-var b;
-console.log(b); // function b(a){console.log(a)}
-b();  //undefined
-</code></pre></li>
-</ul>
-<p>按照优先级只要console.log(a)中的a是函数中的形参，就永远不会被函数和变量声明覆盖，就算没有赋值也是默认填充的undefined值。</p>
-<p><strong>3.JS的执行阶段</strong><br>执行流程大概：  </p>
-<ul>
-<li>执行上下文，执行堆栈(全局上下文，当前活动上下文)</li>
-<li>VO(变量对象，会放一些变量信息，如声明的变量，函数，arguments参数等)和AO(活动对象)</li>
-<li>作用域链</li>
-<li>this机制</li>
-</ul>
-<p>VO与AO：  </p>
-<ul>
-<li>VO是执行上下文的属性，但是只有全局上下文的变量对象允许通过VO的属性名称来间接访问。（因为在全局上下文里，全局对象自身就是变量对象）。</li>
-<li>AO当函数被调用者激活，AO就被创建了</li>
-</ul>
-<p>可以理解为：  </p>
-<ul>
-<li>在函数上下文中：VO===AO</li>
-<li>在全局上下文中：VO === this === global</li>
-</ul>
-<p><strong>js执行上下文细节</strong><br>每次调用函数都会创建新的执行上下文，但是在js解释器内部，每次调用执行上下文，分为两个阶段：  </p>
-<ol>
-<li>创建阶段【当函数被调用，但未执行任何其内部代码之前】<ul>
-<li>创建作用域链</li>
-<li>创建变量，函数和参数</li>
-<li>求this的值</li>
-</ul>
-</li>
-<li>激活/代码执行阶段<ul>
-<li>指派变量的值和函数的引用，解释/执行代码。</li>
-</ul>
-</li>
-</ol>
-<p><strong>解释器如何执行代码的伪逻辑</strong>  </p>
-<ol>
-<li>查找调用函数的代码</li>
-<li>执行函数代码之前，先创建执行上下文</li>
-<li>进入创建阶段：<ul>
-<li>初始化作用域链</li>
-<li>创建变量对象<ul>
-<li>创建arguments对象，检查上下文，初始化参数名称和值并创建引用的复制</li>
-<li>扫描上下文的函数声明：为发现的每一个函数，在变量对象上创建一个属性(函数的名字)，其有一个指向函数在内存中的引用。如果函数的名字已经存在，引用指针将被重写。</li>
-<li>扫描上下文的变量声明：为发现的每个变量声明，在变量对象上创建一个属性(变量的名字)，并且将变量的值初始化为undefined。如果变量的名字已经存在，将不会进行任何操作并继续扫描。</li>
-</ul>
-</li>
-<li>求出上下文内部的this值</li>
-</ul>
-</li>
-<li>激活/代码执行阶段<ul>
-<li>在当前上下文上运行/解释函数代码，并随着代码一行行执行指派变量的值</li>
-</ul>
-</li>
-</ol>
-<p><strong>例如</strong>  </p>
-<pre><code>function foo(i){
-    var a = &quot;hello&quot;;
-    var b = function privateB(){};
-    function c(){};
-}    
-foo(22);
-</code></pre><p>当调用foo(22)时，创建状态如下： </p>
-<pre><code>fooExecutionContext = {
-    scopeChain: {...},
-    variableObject: {
-        arguments: {
-            0: 22,
-            length:1
-        },
-        i:22,
-        c: pointer to function c(),
-        a: undefined,
-        b: undefined
-    },
-    this: {...}
-}
-</code></pre><p>函数执行完成后：  </p>
-<pre><code>fooExecutionContext = {
-    scopeChain: {...},
-    variableObject: {
-        arguments: {
-            0: 22,
-            length:1
-        },
-        i:22,
-        c: pointer to function c(),
-        a: &apos;hello&apos;,
-        b: pointer to function privateB()
-    },
-    this: {...}
-}
-</code></pre><h4 id="JS事件循环机制-Event-Loop"><a href="#JS事件循环机制-Event-Loop" class="headerlink" title="JS事件循环机制 Event Loop"></a>JS事件循环机制 Event Loop</h4><p>首先JS语言的一个特点就是单线程，主要是考虑js多是操作dom，否则会带来复杂的同步问题。单线程就意味着任务需要排队，前一个任务结束，后一个任务才会执行。</p>
-<p>所有任务的可分为两种类型，一是同步任务，一个是异步任务。</p>
-<ol>
-<li>同步任务指的是在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务，构成一个执行栈。</li>
-<li>异步任务指的是不进入主线程，而进入任务队列的任务。</li>
-<li>当执行栈中的所有同步任务执行完毕，系统就会读取任务队列，看看里面有哪些事件。此时对应的异步任务，结束等待状态，进入执行栈，开始执行。</li>
-<li>主线程不断重复上面的第三步。只要主线程空了，就会去读取任务队列，这个过程不断重复。</li>
-</ol>
-<p>不同的异步任务被分为两类：微任务（micro task）和宏任务（macro task）<br>宏任务： setInterval() 、setTimeout()<br>微任务： new Promise() 、new MutationObserver()  </p>
-<p>当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈…如此反复，进入循环。</p>
-<p>当当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2416,7 +2316,7 @@ foo(22);
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
