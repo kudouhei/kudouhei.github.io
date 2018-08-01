@@ -247,7 +247,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/理解nextTick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -266,7 +266,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
+                <a class="post-title-link" href="/2018/07/04/理解nextTick/" itemprop="url">理解Vue.nextTick</a></h1>
         
 
         <div class="post-meta">
@@ -318,23 +318,34 @@
       
         
           
-            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
-<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
-<p>常用的场景例如：</p>
+            <h4 id="理解Vue-nextTick"><a href="#理解Vue-nextTick" class="headerlink" title="理解Vue.nextTick"></a>理解Vue.nextTick</h4><p>在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。</p>
+<p><strong>原理</strong><br>Vue实现响应式并不是数据发生变化之后DOM立即变化，而是按一定的策略进行DOM的更新。</p>
+<p>Vue在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，在统一进行视图更新。</p>
+<pre><code>// 改变数据
+vm.message = &apos;changed&apos;
+// 想要立即使用更新后的DOM。这样不行，因为设置message后DOM还没有更新
+console.log(vm.$el.textContent) // 不会得到‘changed’
+// 这样可以，nextTick里面的代码会在DOM更新后执行
+Vue.nextTick(function(){
+    console.log(vm.$el.textContent) // 可得到‘changed’
+})
+</code></pre><p>只要让nextTick里的代码放在UI render步骤后面执行，就能访问到更新后的DOM了。</p>
+<p>vue就是这样的思路，是用队列控制方式得到。  </p>
 <ul>
-<li>在用户输入时更新大量的信息，例如过滤列表。</li>
-<li>从Vuex商店中收集信息</li>
-<li>表单验证</li>
-<li>数据可视化需要依赖于用户查看的内容而变化</li>
+<li>vue用异步队列的方式来控制DOM更新和nextTick回调先后执行</li>
+<li>microtask因为其高优先级特性，能确保队列中的微任务在一次事件循环前被执行完毕</li>
 </ul>
-<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
-<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
-<p>1.计算属性VSmethod方法  </p>
-<ul>
-<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
-<li>method则每次都会重新计算</li>
-</ul>
-
+<p><strong>用途</strong><br>需要在视图更新之后，基于新的视图进行操作。</p>
+<p><strong>在created和mounted阶段，如果需要操作渲染后的视图，也要使用nextTick方法</strong>  </p>
+<p>例子： 点击按钮显示原本v-show= false隐藏起来的输入框，并获取焦点  </p>
+<pre><code>show() {
+    this.showit = true
+    this.$nextTick(function(){
+        // DOM更新
+        document.getElementById(&quot;keywords&quot;).focus()
+    })
+}
+</code></pre>
           
         
       
