@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="Vue," />
+  <meta name="keywords" content="javascript," />
 
 
 
@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="理解Vue.nextTick在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。 原理Vue实现响应式并不是数据发生变化之后DOM立即变化，而是按一定的策略进行DOM的更新。 Vue在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，在统一进行视图">
-<meta name="keywords" content="Vue">
+<meta name="description" content="JavaScript定义类的三种方法1. 构造函数法用构造函数模拟“类”，在其内部用this关键字指代实例对象。用new生成实例。类的属性和方法还可以定义在构造函数的prototype对象上。  funciton Foo(){     this.name = &amp;quot;Foo&amp;quot;;     t">
+<meta name="keywords" content="javascript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="理解Vue.nextTick">
-<meta property="og:url" content="http://yoursite.com/2018/07/04/理解nextTick/index.html">
+<meta property="og:title" content="JavaScript定义类的三种方法">
+<meta property="og:url" content="http://yoursite.com/2018/08/02/js定义类/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="理解Vue.nextTick在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。 原理Vue实现响应式并不是数据发生变化之后DOM立即变化，而是按一定的策略进行DOM的更新。 Vue在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，在统一进行视图更新。 // 改变数据 vm.message = &amp;apos;changed&amp;a">
+<meta property="og:description" content="JavaScript定义类的三种方法1. 构造函数法用构造函数模拟“类”，在其内部用this关键字指代实例对象。用new生成实例。类的属性和方法还可以定义在构造函数的prototype对象上。  funciton Foo(){     this.name = &amp;quot;Foo&amp;quot;;     this.getName = function(){} } var foo = new Foo()">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-03T22:56:38.000Z">
+<meta property="og:updated_time" content="2018-08-02T13:19:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="理解Vue.nextTick">
-<meta name="twitter:description" content="理解Vue.nextTick在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。 原理Vue实现响应式并不是数据发生变化之后DOM立即变化，而是按一定的策略进行DOM的更新。 Vue在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，在统一进行视图更新。 // 改变数据 vm.message = &amp;apos;changed&amp;a">
+<meta name="twitter:title" content="JavaScript定义类的三种方法">
+<meta name="twitter:description" content="JavaScript定义类的三种方法1. 构造函数法用构造函数模拟“类”，在其内部用this关键字指代实例对象。用new生成实例。类的属性和方法还可以定义在构造函数的prototype对象上。  funciton Foo(){     this.name = &amp;quot;Foo&amp;quot;;     this.getName = function(){} } var foo = new Foo()">
 
 
 
@@ -125,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/04/理解nextTick/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/08/02/js定义类/"/>
 
 
 
 
 
-  <title>理解Vue.nextTick | FE_hei</title>
+  <title>JavaScript定义类的三种方法 | FE_hei</title>
   
 
 
@@ -248,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/理解nextTick/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/02/js定义类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -265,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">理解Vue.nextTick</h1>
+          <h1 class="post-title" itemprop="name headline">JavaScript定义类的三种方法</h1>
         
 
         <div class="post-meta">
@@ -277,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
-                2018-07-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T00:00:00+08:00">
+                2018-08-02
               </time>
             
 
@@ -315,34 +315,59 @@
       
 
       
-        <h4 id="理解Vue-nextTick"><a href="#理解Vue-nextTick" class="headerlink" title="理解Vue.nextTick"></a>理解Vue.nextTick</h4><p>在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。</p>
-<p><strong>原理</strong><br>Vue实现响应式并不是数据发生变化之后DOM立即变化，而是按一定的策略进行DOM的更新。</p>
-<p>Vue在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，在统一进行视图更新。</p>
-<pre><code>// 改变数据
-vm.message = &apos;changed&apos;
-// 想要立即使用更新后的DOM。这样不行，因为设置message后DOM还没有更新
-console.log(vm.$el.textContent) // 不会得到‘changed’
-// 这样可以，nextTick里面的代码会在DOM更新后执行
-Vue.nextTick(function(){
-    console.log(vm.$el.textContent) // 可得到‘changed’
-})
-</code></pre><p>只要让nextTick里的代码放在UI render步骤后面执行，就能访问到更新后的DOM了。</p>
-<p>vue就是这样的思路，是用队列控制方式得到。  </p>
-<ul>
-<li>vue用异步队列的方式来控制DOM更新和nextTick回调先后执行</li>
-<li>microtask因为其高优先级特性，能确保队列中的微任务在一次事件循环前被执行完毕</li>
-</ul>
-<p><strong>用途</strong><br>需要在视图更新之后，基于新的视图进行操作。</p>
-<p><strong>在created和mounted阶段，如果需要操作渲染后的视图，也要使用nextTick方法</strong>  </p>
-<p>例子： 点击按钮显示原本v-show= false隐藏起来的输入框，并获取焦点  </p>
-<pre><code>show() {
-    this.showit = true
-    this.$nextTick(function(){
-        // DOM更新
-        document.getElementById(&quot;keywords&quot;).focus()
-    })
+        <h4 id="JavaScript定义类的三种方法"><a href="#JavaScript定义类的三种方法" class="headerlink" title="JavaScript定义类的三种方法"></a>JavaScript定义类的三种方法</h4><p><strong>1. 构造函数法</strong><br>用构造函数模拟“类”，在其内部用this关键字指代实例对象。用new生成实例。类的属性和方法还可以定义在构造函数的prototype对象上。 </p>
+<pre><code>funciton Foo(){
+    this.name = &quot;Foo&quot;;
+    this.getName = function(){}
 }
-</code></pre>
+var foo = new Foo();
+console.log(foo.name); // Foo
+Foo.prototype.getName = function(){}
+</code></pre><p>优点：可以根据参数来构造不同的对象实例<br>缺点：构造时每个实例对象都会生成getName方法，造成内存浪费</p>
+<p><strong>2. 原型方式</strong>  </p>
+<pre><code>function Foo(){}
+Foo.prototype.name = &quot;hei&quot;;
+Foo.prototype.getName = function(){}
+var f1= new Foo()
+</code></pre><p>原型方式缺点不能通过参数来构造对象实例，优点是所有对象实例都共享getName方法。</p>
+<p><strong>3. 组合方式</strong>  </p>
+<pre><code>function Foo(name){
+    this.name = name;
+}
+Foo.prototype.getName = function(){
+    return this.name;
+}
+</code></pre><p><strong>2. Object.create()</strong><br>直接用Object.create()生成实例，不需要用到new</p>
+<pre><code>var Foo = {
+    name: &quot;Foo&quot;,
+    getName: function(){}
+}
+var foo = Object.create(Foo);
+</code></pre><p>兼容老式浏览器  </p>
+<pre><code>if(!Object.create){
+    Object.create = function(o){
+        function F(){};
+        F.prototype = o;
+        return new F();
+    }
+}
+</code></pre><p>此方法不能实现私有属性和私有方法，实例对象之间也不能共享数据，对“类”的模拟不够全面。</p>
+<p><strong>3. 封装（推荐）</strong>  </p>
+<h6 id="3-1-封装"><a href="#3-1-封装" class="headerlink" title="3.1 封装"></a>3.1 封装</h6><p>这种方法不使用this和prototype，代码简单，用对象模拟“类”。在这个类里面，定义一个构造函数，用来生成实例。在构造函数里，定义一个实例对象，把这个实例对象作为返回值。  </p>
+<pre><code>var Foo = {
+    createFoo: function(){
+        var foo = {};
+        foo.name = &quot;foo&quot;;
+        foo.getName = function(){};
+        return foo;
+    }
+}
+</code></pre><p>使用的时候，调用createFoo()方法，就可以得到实例对象。</p>
+<pre><code>var h1 = Foo.createFoo();
+h1.getName();
+</code></pre><p>此方法好处是，结构清晰。</p>
+<h6 id="3-2-继承"><a href="#3-2-继承" class="headerlink" title="3.2 继承"></a>3.2 继承</h6><p>让一个类继承另一个类，只需要调用createFoo()方法即可。</p>
+
       
     </div>
     
@@ -359,7 +384,7 @@ Vue.nextTick(function(){
       
         <div class="post-tags">
           
-            <a href="/tags/Vue/" rel="tag"><i class="fa fa-tag"></i> Vue</a>
+            <a href="/tags/javascript/" rel="tag"><i class="fa fa-tag"></i> javascript</a>
           
         </div>
       
@@ -372,8 +397,8 @@ Vue.nextTick(function(){
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/03/Vue.extend/" rel="next" title="Vue.extend">
-                <i class="fa fa-chevron-left"></i> Vue.extend
+              <a href="/2018/08/01/js事件/" rel="next" title="javascript事件">
+                <i class="fa fa-chevron-left"></i> javascript事件
               </a>
             
           </div>
@@ -381,10 +406,6 @@ Vue.nextTick(function(){
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/07/04/Vue方法计算属性/" rel="prev" title="Vue中methods，computed，watch">
-                Vue中methods，computed，watch <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -530,7 +551,7 @@ Vue.nextTick(function(){
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#理解Vue-nextTick"><span class="nav-number">1.</span> <span class="nav-text">理解Vue.nextTick</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#JavaScript定义类的三种方法"><span class="nav-number">1.</span> <span class="nav-text">JavaScript定义类的三种方法</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#3-1-封装"><span class="nav-number">1.0.1.</span> <span class="nav-text">3.1 封装</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#3-2-继承"><span class="nav-number">1.0.2.</span> <span class="nav-text">3.2 继承</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
