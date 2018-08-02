@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="Vue实践技巧1. 多个页面都使用到的方法，可以放在vue.prototype上   在vue的入口文件(vue-cli生成的项目的话，默认/src/main.js)   import port from &amp;apos;./xxx/xxx/post&amp;apos; vue.prototype.$post = post 这样就可以在所有的vue组件页面使用this.post()方法了。把方法挂载到prot">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-01T03:58:56.000Z">
+<meta property="og:updated_time" content="2018-08-02T13:17:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vue-ticks">
 <meta name="twitter:description" content="Vue实践技巧1. 多个页面都使用到的方法，可以放在vue.prototype上   在vue的入口文件(vue-cli生成的项目的话，默认/src/main.js)   import port from &amp;apos;./xxx/xxx/post&amp;apos; vue.prototype.$post = post 这样就可以在所有的vue组件页面使用this.post()方法了。把方法挂载到prot">
@@ -437,6 +437,55 @@ watch: {
         immediate: true
     }
 }
+</code></pre><h4 id="vue-keep-alive实践"><a href="#vue-keep-alive实践" class="headerlink" title="vue keep-alive实践"></a>vue keep-alive实践</h4><p>在vue项目中有某些组件不需要多次渲染，需要将组件在内存中进行缓存，这时候应用<code>keep-alive</code>。它可以使被包含的组件状态维持不变，即便组件切换了，其内的状态依旧维持在内存中，下一次显示，不会重新渲染。</p>
+<pre><code>&lt;keep-alive&gt;
+&lt;component&gt;
+  &lt;!-- 组件将被缓存 --&gt;
+&lt;/component&gt;
+&lt;/keep-alive&gt;
+</code></pre><p><strong>配合router-view使用</strong><br>有时候需要将整个路由页面一起缓存下来，就是将<code>&lt;router-view&gt;</code>缓存</p>
+<pre><code>&lt;keep-alive&gt;
+    &lt;router-view v-if=&quot;$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
+&lt;/keep-alive&gt;
+&lt;router-view v-if=&quot;!$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
+
+new Router({
+    routes: [
+        {
+            name: &apos;a&apos;,
+            path: &apos;/a&apos;,
+            component: A,
+            meta: {
+                keepAlive: true
+            }
+        },
+        {
+            name: &apos;b&apos;,
+            path: &apos;/b&apos;,
+            component: B
+        }
+    ]
+})
+</code></pre><p>a路由便达到了被缓存的效果，如果还有想要缓存的路由，只需要在路由元中加入 keepAlive: true.</p>
+<p><strong>使用router.meta</strong><br>需求： 默认显示A；B跳转到A，A不刷新；C跳到A，A不刷新</p>
+<pre><code>// 在A路由里面设置meta属性
+{
+    path: &apos;/&apos;,
+    name: &apos;A&apos;,
+    component: A,
+    meta: { keepAlive: true // 需要被缓存}
+}
+// 在B组件里面设置beforeRouteLeave
+export default {
+    data() {
+        return {};
+    },
+    methods: {},
+    beforeRouteLeave(to, from, next){
+        // 设置下一个路由的meta
+        to.meta.keepAlive = true; // 让A缓存，即不刷新
+    }
+}
 </code></pre>
       
     </div>
@@ -625,7 +674,7 @@ watch: {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue实践技巧"><span class="nav-number">1.</span> <span class="nav-text">Vue实践技巧</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue实践技巧"><span class="nav-number">1.</span> <span class="nav-text">Vue实践技巧</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vue-keep-alive实践"><span class="nav-number">2.</span> <span class="nav-text">vue keep-alive实践</span></a></li></ol></div>
             
 
           </div>
