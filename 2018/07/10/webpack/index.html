@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {   &amp;quot;name&amp;quot;: &amp;quot;mydemo&amp;quot;,">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-17T12:37:57.000Z">
+<meta property="og:updated_time" content="2018-08-02T13:49:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="webpack整理">
 <meta name="twitter:description" content="webpackwebpack安装与配置在当前文件夹初始化npm的package.json文件，npm init。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。 当init后，有如下package.json   //package.json {   &amp;quot;name&amp;quot;: &amp;quot;mydemo&amp;quot;,">
@@ -345,6 +345,8 @@
 <li>devDependencies声明–仅开发依赖</li>
 <li>dependencies依赖包</li>
 </ul>
+<p>####对打包工具的理解<br>打包工具就是负责把一些分散的小模块，按照一定的规则整合成一个大模块的工具。打包工具也会处理好模块之间的依赖关系，最终这个大模块将可以被运行在合适的平台中。</p>
+<p>打包工具会从一个入口文件开始，分析它里面的依赖，并且在进一步地分析依赖中的依赖，不断重复这个过程，直到把这些依赖关系处理清楚。所有打包工具最核心的部分就是处理好模块之间的依赖关系。</p>
 <p><strong>开发与部署</strong><br>开发到一定阶段需要发布一个版本，我们往往需要一个文件夹来保存整合后的项目。这个过程，就叫做部署”deploy”。这也是webpack的工作，会用到一个和开发阶段不同的webpack配置文件，它只是将输出目录换成了另一个而已。</p>
 <p><strong>构建目录</strong>  </p>
 <ul>
