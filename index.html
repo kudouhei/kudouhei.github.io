@@ -247,6 +247,205 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/13/webpack配置优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/13/webpack配置优化/" itemprop="url">Webpack配置优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-13T00:00:00+08:00">
+                2018-08-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="webpack配置优化"><a href="#webpack配置优化" class="headerlink" title="webpack配置优化"></a>webpack配置优化</h3><p><strong>DefinePlugin</strong>  </p>
+<ul>
+<li>DefinePlugin 允许创建一个在编译时可以配置的全局常量。这可能会对开发模式和发布模式的构建允许不同的行为非常有用。</li>
+<li>比如一些 debug 的功能在生产环境中需要关闭、开发环境中和生产环境中 api 地址的不同。</li>
+</ul>
+<p><strong>CommonsChunkPlugin</strong>  </p>
+<ul>
+<li><p>用于提取一些公共代码，一般是用于提取第三方库，这个在上线部署时很有必要，因为出现bug，一般都是业务代码的问题，第三方库相对比较稳定，这个时候第三方库代码不应该受到影响，CommonsChunkPlugin可以减少热更的代价</p>
+<pre><code>// 将第三方库单独打包成一个vender
+new webpack.optimize.CommonsChunkPlugin({
+  name: &apos;vendor&apos;,
+  minChunks: function (module) {
+    // any required modules inside node_modules are extracted to vendor
+    return (
+      module.resource &amp;&amp;
+      /\.js$/.test(module.resource) &amp;&amp;
+      module.resource.indexOf(
+        path.join(__dirname, &apos;../node_modules&apos;)
+      ) === 0
+    )
+  }
+})
+</code></pre></li>
+</ul>
+<p><strong>懒加载</strong>  </p>
+<ul>
+<li><p>webpack遇到import()，会单独将其抽离成一个js文件，等到运行时才去加载</p>
+<pre><code>async function doSomeThing () {
+  const {default: moment} = await import(&apos;moment&apos;)
+  console.log(moment())
+}
+
+setTimeout(() =&gt; {
+  doSomeThing()
+}, 1000)
+</code></pre></li>
+</ul>
+<h4 id="webpack配置重点"><a href="#webpack配置重点" class="headerlink" title="webpack配置重点"></a>webpack配置重点</h4><p><strong>path模块</strong><br>path是Node.js中的一个模块，用于处理目录的对象。  </p>
+<p>常用方法：  </p>
+<ul>
+<li><code>path.join()</code>:用于连接路径</li>
+<li><code>path.resolve()</code>:用于将相对路径转为绝对路径</li>
+</ul>
+<p><strong>process</strong><br>process对象是Node的一个全局对象，提供当前Node进程的信息。  </p>
+<pre><code>process对象提供一系列属性，用于返回系统信息  
+process.argv： 返回当前进程的命令行参数数组  
+process.env： 返回一个对象，成员为当前Shell的环境变量，比如process.env.HOME  
+process.pid： 当前进程的进程号  
+</code></pre><p><strong>webpack-merge</strong>  </p>
+<ul>
+<li>在开发环境中，我们需要具有强大的、具有实时重新加载(live reloading)或热模块替换(hot module replacement)能力的 source map 和 localhost server。</li>
+<li>在生产环境中，我们的目标则转向于关注更小的 bundle，更轻量的 source map，以及更优化的资源，以改善加载时间。</li>
+<li>由于要遵循逻辑分离，我们通常建议为每个环境编写彼此独立的 webpack 配置。通用的配置部分，我们抽象出一个公共文件，通过 webpack-merge 工具的“通用”配置，我们不必在环境特定的配置中重复代码。</li>
+</ul>
+<p><strong>ExtractTextWebpackPlugin</strong>  </p>
+<p>ExtractTextWebpackPlugin 插件通常用来做样式文件的分离，被分离的文件不会被内嵌到 JS bundle 中，而会被放到一个单独的文件中，在样式文件比较大的时候，能够提前样式的加载。</p>
+<pre><code>const ExtractTextPlugin = require(&quot;extract-text-webpack-plugin&quot;);  
+module.exports = {
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    fallback: &quot;style-loader&quot;,
+                    use: &quot;css-loader&quot;
+                })
+            }
+        ]
+    },
+    plugins: [
+        new ExtractTextPlugin(&quot;styles.css&quot;)
+    ]
+}
+</code></pre><p>它会将所有的入口 chunk(entry chunks)中引用的 *.css，移动到独立分离的 CSS 文件。因此，你的样式将不再内嵌到 JS bundle 中，而是会放到一个单独的 CSS 文件（即 styles.css）当中。 如果你的样式文件大小较大，这会做更快提前加载，因为 CSS bundle 会跟 JS bundle 并行加载。  </p>
+<p><strong>html-webpack-plugin</strong><br>通常在开发中，我们为了避免 CDN 和浏览器的缓存通常会个输出文件 bundle.js 加上一个hash 值例如 [hash].bundle.js，使用 html-webpack-plugin 能够在创建新的 html 文件的时候将我们把带有哈希值的 bundle.js 引用到 html 文件.</p>
+<p><strong>UglifyjsWebpackPlugin</strong><br>用来压缩 js 代码</p>
+<h4 id="webpack的loader和plugin区别"><a href="#webpack的loader和plugin区别" class="headerlink" title="webpack的loader和plugin区别"></a>webpack的loader和plugin区别</h4><ul>
+<li>loader用于加载某些资源文件。因为webpack本身只能打包commonjs规范的JS文件，对于其他资源如css、图片或者jsx等没有办法加载。所以就需要对应的loader将资源转化，加载进来。loader用于加载，作用于一个文件上。</li>
+<li>plugin用于扩展webpack功能，而loader只专注于转化文件，plugin功能更丰富</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/10/vuex/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -537,380 +736,6 @@ var foo = Object.create(Foo);
 h1.getName();
 </code></pre><p>此方法好处是，结构清晰。</p>
 <h6 id="3-2-继承"><a href="#3-2-继承" class="headerlink" title="3.2 继承"></a>3.2 继承</h6><p>让一个类继承另一个类，只需要调用createFoo()方法即可。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-source/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/01/vue-source/" itemprop="url">vue-source</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
-                2018-08-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Vue源码学习"><a href="#Vue源码学习" class="headerlink" title="Vue源码学习"></a>Vue源码学习</h3><p>Vue的核心可以分为三个大块：数据处理和双向绑定、模板编译、虚拟dom。</p>
-<h4 id="1-vue响应式原理"><a href="#1-vue响应式原理" class="headerlink" title="1.vue响应式原理"></a>1.vue响应式原理</h4><p><strong>基本概念</strong>  </p>
-<ul>
-<li>data: vue实例中的数据项</li>
-<li>observer：数据属性的观察者，监控对象的读写操作</li>
-<li>dep：消息订阅器，拥有收集订阅者、发布更新的功能</li>
-<li>watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。</li>
-</ul>
-<p><img src="/images/vue/source.png" alt=""></p>
-<p>vue的数据响应式实现分为两个部分：  </p>
-<ol>
-<li>把数据转化为getter和setter</li>
-<li>建立watcher并收集依赖</li>
-</ol>
-<h4 id="Vue的生命周期"><a href="#Vue的生命周期" class="headerlink" title="Vue的生命周期"></a>Vue的生命周期</h4><p>Vue的生命周期，首先需要创建一个实例，也就是在new Vue()的对象过程当中，首先默认执行了init，在init的过程当中首先调用beforeCreate，然后再去调用created。所以一般beforeCreate的时候不要去修改data里赋值的数据，最早要等到created里面去做。</p>
-<p>当created完成后，会去判断instance实例里是否含有“el”，如果没有的话，会调用<code>vm.$mount(el)</code>这个方法，然后执行。如果有的话，直接执行下一步。然后会判断是否含有“template”，如果有的话，会把template解析成一个render函数。render函数是发生在beforeMount和mounted之间的，所以在beforeMount的时候，<code>$el</code>还只是HTML里面写的节点，然后mounted的时候，它就把渲染出来的内容挂载到了DOM节点上。</p>
-<p>beforeMount在有了render函数的时候才会去执行，当执行完了render函数后，就会调用mounted这个钩子，在mounted挂载完毕之后，这个实例就算走完流程了。</p>
-<p>后续的钩子函数执行的过程都是需要外部的触发才会执行的。比如有数据的变化会调用beforeUpdate，然后经过Virtual Dom,最后updated更新完毕。当组件被销毁的时候，它会调用beforeDestory，以destoryed。</p>
-<h4 id="模板编译"><a href="#模板编译" class="headerlink" title="模板编译"></a>模板编译</h4><p>模板编译分为三个阶段：生成ast、优化静态内容、生成render。</p>
-<h4 id="实现vue-watch"><a href="#实现vue-watch" class="headerlink" title="实现vue.watch"></a>实现vue.watch</h4><pre><code>class watcher {
-  constructor(opts){
-    this.$data = this.getBaseType(opts.data) === &apos;Object&apos;?opts.data: {};
-    this.$watch = this.getBaseType(opts.watch)=== &apos;Object&apos; ? opts.watch: {};
-    for(let key in opts.data){
-      this.setData(key)
-    }
-  }
-  getBaseType(target){
-    return Object.prototype.toString.call(target).slice(8, -1);
-  }
-  setData(_key, _val){
-    Object.defineProperty(this, _key, {
-      get: function(){
-        return this.$data[_key];
-      },
-      set: function(newVal){
-        const oldVal = this.$data[_key];
-        if(oldVal === newVal) return newVal;
-        this.$data[_key] = newVal;
-        this.$watch[_key] &amp;&amp; typeof this.$watch[_key] === &apos;function&apos;
-          &amp;&amp; (this.$watch[_key].call(this, newVal, oldVal))
-        return newVal
-      }
-    })
-  }
-}
-let vm = new watcher({
-  data: {
-    a: 0,
-    b: &apos;hello&apos;
-  },
-  watch: {
-    a(newVal, oldVal){
-      console.log(this.b);
-      console.log(&quot;old:&quot;+oldVal)
-      console.log(&quot;new:&quot;+newVal)
-    }
-  }
-})
-</code></pre><h4 id="监听数组变化"><a href="#监听数组变化" class="headerlink" title="监听数组变化"></a>监听数组变化</h4><p>Object.defineProperty通过对象的 getter/setter简单的实现了对象属性变化的监听，并且去通过依赖关系去做相应的依赖处理。<br>存在问题：当对象中某个属性的值是数组的时候，由于JavaScript的限制，Vue无法检测到下面数组的变动：  </p>
-<ul>
-<li>当使用索引直接设置一项时，例如<code>vm.items[indexOfItem] = newValue</code></li>
-<li>当修改数组长度的时候，例如<code>vm.items.length= newLength</code></li>
-</ul>
-<p>数组的length属性，被初始化为  </p>
-<ul>
-<li>enumberable：false</li>
-<li>configurable：false</li>
-<li>writable：true</li>
-</ul>
-<p>原因简单来说，操作数组的方法，也就是Array.prototype上挂载的方法并不能触发该属性的setter，因为这个属性并没有做赋值操作。  </p>
-<p>对于defineProperty来说，处理数组与对象是一视同仁的，只是在初始化时去改写 get 和 set 达到监测数组或对象的变化，对于新增的属性，需要手动再初始化。对于数组来说，只不过特别了点，push、unshift值也会新增索引，对于新增的索引也是可以添加observe从而达到监听的效果；pop、shift值会删除更新索引，也会触发defineProperty的get和set。对于重新赋值length的数组，不会新增索引，因为不清楚新增的索引有多少。</p>
-<p><strong>解决</strong><br>Vue中解决这个问题的方法，是将数组常用的方法进行重写，通过包装之后的数组方法就能够去在调用的时候被监听到。</p>
-<p><strong>方法1</strong><br>通过原型链去拦截对数组的操作，从而实现对操作数组这个行为的监听。</p>
-<pre><code>// 继承Array本身的所有属性
-const arrExtend = Object.create(Array.prototype)
-const arrMethods = [
-    &apos;push&apos;,
-    &apos;pop&apos;,
-    &apos;shift&apos;,
-    &apos;unshift&apos;,
-    &apos;splice&apos;,
-    &apos;sort&apos;,
-    &apos;reverse&apos;
-]
-// arrExtend作为一个拦截对象，对其中的方法进行重写
-arrMethods.forEach(method =&gt; {
-    const oldMethod = Array.prototype[method]
-    const newMethod = function(...args){
-        oldMethod.apply(this, args)
-        console.log(`${method}方法被执行了`)
-    }
-    arrExtend[method] = newMethod
-})
-</code></pre><p>需要在 defineReactive 函数中添加的代码为：</p>
-<pre><code>if (Array.isArray(value)) {
-    value.__proto__ = arrExtend
- }
-</code></pre><p><strong>方法2： Proxy</strong><br>通过调用 new Proxy() ，你可以创建一个代理用来替代另一个对象(被称为目标)，这个代理对目标对象进行了虚拟，因此该代理与该目标对象表面上可以被当作同一个对象来对待。<br>代理允许你拦截在目标对象上的底层操作，而这原本是 JS 引擎的内部能力。拦截行为使用了一个能够响应特定操作的函数(被称为陷阱)</p>
-<pre><code>const createProxy = data =&gt; {
-  if (typeof data === &apos;object&apos; &amp;&amp; data.toString() === &apos;[object Object]&apos;) {
-    for (let k in data) {
-      if (typeof data[k] === &apos;object&apos;) {
-        defineObjectReactive(data, k, data[k])
-      } else {
-        defineBasicReactive(data, k, data[k])
-      }
-    }
-  }
-}
-
-function defineObjectReactive(obj, key, value) {
-  // 递归
-  createProxy(value)
-  obj[key] = new Proxy(value, {
-    set(target, property, val, receiver) {
-      if (property !== &apos;length&apos;) {
-        console.log(&apos;Set %s to %o&apos;, property, val)
-      }
-      return Reflect.set(target, property, val, receiver)
-    }
-  })
-}
-
-function defineBasicReactive(obj, key, value) {
-  Object.defineProperty(obj, key, {
-    enumerable: true,
-    configurable: false,
-    get() {
-      return value
-    },
-    set(newValue) {
-      if (value === newValue) return
-      console.log(`发现 ${key} 属性 ${value} -&gt; ${newValue}`)
-      value = newValue
-    }
-  })
-}
-
-export default {
-  createProxy
-}
-</code></pre><p>实现对Object类型的属性进行监听的时候，我采用的是创建代理，因为我们之前的痛点在于无法去有效监听数组的变化。当我们使用这种改进方法之后，我们不用像之前通过重写数组的方法来实现对数组操作的监听了，因为之前这种方法存在很多的局限性，我们不能覆盖所有的数组操作，同时，我们也不能响应到类似于data.array.length = 0这种操作。通过代理实现之后，一切都不一样了。我们可以从底层就实现对数组的变化进行监听。甚至能watch到数组长度的变化等等各种更加细节的东西。这无疑解决了很大的问题。</p>
-<h4 id="详细介绍对vue生命周期的理解"><a href="#详细介绍对vue生命周期的理解" class="headerlink" title="详细介绍对vue生命周期的理解"></a>详细介绍对vue生命周期的理解</h4><p>vue生命周期总共分为8个阶段创建前后，载入前后，更新前后，销毁前后。  </p>
-<blockquote>
-<p>创建前后：在beforeCreate阶段，vue实例的挂载元素el和数据对象data都为undefined，还未初始化。在created阶段，vue实例的数据对象data有了，el还没有。</p>
-<p>载入前后：在beforeMounted阶段，vue实例的$el和data都初始化了，但还是挂载之前为虚拟的dom节点，data.message还未替换。在mounted阶段，vue实例挂载完成，data.message成功渲染。  </p>
-<p>更新前后：当data变化时，会触发beforeUpdate和updated方法。</p>
-<p>销毁前后：在执行destroy方法后，对data的改变不会再触发周期函数，说明此时vue实例已经解除了事件监听以及和dom的绑定，但是dom结构依然存在。</p>
-</blockquote>
-<h4 id="对vue双向数据绑定原理的理解"><a href="#对vue双向数据绑定原理的理解" class="headerlink" title="对vue双向数据绑定原理的理解"></a>对vue双向数据绑定原理的理解</h4><p>vue是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。</p>
-<ol>
-<li>需要observe的数据对象进行递归遍历，包括子属性对象的属性，都加上setter和getter。此时给这个对象的某个值赋值，就会触发setter，那么就能监听到了数据变化。</li>
-<li>compile解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图。</li>
-<li>Watcher订阅者是Observer和Compile之间通信的桥梁，主要完成：  <ul>
-<li>在自身实例化时往属性订阅器dep里面添加自己</li>
-<li>自身必须有一个updata()</li>
-<li>待属性变动dep.notice()通知时，能调用自身的update()方法，并触发Compile中绑定的回调。</li>
-</ul>
-</li>
-<li>MVVM作为数据绑定的入口，整合Observer、Compile和Watcher三者，通过Observer来监听自己的model数据变化，通过Compile来解析编译模板指令，最终利用Watcher搭起Observer和Compile之间的通信桥梁，达到数据变化-&gt;视图更新；视图交互变化-&gt;数据model变更的双向绑定效果。</li>
-</ol>
-<h4 id="对vue的template编译理解"><a href="#对vue的template编译理解" class="headerlink" title="对vue的template编译理解"></a>对vue的template编译理解</h4><p>简单讲，先转化成AST树，得到的render函数返回VNode(Vue的虚拟DOM节点)</p>
-<ol>
-<li>将模板字符串转换成<code>element AST</code>(解析器)</li>
-<li>对AST进行静态节点标记（为后面patch过程中对比新旧VNode树形结构做优化），主要用来做虚拟DOM的渲染优化(优化器)</li>
-<li>使用<code>element AST</code>（根据AST结构拼接）生成render函数代码字符串(代码生成器)</li>
-</ol>
-<h4 id="详解vue的diff算法"><a href="#详解vue的diff算法" class="headerlink" title="详解vue的diff算法"></a>详解vue的diff算法</h4><p><strong>1. 当数据发生变化时，vue怎么更新节点</strong><br>先根据真实DOM生成一棵virtual DOM，当virtual DOM某个节点的数据改变后会生成一个新的VNode，然后VNode和oldVNode作对比，发现有不一样的地方就直接修改在真实的DOM上，然后使oldVNode的值为VNode。</p>
-<p>diff的过程就是调用名为patch的函数，比较新旧节点，一边比较一边给真实的DOM打补丁。</p>
-<p><strong>diff流程图</strong>  </p>
-<p>当数据发生改变时，set方法会让调用Dep.notify通知所有订阅者Watcher，订阅者就会调用patch给真实的DOM打补丁，更新相应的视图。  </p>
-<p><img src="/images/vue/diff.jpg" alt="">  </p>
-<p><strong>patch打补丁(核心)</strong>  </p>
-<pre><code>function patch(oldVnode, vnode){
-    if(sameVnode(oldVnode, vnode)){
-        patchVnode(oldVnode, vnode)
-    }else{
-        const oEl = oldVnode.el //当前oldVNode对应的真实元素节点
-        let parentEle = api.parentNode(oEl) // 父元素
-        createEle(vnode) //根据vnode生成新元素
-        if(parentEle!==null){
-            api.insertBefore(parentEle,vnode.el,api.nextSibling(oEl)) // 将新元素添加进父元素
-            api.removeChild(parentEle, oldVnode.el) //移除以前的旧元素节点
-            oldVnode = null
-        }
-    }
-    return vnode;
-}
-</code></pre><ul>
-<li>判断两节点是否值得比较，值得比较则执行patchVnode</li>
-<li>不值得比较则用Vnode替换oldVnode</li>
-</ul>
-<p><strong>patchVnode</strong><br>当我们确定两个节点值得比较之后我们会对两个节点指定patchVnode方法。</p>
-<pre><code>patchVnode(oldVnode, vnode){
-//让vnode.el引用到现在的真实dom，当el修改时，vnode.el会同步变化
-    const el = vnode.el = oldVnode.el
-    let i, oldCh = oldVnode.children, ch = vnode.children
-    if(oldVnode === vnode) return;
-    if (oldVnode.text !== null &amp;&amp; vnode.text !== null &amp;&amp; oldVnode.text !== vnode.text) {
-    api.setTextContent(el, vnode.text)
-}else {
-    updateEle(el, vnode, oldVnode)
-    if (oldCh &amp;&amp; ch &amp;&amp; oldCh !== ch) {
-        updateChildren(el, oldCh, ch) //比较子节点
-    }else if (ch){
-        //只有新的节点有子节点，vnode.el已经引用了老的dom节点，createEle函数会在老dom节点上添加子节点
-        createEle(vnode) //create el&apos;s children dom
-    }else if (oldCh){
-        //新节点没有子节点，老节点有子节点，直接删除老节点
-        api.removeChildren(el)
-    }
- }
-}
-</code></pre><ul>
-<li>判断Vnode和oldVnode是否指向同一个对象，如果是，那么直接return</li>
-<li>如果他们都有文本节点并且不相等，那么将el的文本节点设置为Vnode的文本节点。</li>
-<li>如果oldVnode有子节点而Vnode没有，则删除el的子节点</li>
-<li>如果oldVnode没有子节点而Vnode有，则将Vnode的子节点真实化之后添加到el</li>
-<li>如果两者都有子节点，则执行updateChildren函数比较子节点</li>
-</ul>
-<h4 id="谈谈VUE中的MVVM模式"><a href="#谈谈VUE中的MVVM模式" class="headerlink" title="谈谈VUE中的MVVM模式"></a>谈谈VUE中的MVVM模式</h4><p>MVVM全称Model-View-ViewModel。Vue是以数据为驱动，Vue自身将DOM和数据进行绑定，一旦创建绑定，DOM和数据将保持同步，每当数据发生变化，DOM会跟着变化。ViewModel是Vue的核心，是Vue的一个实例。</p>
-<p>DOMListeners和DataBindings是实现双向绑定的关键。DOMListeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；DataBindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化</p>
-<h4 id="React和vue深入对比"><a href="#React和vue深入对比" class="headerlink" title="React和vue深入对比"></a>React和vue深入对比</h4><blockquote>
-<p>virtual DOM  </p>
-</blockquote>
-<ul>
-<li>Vue2.0引入了virtual DOM的概念。Vue在渲染过程中，会跟踪每一个组件的依赖关系，不需要重新渲染整个组件树。在Vue2里，就是通过Render函数来实现Virtual DOM的</li>
-<li>而React，每当应用的状态被改变时，全部子组件都会重新渲染。</li>
-</ul>
-<blockquote>
-<p>组件与数据流</p>
-</blockquote>
-<ul>
-<li>在Vue中，可以使用单文件组件，将样式，模板和逻辑写在一起；React可以将js和jsx写在一起。</li>
-<li>react和vue组件中，都存在一个props属性的概念，允许父组件往子组件传递数据，而且都是单向流动，不可逆向流动。</li>
-<li>在React中，父与子之间的数据通信通过props属性传递；而子与父之间的数据通信可以通过父组件定义事件，子组件触发父组件中的事件时，通过实参的形式来改变父组件中的数据来通信；</li>
-<li>React是单向数据流，从父节点传递到子节点（通过props）。Vue则实现了双向数据绑定，vue通过Object.defineProperty()定义数据的set和get。</li>
-</ul>
-<blockquote>
-<p>组件生命周期</p>
-<p>模板与jsx</p>
-</blockquote>
-<ul>
-<li>React与Vue最大的不同是模板的编写。vue的template主要是写在单文件组件中的，使用了基于HTML的模板语法。</li>
-<li>React使用了jsx，通过render渲染方法，将jsx + inline style + DOM写在一起</li>
-</ul>
-<blockquote>
-<p>状态管理</p>
-</blockquote>
-<ul>
-<li>状态state在react中是关键的概念，是不可变的，在react中需要使用setState()方法去更新状态。</li>
-<li>在vue中，state对象并不是必须的，数据由data属性在vue对象中进行管理。</li>
-<li>当非父子组件之间嵌套过深的时候都建议使用状态管理来维护数据的变化。</li>
-</ul>
 
           
         
@@ -1404,6 +1229,380 @@ export default {
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-source/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/01/vue-source/" itemprop="url">vue-source</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Vue源码学习"><a href="#Vue源码学习" class="headerlink" title="Vue源码学习"></a>Vue源码学习</h3><p>Vue的核心可以分为三个大块：数据处理和双向绑定、模板编译、虚拟dom。</p>
+<h4 id="1-vue响应式原理"><a href="#1-vue响应式原理" class="headerlink" title="1.vue响应式原理"></a>1.vue响应式原理</h4><p><strong>基本概念</strong>  </p>
+<ul>
+<li>data: vue实例中的数据项</li>
+<li>observer：数据属性的观察者，监控对象的读写操作</li>
+<li>dep：消息订阅器，拥有收集订阅者、发布更新的功能</li>
+<li>watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。</li>
+</ul>
+<p><img src="/images/vue/source.png" alt=""></p>
+<p>vue的数据响应式实现分为两个部分：  </p>
+<ol>
+<li>把数据转化为getter和setter</li>
+<li>建立watcher并收集依赖</li>
+</ol>
+<h4 id="Vue的生命周期"><a href="#Vue的生命周期" class="headerlink" title="Vue的生命周期"></a>Vue的生命周期</h4><p>Vue的生命周期，首先需要创建一个实例，也就是在new Vue()的对象过程当中，首先默认执行了init，在init的过程当中首先调用beforeCreate，然后再去调用created。所以一般beforeCreate的时候不要去修改data里赋值的数据，最早要等到created里面去做。</p>
+<p>当created完成后，会去判断instance实例里是否含有“el”，如果没有的话，会调用<code>vm.$mount(el)</code>这个方法，然后执行。如果有的话，直接执行下一步。然后会判断是否含有“template”，如果有的话，会把template解析成一个render函数。render函数是发生在beforeMount和mounted之间的，所以在beforeMount的时候，<code>$el</code>还只是HTML里面写的节点，然后mounted的时候，它就把渲染出来的内容挂载到了DOM节点上。</p>
+<p>beforeMount在有了render函数的时候才会去执行，当执行完了render函数后，就会调用mounted这个钩子，在mounted挂载完毕之后，这个实例就算走完流程了。</p>
+<p>后续的钩子函数执行的过程都是需要外部的触发才会执行的。比如有数据的变化会调用beforeUpdate，然后经过Virtual Dom,最后updated更新完毕。当组件被销毁的时候，它会调用beforeDestory，以destoryed。</p>
+<h4 id="模板编译"><a href="#模板编译" class="headerlink" title="模板编译"></a>模板编译</h4><p>模板编译分为三个阶段：生成ast、优化静态内容、生成render。</p>
+<h4 id="实现vue-watch"><a href="#实现vue-watch" class="headerlink" title="实现vue.watch"></a>实现vue.watch</h4><pre><code>class watcher {
+  constructor(opts){
+    this.$data = this.getBaseType(opts.data) === &apos;Object&apos;?opts.data: {};
+    this.$watch = this.getBaseType(opts.watch)=== &apos;Object&apos; ? opts.watch: {};
+    for(let key in opts.data){
+      this.setData(key)
+    }
+  }
+  getBaseType(target){
+    return Object.prototype.toString.call(target).slice(8, -1);
+  }
+  setData(_key, _val){
+    Object.defineProperty(this, _key, {
+      get: function(){
+        return this.$data[_key];
+      },
+      set: function(newVal){
+        const oldVal = this.$data[_key];
+        if(oldVal === newVal) return newVal;
+        this.$data[_key] = newVal;
+        this.$watch[_key] &amp;&amp; typeof this.$watch[_key] === &apos;function&apos;
+          &amp;&amp; (this.$watch[_key].call(this, newVal, oldVal))
+        return newVal
+      }
+    })
+  }
+}
+let vm = new watcher({
+  data: {
+    a: 0,
+    b: &apos;hello&apos;
+  },
+  watch: {
+    a(newVal, oldVal){
+      console.log(this.b);
+      console.log(&quot;old:&quot;+oldVal)
+      console.log(&quot;new:&quot;+newVal)
+    }
+  }
+})
+</code></pre><h4 id="监听数组变化"><a href="#监听数组变化" class="headerlink" title="监听数组变化"></a>监听数组变化</h4><p>Object.defineProperty通过对象的 getter/setter简单的实现了对象属性变化的监听，并且去通过依赖关系去做相应的依赖处理。<br>存在问题：当对象中某个属性的值是数组的时候，由于JavaScript的限制，Vue无法检测到下面数组的变动：  </p>
+<ul>
+<li>当使用索引直接设置一项时，例如<code>vm.items[indexOfItem] = newValue</code></li>
+<li>当修改数组长度的时候，例如<code>vm.items.length= newLength</code></li>
+</ul>
+<p>数组的length属性，被初始化为  </p>
+<ul>
+<li>enumberable：false</li>
+<li>configurable：false</li>
+<li>writable：true</li>
+</ul>
+<p>原因简单来说，操作数组的方法，也就是Array.prototype上挂载的方法并不能触发该属性的setter，因为这个属性并没有做赋值操作。  </p>
+<p>对于defineProperty来说，处理数组与对象是一视同仁的，只是在初始化时去改写 get 和 set 达到监测数组或对象的变化，对于新增的属性，需要手动再初始化。对于数组来说，只不过特别了点，push、unshift值也会新增索引，对于新增的索引也是可以添加observe从而达到监听的效果；pop、shift值会删除更新索引，也会触发defineProperty的get和set。对于重新赋值length的数组，不会新增索引，因为不清楚新增的索引有多少。</p>
+<p><strong>解决</strong><br>Vue中解决这个问题的方法，是将数组常用的方法进行重写，通过包装之后的数组方法就能够去在调用的时候被监听到。</p>
+<p><strong>方法1</strong><br>通过原型链去拦截对数组的操作，从而实现对操作数组这个行为的监听。</p>
+<pre><code>// 继承Array本身的所有属性
+const arrExtend = Object.create(Array.prototype)
+const arrMethods = [
+    &apos;push&apos;,
+    &apos;pop&apos;,
+    &apos;shift&apos;,
+    &apos;unshift&apos;,
+    &apos;splice&apos;,
+    &apos;sort&apos;,
+    &apos;reverse&apos;
+]
+// arrExtend作为一个拦截对象，对其中的方法进行重写
+arrMethods.forEach(method =&gt; {
+    const oldMethod = Array.prototype[method]
+    const newMethod = function(...args){
+        oldMethod.apply(this, args)
+        console.log(`${method}方法被执行了`)
+    }
+    arrExtend[method] = newMethod
+})
+</code></pre><p>需要在 defineReactive 函数中添加的代码为：</p>
+<pre><code>if (Array.isArray(value)) {
+    value.__proto__ = arrExtend
+ }
+</code></pre><p><strong>方法2： Proxy</strong><br>通过调用 new Proxy() ，你可以创建一个代理用来替代另一个对象(被称为目标)，这个代理对目标对象进行了虚拟，因此该代理与该目标对象表面上可以被当作同一个对象来对待。<br>代理允许你拦截在目标对象上的底层操作，而这原本是 JS 引擎的内部能力。拦截行为使用了一个能够响应特定操作的函数(被称为陷阱)</p>
+<pre><code>const createProxy = data =&gt; {
+  if (typeof data === &apos;object&apos; &amp;&amp; data.toString() === &apos;[object Object]&apos;) {
+    for (let k in data) {
+      if (typeof data[k] === &apos;object&apos;) {
+        defineObjectReactive(data, k, data[k])
+      } else {
+        defineBasicReactive(data, k, data[k])
+      }
+    }
+  }
+}
+
+function defineObjectReactive(obj, key, value) {
+  // 递归
+  createProxy(value)
+  obj[key] = new Proxy(value, {
+    set(target, property, val, receiver) {
+      if (property !== &apos;length&apos;) {
+        console.log(&apos;Set %s to %o&apos;, property, val)
+      }
+      return Reflect.set(target, property, val, receiver)
+    }
+  })
+}
+
+function defineBasicReactive(obj, key, value) {
+  Object.defineProperty(obj, key, {
+    enumerable: true,
+    configurable: false,
+    get() {
+      return value
+    },
+    set(newValue) {
+      if (value === newValue) return
+      console.log(`发现 ${key} 属性 ${value} -&gt; ${newValue}`)
+      value = newValue
+    }
+  })
+}
+
+export default {
+  createProxy
+}
+</code></pre><p>实现对Object类型的属性进行监听的时候，我采用的是创建代理，因为我们之前的痛点在于无法去有效监听数组的变化。当我们使用这种改进方法之后，我们不用像之前通过重写数组的方法来实现对数组操作的监听了，因为之前这种方法存在很多的局限性，我们不能覆盖所有的数组操作，同时，我们也不能响应到类似于data.array.length = 0这种操作。通过代理实现之后，一切都不一样了。我们可以从底层就实现对数组的变化进行监听。甚至能watch到数组长度的变化等等各种更加细节的东西。这无疑解决了很大的问题。</p>
+<h4 id="详细介绍对vue生命周期的理解"><a href="#详细介绍对vue生命周期的理解" class="headerlink" title="详细介绍对vue生命周期的理解"></a>详细介绍对vue生命周期的理解</h4><p>vue生命周期总共分为8个阶段创建前后，载入前后，更新前后，销毁前后。  </p>
+<blockquote>
+<p>创建前后：在beforeCreate阶段，vue实例的挂载元素el和数据对象data都为undefined，还未初始化。在created阶段，vue实例的数据对象data有了，el还没有。</p>
+<p>载入前后：在beforeMounted阶段，vue实例的$el和data都初始化了，但还是挂载之前为虚拟的dom节点，data.message还未替换。在mounted阶段，vue实例挂载完成，data.message成功渲染。  </p>
+<p>更新前后：当data变化时，会触发beforeUpdate和updated方法。</p>
+<p>销毁前后：在执行destroy方法后，对data的改变不会再触发周期函数，说明此时vue实例已经解除了事件监听以及和dom的绑定，但是dom结构依然存在。</p>
+</blockquote>
+<h4 id="对vue双向数据绑定原理的理解"><a href="#对vue双向数据绑定原理的理解" class="headerlink" title="对vue双向数据绑定原理的理解"></a>对vue双向数据绑定原理的理解</h4><p>vue是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。</p>
+<ol>
+<li>需要observe的数据对象进行递归遍历，包括子属性对象的属性，都加上setter和getter。此时给这个对象的某个值赋值，就会触发setter，那么就能监听到了数据变化。</li>
+<li>compile解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图。</li>
+<li>Watcher订阅者是Observer和Compile之间通信的桥梁，主要完成：  <ul>
+<li>在自身实例化时往属性订阅器dep里面添加自己</li>
+<li>自身必须有一个updata()</li>
+<li>待属性变动dep.notice()通知时，能调用自身的update()方法，并触发Compile中绑定的回调。</li>
+</ul>
+</li>
+<li>MVVM作为数据绑定的入口，整合Observer、Compile和Watcher三者，通过Observer来监听自己的model数据变化，通过Compile来解析编译模板指令，最终利用Watcher搭起Observer和Compile之间的通信桥梁，达到数据变化-&gt;视图更新；视图交互变化-&gt;数据model变更的双向绑定效果。</li>
+</ol>
+<h4 id="对vue的template编译理解"><a href="#对vue的template编译理解" class="headerlink" title="对vue的template编译理解"></a>对vue的template编译理解</h4><p>简单讲，先转化成AST树，得到的render函数返回VNode(Vue的虚拟DOM节点)</p>
+<ol>
+<li>将模板字符串转换成<code>element AST</code>(解析器)</li>
+<li>对AST进行静态节点标记（为后面patch过程中对比新旧VNode树形结构做优化），主要用来做虚拟DOM的渲染优化(优化器)</li>
+<li>使用<code>element AST</code>（根据AST结构拼接）生成render函数代码字符串(代码生成器)</li>
+</ol>
+<h4 id="详解vue的diff算法"><a href="#详解vue的diff算法" class="headerlink" title="详解vue的diff算法"></a>详解vue的diff算法</h4><p><strong>1. 当数据发生变化时，vue怎么更新节点</strong><br>先根据真实DOM生成一棵virtual DOM，当virtual DOM某个节点的数据改变后会生成一个新的VNode，然后VNode和oldVNode作对比，发现有不一样的地方就直接修改在真实的DOM上，然后使oldVNode的值为VNode。</p>
+<p>diff的过程就是调用名为patch的函数，比较新旧节点，一边比较一边给真实的DOM打补丁。</p>
+<p><strong>diff流程图</strong>  </p>
+<p>当数据发生改变时，set方法会让调用Dep.notify通知所有订阅者Watcher，订阅者就会调用patch给真实的DOM打补丁，更新相应的视图。  </p>
+<p><img src="/images/vue/diff.jpg" alt="">  </p>
+<p><strong>patch打补丁(核心)</strong>  </p>
+<pre><code>function patch(oldVnode, vnode){
+    if(sameVnode(oldVnode, vnode)){
+        patchVnode(oldVnode, vnode)
+    }else{
+        const oEl = oldVnode.el //当前oldVNode对应的真实元素节点
+        let parentEle = api.parentNode(oEl) // 父元素
+        createEle(vnode) //根据vnode生成新元素
+        if(parentEle!==null){
+            api.insertBefore(parentEle,vnode.el,api.nextSibling(oEl)) // 将新元素添加进父元素
+            api.removeChild(parentEle, oldVnode.el) //移除以前的旧元素节点
+            oldVnode = null
+        }
+    }
+    return vnode;
+}
+</code></pre><ul>
+<li>判断两节点是否值得比较，值得比较则执行patchVnode</li>
+<li>不值得比较则用Vnode替换oldVnode</li>
+</ul>
+<p><strong>patchVnode</strong><br>当我们确定两个节点值得比较之后我们会对两个节点指定patchVnode方法。</p>
+<pre><code>patchVnode(oldVnode, vnode){
+//让vnode.el引用到现在的真实dom，当el修改时，vnode.el会同步变化
+    const el = vnode.el = oldVnode.el
+    let i, oldCh = oldVnode.children, ch = vnode.children
+    if(oldVnode === vnode) return;
+    if (oldVnode.text !== null &amp;&amp; vnode.text !== null &amp;&amp; oldVnode.text !== vnode.text) {
+    api.setTextContent(el, vnode.text)
+}else {
+    updateEle(el, vnode, oldVnode)
+    if (oldCh &amp;&amp; ch &amp;&amp; oldCh !== ch) {
+        updateChildren(el, oldCh, ch) //比较子节点
+    }else if (ch){
+        //只有新的节点有子节点，vnode.el已经引用了老的dom节点，createEle函数会在老dom节点上添加子节点
+        createEle(vnode) //create el&apos;s children dom
+    }else if (oldCh){
+        //新节点没有子节点，老节点有子节点，直接删除老节点
+        api.removeChildren(el)
+    }
+ }
+}
+</code></pre><ul>
+<li>判断Vnode和oldVnode是否指向同一个对象，如果是，那么直接return</li>
+<li>如果他们都有文本节点并且不相等，那么将el的文本节点设置为Vnode的文本节点。</li>
+<li>如果oldVnode有子节点而Vnode没有，则删除el的子节点</li>
+<li>如果oldVnode没有子节点而Vnode有，则将Vnode的子节点真实化之后添加到el</li>
+<li>如果两者都有子节点，则执行updateChildren函数比较子节点</li>
+</ul>
+<h4 id="谈谈VUE中的MVVM模式"><a href="#谈谈VUE中的MVVM模式" class="headerlink" title="谈谈VUE中的MVVM模式"></a>谈谈VUE中的MVVM模式</h4><p>MVVM全称Model-View-ViewModel。Vue是以数据为驱动，Vue自身将DOM和数据进行绑定，一旦创建绑定，DOM和数据将保持同步，每当数据发生变化，DOM会跟着变化。ViewModel是Vue的核心，是Vue的一个实例。</p>
+<p>DOMListeners和DataBindings是实现双向绑定的关键。DOMListeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；DataBindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化</p>
+<h4 id="React和vue深入对比"><a href="#React和vue深入对比" class="headerlink" title="React和vue深入对比"></a>React和vue深入对比</h4><blockquote>
+<p>virtual DOM  </p>
+</blockquote>
+<ul>
+<li>Vue2.0引入了virtual DOM的概念。Vue在渲染过程中，会跟踪每一个组件的依赖关系，不需要重新渲染整个组件树。在Vue2里，就是通过Render函数来实现Virtual DOM的</li>
+<li>而React，每当应用的状态被改变时，全部子组件都会重新渲染。</li>
+</ul>
+<blockquote>
+<p>组件与数据流</p>
+</blockquote>
+<ul>
+<li>在Vue中，可以使用单文件组件，将样式，模板和逻辑写在一起；React可以将js和jsx写在一起。</li>
+<li>react和vue组件中，都存在一个props属性的概念，允许父组件往子组件传递数据，而且都是单向流动，不可逆向流动。</li>
+<li>在React中，父与子之间的数据通信通过props属性传递；而子与父之间的数据通信可以通过父组件定义事件，子组件触发父组件中的事件时，通过实参的形式来改变父组件中的数据来通信；</li>
+<li>React是单向数据流，从父节点传递到子节点（通过props）。Vue则实现了双向数据绑定，vue通过Object.defineProperty()定义数据的set和get。</li>
+</ul>
+<blockquote>
+<p>组件生命周期</p>
+<p>模板与jsx</p>
+</blockquote>
+<ul>
+<li>React与Vue最大的不同是模板的编写。vue的template主要是写在单文件组件中的，使用了基于HTML的模板语法。</li>
+<li>React使用了jsx，通过render渲染方法，将jsx + inline style + DOM写在一起</li>
+</ul>
+<blockquote>
+<p>状态管理</p>
+</blockquote>
+<ul>
+<li>状态state在react中是关键的概念，是不可变的，在react中需要使用setState()方法去更新状态。</li>
+<li>在vue中，state对象并不是必须的，数据由data属性在vue对象中进行管理。</li>
+<li>当非父子组件之间嵌套过深的时候都建议使用状态管理来维护数据的变化。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/18/实现new/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1502,179 +1701,6 @@ var person = objectFactory(Person, &apos;Kevin&apos;, &apos;18&apos;);
 console.log(person.name) // Kevin
 console.log(person.strength) //60
 </code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
-                2018-07-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
-<p><strong>攻击分类</strong>  </p>
-<ul>
-<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
-<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
-<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
-</ul>
-<p><strong>如何防御XSS</strong>  </p>
-<ul>
-<li>转义： 转义嵌入HTML中的动态内容</li>
-<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
-<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
-</ul>
-</li>
-</ul>
-<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
-<p><strong>攻击原理</strong>  </p>
-<ol>
-<li>浏览器C浏览并登录信任网站A</li>
-<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
-<li>用户在没有登出A网站的情况下，访问危险网站B</li>
-<li>B要求访问第三方站点A，发出一个请求request</li>
-<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
-<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
-</ol>
-<p><strong>常见的防御方式</strong>  </p>
-<ul>
-<li>添加验证码</li>
-<li>验证HTTP Referer字段</li>
-<li>在HTTP头中自定义属性并验证</li>
-</ul>
-<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
-<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
-<p><strong>https作用</strong>  </p>
-<ul>
-<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
-<li>身份认证确认网站的真实性</li>
-<li>数据完整性防止内容被第三方冒充或篡改</li>
-</ul>
-<p><strong>HTTPS流程解析</strong>  </p>
-<ol>
-<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
-<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
-<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
-<li>将加密后的对称密钥发送给HTTPS服务端</li>
-<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
-</ol>
-<p><strong>https和http区别</strong>  </p>
-<ul>
-<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
-<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
-<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
-</ul>
-<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
-
           
         
       
@@ -1899,6 +1925,179 @@ console.log(person.strength) //60
 </ul>
 <p><strong>https</strong>  </p>
 <p>https与http的区别就是： 在请求前，会建立ssl链接，确保接下来的通信都是加密的，无法被轻易截取分析。https=http+ssl</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
+                2018-07-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
+<p><strong>攻击分类</strong>  </p>
+<ul>
+<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
+<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
+<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
+</ul>
+<p><strong>如何防御XSS</strong>  </p>
+<ul>
+<li>转义： 转义嵌入HTML中的动态内容</li>
+<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
+<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
+</ul>
+</li>
+</ul>
+<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
+<p><strong>攻击原理</strong>  </p>
+<ol>
+<li>浏览器C浏览并登录信任网站A</li>
+<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
+<li>用户在没有登出A网站的情况下，访问危险网站B</li>
+<li>B要求访问第三方站点A，发出一个请求request</li>
+<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
+<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
+</ol>
+<p><strong>常见的防御方式</strong>  </p>
+<ul>
+<li>添加验证码</li>
+<li>验证HTTP Referer字段</li>
+<li>在HTTP头中自定义属性并验证</li>
+</ul>
+<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
+<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
+<p><strong>https作用</strong>  </p>
+<ul>
+<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
+<li>身份认证确认网站的真实性</li>
+<li>数据完整性防止内容被第三方冒充或篡改</li>
+</ul>
+<p><strong>HTTPS流程解析</strong>  </p>
+<ol>
+<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
+<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
+<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
+<li>将加密后的对称密钥发送给HTTPS服务端</li>
+<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
+</ol>
+<p><strong>https和http区别</strong>  </p>
+<ul>
+<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
+<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
+<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
+</ul>
+<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
 
           
         
@@ -2216,541 +2415,6 @@ console.log(addCurry(1)(3,4));
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/webpack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/10/webpack/" itemprop="url">webpack整理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-10T00:00:00+08:00">
-                2018-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="webpack"><a href="#webpack" class="headerlink" title="webpack"></a>webpack</h2><h4 id="webpack安装与配置"><a href="#webpack安装与配置" class="headerlink" title="webpack安装与配置"></a>webpack安装与配置</h4><p>在当前文件夹初始化npm的package.json文件，<code>npm init</code>。这句命令就表示，我们把当前文件夹，初始化为一个npm包，它处于npm的管理之下。package.json文件用来配置当前包。</p>
-<p>当init后，有如下package.json  </p>
-<pre><code>//package.json
-{
-  &quot;name&quot;: &quot;mydemo&quot;,
-  &quot;version&quot;: &quot;1.0.0&quot;,
-  &quot;description&quot;: &quot;&quot;,
-  &quot;main&quot;: &quot;index.js&quot;,
-  &quot;scripts&quot;: {
-    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
-  },
-  &quot;author&quot;: &quot;&quot;,
-  &quot;license&quot;: &quot;ISC&quot;
-}
-</code></pre><ul>
-<li>name,version必须，表示包的名称和版本，构成了包的唯一标示。</li>
-<li>description main author license属性，仅在需要制作工具包时关注。main表示当别人引入require你的工具包时，入口文件在哪。</li>
-<li>scripts则与实际开发过程有关，通过它，可以定义npm脚本。  </li>
-</ul>
-<p>例如：  </p>
-<pre><code>&quot;scripts&quot;: {
-  &quot;build&quot;: &quot;webpack&quot;,
-  &quot;dev&quot;: &quot;webpack-dev-server --devtool eval --progress --colors --hot --content-base build&quot;
-}
-</code></pre><p>当我们在命令行npm run build时，就等于webpack，原理很简单，在执行npm run命令时，会新创建一个Shell，并将当前目录的/node_modules/.bin/加入到PATH变量(环境变量)，之后运行脚本命令，结束后，将PATH恢复原样。</p>
-<h4 id="webpack-1"><a href="#webpack-1" class="headerlink" title="webpack"></a>webpack</h4><p>一个项目通常都会有，开发，发布这两种状态。为了分别管理，npm在package.json提供了这样的字段。</p>
-<ul>
-<li>devDependencies声明–仅开发依赖</li>
-<li>dependencies依赖包</li>
-</ul>
-<p>####对打包工具的理解<br>打包工具就是负责把一些分散的小模块，按照一定的规则整合成一个大模块的工具。打包工具也会处理好模块之间的依赖关系，最终这个大模块将可以被运行在合适的平台中。</p>
-<p>打包工具会从一个入口文件开始，分析它里面的依赖，并且在进一步地分析依赖中的依赖，不断重复这个过程，直到把这些依赖关系处理清楚。所有打包工具最核心的部分就是处理好模块之间的依赖关系。</p>
-<p><strong>开发与部署</strong><br>开发到一定阶段需要发布一个版本，我们往往需要一个文件夹来保存整合后的项目。这个过程，就叫做部署”deploy”。这也是webpack的工作，会用到一个和开发阶段不同的webpack配置文件，它只是将输出目录换成了另一个而已。</p>
-<p><strong>构建目录</strong>  </p>
-<ul>
-<li>app文件夹，所有手写文件存放的地方。</li>
-<li>build文件夹，经过webpack打包，自动生成文件的去处。在build文件夹下，新建index.html用来表示索引页。</li>
-<li>dist文件夹，用来保存发布版。在app中写东西，打包到build中调试，最后发布到dist文件夹里。</li>
-</ul>
-<p><strong>配置webpack</strong><br>三种途径：  </p>
-<ul>
-<li>cli-即命令行形式，一般都会通过package.json中写入scripts字段形式。</li>
-<li>配置文件webpack.config.js文件中写入字段，webpack在启动时会读取它，并依据其工作。</li>
-<li>node api，配置文件也算node api，node api是一套配置文件的生成系统，根据不同的输入，实现不同的配置。</li>
-</ul>
-<p>注：因为要往两个地方打包，所有两个配置文件  </p>
-<ul>
-<li>webpack.config.js 目标build</li>
-<li>webpack.production.config.js目标dist</li>
-</ul>
-<p>1.开始配置webpack，目标是把这两个js文件合并成一个文件. 我们可以自己在build文件夹里面手动建一个index.html文件，然后再把合并以后的js引用在里面，但是这样有些麻烦，所以我们这里安装一个plugin，可以自动快速的帮我们生成HTML。</p>
-<pre><code>npm install html-webpack-plugin --save-dev//此模块帮我们生成html
-</code></pre><p>2.配置webpack-dev-server，自动刷新浏览器  </p>
-<pre><code>npm install webpack-dev-server --save-dev
-</code></pre><p>3.再package.json里配置运行命令</p>
-<pre><code>&quot;scripts&quot;: {
-    &quot;dev&quot;: &quot;webpack-dev-server --hot --inline&quot;
-}
-</code></pre><p>4.在webpack中配置Babel，Babel 把用最新标准编写的 JavaScript 代码向下编译成可以在今天随处可用的版本。</p>
-<pre><code>npm install --save-dev babel-core babel-loader babel-preset-es2015 babel-preset-react  
-</code></pre><p>5.安装React和React-DOM  </p>
-<pre><code>npm install --save react react-dom
-</code></pre><p>在webpack.config.js中  </p>
-<pre><code>var path = require(&quot;path&quot;)
-var HtmlwebpackPlugin = require(&apos;html-webpack-plugin&apos;);
-module.exports = {
-  //项目的文件夹 可以直接用文件夹名称 默认会找index.js 也可以确定是哪个文件名字
-  entry: __dirname + &quot;/app/index.js&quot;,
-  //输出的文件名 合并以后的js会命名为bundle.js
-  output: {
-    path: __dirname + &quot;/build&quot;,
-    filename: &quot;bundle.js&quot;
-  },
-  //添加我们的插件会自动生成一个html文件
-  plugins: [
-    new HtmlwebpackPlugin({
-       title: &quot;My app&quot;,
-       showErrors: true
-     })
-  ],
-  //node服务器，实时预览
-  devServer: {
-    contentBase: __dirname + &quot;/build&quot;,//本地服务器所加载的页面所在的目录
-    historyApiFallback: true,//不跳转
-    inline: true,//当源文件改变时会自动刷新页面
-    port:8080//端口
-  },
-  //babel 的配置， ES6 与React
-  module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: &apos;babel-loader&apos;,
-        query: {
-          presets: [&apos;es2015&apos;,&apos;react&apos;]
-        }
-      }
-    ]
-  }
-};
-</code></pre><p><strong>webpack</strong><br>模块化打包工具，分析项目结构，处理模块化依赖，转换成浏览器可运行的代码。  </p>
-<ul>
-<li>代码转换：scss,less编译成css</li>
-<li>文件优化：压缩JavaScript、css、HTML，压缩合并图片</li>
-<li>代码分割：提取多个页面的公共代码、提取首屏不需要执行部分的代码让其异步加载</li>
-<li>模块合并：在采用模块化的项目里多个模块，需要构建功能把模块分类合并成一个文件</li>
-<li>自动刷新：监听本地源代码的变化，自动重新构建、刷新浏览器</li>
-</ul>
-<p><strong>优化webpack构建速度思路</strong>  </p>
-<ul>
-<li>优化本身项目结构，模块的引入、拆分、共用</li>
-<li>优化结构路径、让webpack接管的文件能够快速定位</li>
-<li>优化uglify编译速度</li>
-<li>优化webpack本身编译速度</li>
-</ul>
-<p><strong>作用最大的有这几个</strong>   </p>
-<ul>
-<li>开启webpack的cache</li>
-<li>开启babel-loader的cache</li>
-<li>指定modules以及配置项目相关的alias<ul>
-<li>通过编写alias，既能让webpack查找文件定位更快，在开发的时候，也能少些很多相对路径的../..，在引入模块的时候很方便。</li>
-</ul>
-</li>
-<li>配置loader的include和exclude</li>
-<li><p>用CommonsChunkPlugin提取公用模块</p>
-<pre><code>    plugins: [
-      new webpack.optimize.CommonsChunkPlugin({
-        async: &apos;shared-module&apos;,
-        minChunks: (module, count) =&gt; (
-          count &gt;= 2    // 当一个模块被重复引用2次或以上的时候单独打包起来。 
-        )
-      }),
-
-  //...
-]
-</code></pre></li>
-<li>换用happypack多进程构建</li>
-<li>换用webpack-uglify-parallel并行压缩代码</li>
-</ul>
-<p><strong>webpack打包</strong><br>webpack 在打包过程中会针对不同的资源类型使用不同的loader处理，然后将所有静态资源整合到一个bundle里，以实现所有静态资源的加载。webpack最初的主要目的是在浏览器端复用符合CommonJS规范的代码模块，而CommonJS模块每次修改都需要重新构建(rebuild)后才能在浏览器端使用。</p>
-<p><strong>webpack是如何进行资源的打包的呢</strong>  </p>
-<ul>
-<li>对于单入口文件，每个入口文件把自己所依赖的资源全部打包到一起，即使一个资源循环加载的话，也只会打包一份</li>
-<li>对于多入口文件的情况，分别独立执行单个入口的情况，每个入口文件各不相干</li>
-</ul>
-<p><strong>插件</strong> </p>
-<ul>
-<li>使用UgligyJsPlugin压缩JavaScript代码</li>
-<li>使用HtmlWebpackPlugin生成一个HTML5文件，该文件的body中使用script标记引用了所有webpack bundle</li>
-<li>css module</li>
-<li>ExtractTextPlugin提取css文件</li>
-<li>DefinePlugin插件，允许你创建一个在编译时可以配置的全局常量。</li>
-<li>CleanWebpackPlugin清除输出目录，避免每次手动删除</li>
-</ul>
-<h3 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h3><ul>
-<li>基础配置<ul>
-<li>entry：入口</li>
-<li>module：Loaders是用来告诉webpack如何转化处理某一类型的文件，并且引入到打包出的文件中。</li>
-<li>plugins：(插件用于扩展 loader 的能力）你可以用插件进行定义环境变量对代码进行打包压缩。</li>
-<li>output：出口</li>
-</ul>
-</li>
-<li><p>进阶配置</p>
-<ul>
-<li>resolve</li>
-<li>devtool</li>
-<li>devServer</li>
-</ul>
-</li>
-<li><p>配置webpack.config.js</p>
-</li>
-<li>如何使用webpack？</li>
-<li>webpack打包原理</li>
-<li>dev-server的原理？</li>
-<li>有没有实现一个webpack的loader？</li>
-<li>vue异步加载，（改进空间）</li>
-</ul>
-<p><strong>webpack-dev-server和http服务器区别</strong><br>webpack-dev-server使用内存来存储webpack开发环境下的打包文件，并且可以使用模块热更新，它比传统的http服务器对开发更加简单高效。</p>
-<p><strong>模块热更新</strong><br>模块热更新是webpack的一个功能，可以使得代码修改过后不用刷新浏览器就可以更新。</p>
-<p><strong>什么是(持久化缓存)长缓存？在webpack中如何做到长缓存优化</strong><br>浏览器在用户访问页面的时候，为了加快加载速度，会对用户访问的静态资源进行存储，但是每一次代码升级或是更新，都需要浏览器去下载新的代码，最方便和简单的更新方式就是引入新的文件名称。</p>
-<p>比较成熟的持久化缓存方案就是在静态资源的名字后面加 hash 值，因为每次修改文件生成的 hash 值不一样，这样做的好处在于增量式发布文件，避免覆盖掉之前文件从而导致线上的用户访问失效。</p>
-<h4 id="webpack如何做持久化缓存"><a href="#webpack如何做持久化缓存" class="headerlink" title="webpack如何做持久化缓存"></a>webpack如何做持久化缓存</h4><ul>
-<li>保证hash值的唯一性，即为每个打包后的资源生成一个独一无二的hash值，只要打包内容不一致，那么hash值就不一样。</li>
-<li>保证hash值的稳定性，需要修改某个模块的时候，只有受影响的打包后文件hash值改变，与该模块无关的打包文件hash值不变。</li>
-</ul>
-<p><strong>webpack打包原理</strong><br>通常 webpack 将所有处理文件全部打包成一个 bundle 文件。</p>
-<p>1.配置webpack.config.js  </p>
-<pre><code>module.exports = {
-  entry: {
-    bundle: &apos;./index.js&apos;
-  },
-  output: {
-    path: __dirname,
-    filename: &apos;[name].js&apos;
-  }
-};
-</code></pre><p>2.创建 index.js  </p>
-<pre><code>var aText = require(&quot;./a.js&quot;);
-var bText = require(&quot;./b.js&quot;);
-var str = &apos;This is Moudle Index. I depends (&apos; + aText +&apos;) and (&apos;+ bText + &apos;).&apos;;
-document.write(str);
-</code></pre><p>3.创建 a.js和 b.js  </p>
-<pre><code>//a.js
-var bText = require(&quot;./b.js&quot;);
-var str = &apos;This is Moudle A. I depends (&apos; + bText + &apos;).&apos;;
-module.exports = str;
-//b.js
-module.exports = &quot;This is Moudle B.&quot;;
-</code></pre><p>4.执行webpack，生成的 bundle.js  </p>
-<pre><code>(function(modules) {
-  // modules 存储的是模块函数
-  // installedModules 存储的是模块对象
-  var installedModules = {};
-  // 定义 require 函数 
-  // require的功能是执行 modules[id] 里的模块函数，并将返回的结果放在 installedModules[id].exports
-  function __webpack_require__(moduleId) {
-      // 检测当前模块是否已添加，防止重复添加
-      if (installedModules[moduleId]) {
-          return installedModules[moduleId].exports;
-      }
-      // 创建一个模块对象，用于存放模块相关的信息
-      var module = installedModules[moduleId] = {
-          i: moduleId, // 模块id
-          l: false, // 是否加载完成
-          exports: {} // 模块内容
-      };
-      // 执行模块函数，此时会在 module.exports 添加模块内容
-      // 保证了模块加载时 this 的指向 module.exports 并且传入默认参数
-      modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-      // 标记模块加载完成
-      module.l = true;
-      // 返回模块内容
-      return module.exports;
-  }
-  return __webpack_require__(1);
-})([
-  /* 0 */
-  (function(module, exports) {
-      module.exports = &quot;This is Moudle B.&quot;;
-  }),
-  /* 1 */
-  (function(module, exports, __webpack_require__) {
-      var aText = __webpack_require__(2);
-      var bText = __webpack_require__(0);
-      var str = &apos;This is Moudle Index. I depends (&apos; + aText + &apos;) and (&apos; + bText + &apos;).&apos;;
-      document.write(str);
-  }),
-  /* 2 */
-  (function(module, exports, __webpack_require__) {
-      var bText = `__webpack_require__(0)`;
-      var str = &apos;This is Moudle A. I depends (&apos; + bText + &apos;).&apos;;
-      module.exports = str;
-  })
-])    
-</code></pre><p>注：  </p>
-<ol>
-<li>三个文件生成三个模块，将他们放入modules数组，通过数组的下标来作为moduleId</li>
-<li>将modules传入一个自执行函数中，自执行函数中包含一个installModules已经加载过的模块和一个模块加载函数，最后加载模块入口并返回</li>
-<li><code>__webpack_require__</code>模块加载，先判断installModules是否已加载，加载过了就直接返回exports数据，没有加载过该模块就通过<code>modules[moduleId].call(module.exports, module, module.exports, __webpack_require__)</code>执行模块并且将 module.exports 给返回。</li>
-</ol>
-<p><strong>实现一个webpack loader</strong><br>A loader is a node module exporting a function.    loader是一个node模块，导出一个函数，该函数的参数是require的源模块，处理source后把返回值交给下一个loader。</p>
-<p>处理结果(不止一个)返回给下一个Loader，需要调用webpack提供的Loader API。支持返回多个内容的结果给下一个Loader。</p>
-<pre><code>module.exports = function(source){    
-    // this.callback(null, source); 
-    return source;
-}
-</code></pre><p>实现思路：  </p>
-<ul>
-<li>从右到左，链式执行</li>
-<li>上一个Loader的处理结果给下一个接着处理</li>
-<li>node module写法</li>
-<li>module依赖</li>
-<li>return &amp;&amp; this.callback()</li>
-</ul>
-<p><strong>webpack实现按需加载</strong><br>在最开始使用Webpack的时候, 都是将所有的js文件全部打包到一个build.js文件中(文件名取决与在webpack.config.js文件中output.filename), 但是在大型项目中, build.js可能过大, 导致页面加载时间过长. 这个时候就需要code splitting, code splitting就是将文件分割成块(chunk), 我们可以定义一些分割点(split point), 根据这些分割点对文件进行分块, 并实现按需加载.</p>
-<pre><code>output: {
-    path: path.resolve(__dirname, &apos;./dist&apos;),
-    publicPath: &apos;/dist/&apos;,
-    filename: &apos;build.js&apos;,
-    //添加chundkFilename
-    chunkFilename: &apos;[name].[chunkhash:5].chunk.js&apos;
-}
-
-//AMD风格的异步加载
-// const ComA = resolve =&gt; require([&apos;./components/A.vue&apos; ], resolve);
-// const ComB = resolve =&gt; require([&apos;./components/B.vue&apos; ], resolve);
-// const ComC = resolve =&gt; require([&apos;./components/C.vue&apos; ], resolve);
-
-//CMD风格的异步加载
-const ComA = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/A.vue&apos;)));
-const ComB = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/B.vue&apos;)));
-const ComC = resolve =&gt; require.ensure([], () =&gt; resolve(require(&apos;./components/C.vue&apos;)));
-</code></pre><p><strong>webpack打包分析与性能优化</strong><br><strong>webpack打包分析</strong><br>webpack在打包过程中会针对不同的资源类型使用不同的loader处理，然后将所有静态资源整合到一个bundle里，以实现所有静态资源的加载。webpack最初的主要目的是在浏览器端复用符合CommonJS规范的代码模块，而CommonJS模块每次修改都需要重新构建后才能在浏览器端使用。</p>
-<p>webpack如何进行资源打包  </p>
-<ul>
-<li>对于单入口文件，每个入口文件把自己所依赖的资源全部打包到一起，即使一个资源循环加载的话，也只会打包一份。</li>
-<li>对于多入口文件的情况，分别独立执行单个入口的情况，每个入口文件各不相干</li>
-</ul>
-<p><strong>webpack打包优化</strong><br>1.减小打包文件体积  </p>
-<p>原因： </p>
-<ol>
-<li>import css文件的时候，会直接作为模块一并打包到js文件中<ul>
-<li>使用extract-text-webpack-plugin，缺点是产生更长时间编译，会增加额外的HTTP请求</li>
-</ul>
-</li>
-<li><p>所有js模块+依赖都会打包到一个文件</p>
-<ul>
-<li><p>提取公共代码块 </p>
-<pre><code>new webpack.optimize.CommonChunkPlugin(&apos;common.js&apos;)
-</code></pre></li>
-</ul>
-</li>
-</ol>
-<p>2.代码压缩<br>webpack提供的UglifyJS插件由于采用单线程压缩，速度很慢。  </p>
-<p>webpack-parallel-uglify-plugin插件可以并行运行UglifyJS插件，这可以有效减少构建时间，当然，该插件应用于生产环境而非开发环境，配置如下：  </p>
-<pre><code>var ParallelUglifyPlugin = require(&apos;webpack-parallel-uglify-plugin&apos;);
-new ParallelUglifyPlugin({
-    cacheDir: &apos;.cache/&apos;,
-    uglifyJS: {
-        output: {
-            comments: false
-        },
-        compress: {
-            warnings: false
-        }
-    }
-})
-</code></pre><p>3.happypack<br>happypack的原理是让loader可以多进程去处理文件。  </p>
-<p>在webpack.config.js中  </p>
-<pre><code>const HappyPack = require(&apos;happypack&apos;);
-const os = require(&apos;os&apos;);
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
-
-module.exports = {
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        //把对.js 的文件处理交给id为happyBabel 的HappyPack 的实例执行
-        loader: &apos;happypack/loader?id=happyBabel&apos;,
-        //排除node_modules 目录下的文件
-        exclude: /node_modules/
-      },
-    ]
-  },
-plugins: [
-    new HappyPack({
-        //用id来标识 happypack处理那里类文件
-      id: &apos;happyBabel&apos;,
-      //如何处理  用法和loader 的配置一样
-      loaders: [{
-        loader: &apos;babel-loader?cacheDirectory=true&apos;,
-      }],
-      //共享进程池
-      threadPool: happyThreadPool,
-      //允许 HappyPack 输出日志
-      verbose: true,
-    })
-  ]
-}
-</code></pre><p><strong>webpack4.0配置</strong>  </p>
-<pre><code>const path = require(&apos;path&apos;)
-const webpack = require(&apos;webpack&apos;);
-const HtmlWebpackPlugin = require(&apos;html-webpack-plugin&apos;); // 将html打包
-const ExtractTextPlugin = require(&apos;extract-text-webpack-plugin&apos;);// 打包的css拆分，将一部分抽离出来
-module.exports = {
-    entry: &apos;./src/index.js&apos;,
-    output: {
-        path: path.resolve(__dirname, &apos;dist&apos;), // 定位，输出文件的目标路径
-        filename: &apos;[name].js&apos;
-    },
-    module: { // 模块的相关配置
-        rules: [  // 根据文件的后缀提供一个loader，解析规则
-            {
-                test: /\.js$/,
-                include: [ path.resolve(__dirname, &apos;src&apos;) ],
-                use: &apos;babel-loader&apos;
-            },
-            {
-                test: /\.less$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: &apos;style-loader&apos;,
-                    use: [
-                        &apos;css-loader&apos;,
-                        &apos;less-loader&apos;
-                    ]
-                })
-            }
-        ]
-    },
-    resolve: { // 解析模块的可选项
-        extensions: [&quot;.js&quot;, &quot;.json&quot;, &quot;.jsx&quot;, &quot;.less&quot;, &quot;.css&quot;],
-        alias: {
-            utils: path.resolve(__dirname, &apos;src/utils&apos;)
-        }
-    },
-    plugins: [ // 插件的引用，压缩，分离美化
-        new ExtractTextPlugin(&apos;[name].css&apos;),
-        new HtmlWebpackPlugin({
-            file: &apos;index.html&apos;, // 将模板的头部和尾部添加css，js模板，dist目录发布到服务器上
-            template: &apos;src/index.html&apos;
-        })
-    ],
-    devServer: { // 服务于webpack-dev-server 内部封装了一个express
-        port: &apos;8080&apos;,
-        before(app){
-            app.get(&apos;/api/test.json&apos;,(req, res)=&gt;{
-                res.json({
-                    code: 200,
-                    message: &apos;Hello&apos;
-                })
-            })
-        }        
-    }    
-}
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2805,7 +2469,7 @@ module.exports = {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
