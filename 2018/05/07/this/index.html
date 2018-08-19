@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="箭头函数this箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。 var person = {   name: &amp;quot;test&amp;quot;,   getName: () =&amp;gt; console.log(this.name) } person.getName() // undefined 事实上，箭头函数的this是其所在上下文的this决定的。这里的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-01T02:52:12.000Z">
+<meta property="og:updated_time" content="2018-08-19T22:33:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="箭头函数this">
 <meta name="twitter:description" content="箭头函数this箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。 var person = {   name: &amp;quot;test&amp;quot;,   getName: () =&amp;gt; console.log(this.name) } person.getName() // undefined 事实上，箭头函数的this是其所在上下文的this决定的。这里的">
@@ -349,6 +349,8 @@ var p = new Person() // 0 1 2...
 <li>没有原型，由于不能使用new调用箭头函数，所有没有构建原型的需求。</li>
 <li>没有super，由于没有原型，所有不能通过super来访问原型的属性，所有箭头函数也没有super</li>
 </ul>
+<p>箭头在声明的时候就绑定了执行上下文，要动态改变上下文是不可能的。</p>
+<p><strong>定义构造函数</strong><br>构造函数中的this指向新创建的对象，当执行<code>new Car()</code>的时候，构造函数Car的上下文就是新创建的对象，<code>this instanceof Car ===true</code>.箭头函数是不能用来做构造函数的。</p>
 
       
     </div>
