@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="常用函数节流函数节流函数就是预先设定一个执行周期，当调用动作的时刻大于等于执行周期则执行该动作，然后进入下一个新周期。 适用场景：    适合指定每隔一定时间间隔内执行不超过一次的情况 window对象的resize、scroll事件 拖拽时的mousemove事件  实现：   function throttle(fn, threshhold){     var timeout;     var">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-28T14:57:58.000Z">
+<meta property="og:updated_time" content="2018-08-26T22:37:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用函数">
 <meta name="twitter:description" content="常用函数节流函数节流函数就是预先设定一个执行周期，当调用动作的时刻大于等于执行周期则执行该动作，然后进入下一个新周期。 适用场景：    适合指定每隔一定时间间隔内执行不超过一次的情况 window对象的resize、scroll事件 拖拽时的mousemove事件  实现：   function throttle(fn, threshhold){     var timeout;     var">
@@ -357,6 +357,19 @@
         timeout = setTimeout(function(){
             func.apply(context, args)
         }, delay)
+    }
+}
+</code></pre><p><strong>立即执行版</strong>  </p>
+<pre><code>function debounce(func, delay){
+    var timeout;
+    return function(){
+        clearTimeout(timeout);
+        var context = this, args = arguments;
+        var callNow = !timeout;
+        timeout = setTimeout(function(){
+            timeout = null;
+        }, delay)
+        if(callNow) func.apply(context, args)
     }
 }
 </code></pre><h4 id="深拷贝实现"><a href="#深拷贝实现" class="headerlink" title="深拷贝实现"></a>深拷贝实现</h4><p><strong>基本类型</strong><br>6种：undefined、null、Boolean、Number、String、Symbol，基本数据类型的值是按值访问的。基本类型的变量是存放在栈内存里。 </p>

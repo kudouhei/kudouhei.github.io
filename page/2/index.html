@@ -986,6 +986,141 @@ win.addEventListener(&apos;resize&apos;, refreshRem)
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
+<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
+<p>常用的场景例如：</p>
+<ul>
+<li>在用户输入时更新大量的信息，例如过滤列表。</li>
+<li>从Vuex商店中收集信息</li>
+<li>表单验证</li>
+<li>数据可视化需要依赖于用户查看的内容而变化</li>
+</ul>
+<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
+<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
+<p>1.计算属性VSmethod方法  </p>
+<ul>
+<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
+<li>method则每次都会重新计算</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/理解nextTick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1085,141 +1220,6 @@ Vue.nextTick(function(){
     })
 }
 </code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
-                2018-07-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
-<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
-<p>常用的场景例如：</p>
-<ul>
-<li>在用户输入时更新大量的信息，例如过滤列表。</li>
-<li>从Vuex商店中收集信息</li>
-<li>表单验证</li>
-<li>数据可视化需要依赖于用户查看的内容而变化</li>
-</ul>
-<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
-<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
-<p>1.计算属性VSmethod方法  </p>
-<ul>
-<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
-<li>method则每次都会重新计算</li>
-</ul>
-
           
         
       
@@ -1813,6 +1813,19 @@ console.log(formatNumber1(&quot;999456789&quot;)) // 1,234,567,890
         timeout = setTimeout(function(){
             func.apply(context, args)
         }, delay)
+    }
+}
+</code></pre><p><strong>立即执行版</strong>  </p>
+<pre><code>function debounce(func, delay){
+    var timeout;
+    return function(){
+        clearTimeout(timeout);
+        var context = this, args = arguments;
+        var callNow = !timeout;
+        timeout = setTimeout(function(){
+            timeout = null;
+        }, delay)
+        if(callNow) func.apply(context, args)
     }
 }
 </code></pre><h4 id="深拷贝实现"><a href="#深拷贝实现" class="headerlink" title="深拷贝实现"></a>深拷贝实现</h4><p><strong>基本类型</strong><br>6种：undefined、null、Boolean、Number、String、Symbol，基本数据类型的值是按值访问的。基本类型的变量是存放在栈内存里。 </p>
