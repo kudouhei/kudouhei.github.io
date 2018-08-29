@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="理解Vue.nextTick在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。 原理Vue实现响应式并不是数据发生变化之后DOM立即变化，而是按一定的策略进行DOM的更新。 Vue在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，在统一进行视图更新。 // 改变数据 vm.message = &amp;apos;changed&amp;a">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-03T22:56:38.000Z">
+<meta property="og:updated_time" content="2018-08-29T22:59:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解Vue.nextTick">
 <meta name="twitter:description" content="理解Vue.nextTick在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。 原理Vue实现响应式并不是数据发生变化之后DOM立即变化，而是按一定的策略进行DOM的更新。 Vue在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，在统一进行视图更新。 // 改变数据 vm.message = &amp;apos;changed&amp;a">
@@ -342,6 +342,27 @@ Vue.nextTick(function(){
         document.getElementById(&quot;keywords&quot;).focus()
     })
 }
+</code></pre><p><strong>模拟nextTick</strong>  </p>
+<p>用setTimeout来模拟nextTick，先定义一个callbacks来存储nextTick，在下一个tick处理回调函数之前，所有的cb都会存储到这个callbacks数组当中。pending是一个标记位，代表等待的状态。接着setTimeout 会在 task 中创建一个事件 flushCallbacks ，flushCallbacks 则会在执行时将 callbacks 中的所有 cb 依次执行。</p>
+<pre><code>//存储nextTick
+let callbacks = [];
+let pending = false;
+function nextTick(cb){
+    callbacks.push(cb);
+    if (!pending) {
+    // 代表等待状态的标志位
+    pending = true;
+    setTimeout(flushCallbacks, 0);
+}
+}
+function flushCallbacks(){
+    pending = false;
+    const copies = callbacks.slice(0);
+    callbacks.length = 0;
+    for (let i = 0; i &lt; copies.length; i++) {
+    copies[i]();
+}
+}
 </code></pre>
       
     </div>
@@ -372,8 +393,8 @@ Vue.nextTick(function(){
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/03/Vue.extend/" rel="next" title="Vue.extend">
-                <i class="fa fa-chevron-left"></i> Vue.extend
+              <a href="/2018/07/04/Vue方法计算属性/" rel="next" title="Vue中methods，computed，watch">
+                <i class="fa fa-chevron-left"></i> Vue中methods，computed，watch
               </a>
             
           </div>
@@ -382,8 +403,8 @@ Vue.nextTick(function(){
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/04/Vue方法计算属性/" rel="prev" title="Vue中methods，computed，watch">
-                Vue中methods，computed，watch <i class="fa fa-chevron-right"></i>
+              <a href="/2018/07/09/响应式/" rel="prev" title="常用响应式布局">
+                常用响应式布局 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
