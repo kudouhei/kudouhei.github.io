@@ -94,7 +94,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/vue/source.png">
 <meta property="og:image" content="http://yoursite.com/images/vue/diff.jpg">
-<meta property="og:updated_time" content="2018-08-01T14:08:54.000Z">
+<meta property="og:updated_time" content="2018-08-30T22:51:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vue-source">
 <meta name="twitter:description" content="Vue源码学习Vue的核心可以分为三个大块：数据处理和双向绑定、模板编译、虚拟dom。 1.vue响应式原理基本概念    data: vue实例中的数据项 observer：数据属性的观察者，监控对象的读写操作 dep：消息订阅器，拥有收集订阅者、发布更新的功能 watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。   vue的数据响应式实现分为两">
@@ -573,6 +573,10 @@ export default {
 <li>在vue中，state对象并不是必须的，数据由data属性在vue对象中进行管理。</li>
 <li>当非父子组件之间嵌套过深的时候都建议使用状态管理来维护数据的变化。</li>
 </ul>
+<h3 id="Vue从Virtual-DOM映射到真实DOM的过程"><a href="#Vue从Virtual-DOM映射到真实DOM的过程" class="headerlink" title="Vue从Virtual DOM映射到真实DOM的过程"></a>Vue从Virtual DOM映射到真实DOM的过程</h3><p>DOM模型用一个逻辑树来表示一个文档，树的每个分支的终点都是一个节点(node)，每个节点都包含着对象。简单粗暴的方法将整个DOM结构用innerHTML修改到页面上，这样进行重绘整个视图层是相当消耗性能的。</p>
+<p>Virtual DOM其实就是以VNode节点（JavaScript对象）作为基础，用对象属性来描述节点，实际上它是一层对真实DOM的封装。Virtual DOM上定义了关于真实DOM的一些关键的信息，Virtual DOM完全是用JS去实现，和宿主浏览器没有关系，此外由于js的执行速度，将原本需要在真实DOM进行的创建节点，删除节点，添加节点等一系列复杂的DOM操作全部放到Virtual DOM中进行。这样相对与用innerHTML重绘整个视图性能将大大提高。将Virtual DOM修改的地方用diff算法来更新只修改的地方，这样就能避免很多不需要的dom修改，提高了性能。</p>
+<p>在更新视图的时候，如果需要diff的prevVNode不存在，那么就用新的vnode创建一个真实dom节点；如果需要diff的prevVNode存在，首先对prevVNode和VNode进行diff，并将需要的更新的dom操作已patch的形式打到prevVNode上，并完成真实dom的更新工作。</p>
+<p>patch方法为整个Virtual DOM的核心方法，主要完成了新的虚拟dom节点和旧的虚拟dom节点的diff过程，经过patch过程之后生成真实的dom节点并完成视图的更新工作。</p>
 
       
     </div>
@@ -613,8 +617,8 @@ export default {
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/08/02/js定义类/" rel="prev" title="JavaScript定义类的三种方法">
-                JavaScript定义类的三种方法 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/08/01/js事件/" rel="prev" title="javascript事件">
+                javascript事件 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -761,7 +765,7 @@ export default {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue源码学习"><span class="nav-number">1.</span> <span class="nav-text">Vue源码学习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-vue响应式原理"><span class="nav-number">1.1.</span> <span class="nav-text">1.vue响应式原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue的生命周期"><span class="nav-number">1.2.</span> <span class="nav-text">Vue的生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模板编译"><span class="nav-number">1.3.</span> <span class="nav-text">模板编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现vue-watch"><span class="nav-number">1.4.</span> <span class="nav-text">实现vue.watch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监听数组变化"><span class="nav-number">1.5.</span> <span class="nav-text">监听数组变化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#详细介绍对vue生命周期的理解"><span class="nav-number">1.6.</span> <span class="nav-text">详细介绍对vue生命周期的理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对vue双向数据绑定原理的理解"><span class="nav-number">1.7.</span> <span class="nav-text">对vue双向数据绑定原理的理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对vue的template编译理解"><span class="nav-number">1.8.</span> <span class="nav-text">对vue的template编译理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#详解vue的diff算法"><span class="nav-number">1.9.</span> <span class="nav-text">详解vue的diff算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#谈谈VUE中的MVVM模式"><span class="nav-number">1.10.</span> <span class="nav-text">谈谈VUE中的MVVM模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#React和vue深入对比"><span class="nav-number">1.11.</span> <span class="nav-text">React和vue深入对比</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue源码学习"><span class="nav-number">1.</span> <span class="nav-text">Vue源码学习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-vue响应式原理"><span class="nav-number">1.1.</span> <span class="nav-text">1.vue响应式原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue的生命周期"><span class="nav-number">1.2.</span> <span class="nav-text">Vue的生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模板编译"><span class="nav-number">1.3.</span> <span class="nav-text">模板编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现vue-watch"><span class="nav-number">1.4.</span> <span class="nav-text">实现vue.watch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#监听数组变化"><span class="nav-number">1.5.</span> <span class="nav-text">监听数组变化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#详细介绍对vue生命周期的理解"><span class="nav-number">1.6.</span> <span class="nav-text">详细介绍对vue生命周期的理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对vue双向数据绑定原理的理解"><span class="nav-number">1.7.</span> <span class="nav-text">对vue双向数据绑定原理的理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对vue的template编译理解"><span class="nav-number">1.8.</span> <span class="nav-text">对vue的template编译理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#详解vue的diff算法"><span class="nav-number">1.9.</span> <span class="nav-text">详解vue的diff算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#谈谈VUE中的MVVM模式"><span class="nav-number">1.10.</span> <span class="nav-text">谈谈VUE中的MVVM模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#React和vue深入对比"><span class="nav-number">1.11.</span> <span class="nav-text">React和vue深入对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue从Virtual-DOM映射到真实DOM的过程"><span class="nav-number">2.</span> <span class="nav-text">Vue从Virtual DOM映射到真实DOM的过程</span></a></li></ol></div>
             
 
           </div>
