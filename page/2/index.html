@@ -247,6 +247,288 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/12/call/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/12/call/" itemprop="url">模拟实现call,apply</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-12T00:00:00+08:00">
+                2018-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="模拟实现call"><a href="#模拟实现call" class="headerlink" title="模拟实现call"></a>模拟实现call</h4><p>步骤：  </p>
+<ul>
+<li>将函数设为对象的属性</li>
+<li>执行该函数</li>
+<li><p>删除该函数</p>
+<pre><code>foo.fn = bar; // fn是对象的属性名
+foo.fn();
+delete foo.fn
+</code></pre></li>
+</ul>
+<p>call实现：  </p>
+<pre><code>Function.prototype.call2 = function(context){
+  var context = context || window;
+  context.fn = this;
+  var args = [];
+  for(var i=1,len=arguments.length;i&lt;len;i++){
+    args.push(&apos;arguments[&apos;+i+&apos;]&apos;);
+  }
+  var result = eval(&apos;context.fn(&apos;+args+&apos;)&apos;);
+  delete context.fn;
+  return result;
+}
+var value = 2;
+var foo = {
+  value: 1
+};
+function bar(name, age){
+  console.log(this.value);
+  return {
+    value: this.value,
+    name: name,
+    age: age
+  }
+}
+bar.call2(null); //2
+console.log(bar.call2(obj, &apos;kevin&apos;, 18));
+</code></pre><p>apply实现：  </p>
+<pre><code>Function.prototype.apply2 = function(context, arr){
+     var context = Object(context) || window;
+     context.fn = this;
+     var result;
+     if(!arr){
+       result = context.fn();
+     }else{
+       var args = [];
+       for(var i=0,len=arr.length;i&lt;len;i++){
+         args.push(&apos;arr[&apos; +i+ &apos;]&apos;);
+       }
+       result = eval(&apos;context.fn(&apos;+args+&apos;)&apos;);
+     }
+     delete context.fn;
+     return result;
+   } 
+</code></pre><p><strong>bind</strong><br>bind() 方法会创建一个新函数。当这个新函数被调用时，bind() 的第一个参数将作为它运行时的 this，之后的一序列参数将会在传递的实参前传入作为它的参数。两个特点（返回一个函数，可以传入参数）  </p>
+<p>实现：  </p>
+<pre><code>var foo = {
+    value: 1
+};
+function bar(name, age) {
+    console.log(this.value);
+    console.log(name);
+    console.log(age);
+}
+var bindFoo = bar.bind(foo, &apos;daisy&apos;);
+bindFoo(&apos;18&apos;);
+
+Function.prototype.bind2 = function(context){
+  var self = this;
+  // 获取bind2函数从第二个参数到最后一个参数
+  var args = Array.prototype.slice.call(arguments,1);
+  return function(){
+    // 此时的arguments是指bind返回的函数传入的参数
+    var bindArgs = Array.prototype.slice.call(arguments);
+    return self.apply(context, args.concat(bindArgs));
+  }
+}
+// 一个绑定函数也能使用new操作符创建对象：这种行为就像把原函数当成构造器
+// 提供的this值被忽略，调用时的参数被提供给模拟函数。
+//上述方法的问题 当bind返回的函数作为构造函数的时候，bind时指定的this值会失效，但传入的参数依然生效。
+Function.prototype.bind2 = function(context){
+  var self = this;
+  var args = Array.prototype.slice.call(arguments,1);
+  var fNOP = function(){}
+  var fBound = function(){
+    var bindArgs = Array.prototype.slice.call(arguments);
+    //当作为构造函数时，this指向实例，此时结果为true，
+    //将绑定函数的this指向该实例，让实例获得来自绑定函数的值。
+    //当作为普通函数时，this指向window，此时结果为false，将绑定函数的this指向context
+    return self.apply(this instanceof fNOP? this: context, args.concat(bindArgs));
+  }
+  // 修改返回函数的prototype为绑定函数的prototype，实例就可以继承绑定函数的原型中的值
+  fNOP.prototype = this.prototype;
+  fBound.prototype = new fNOP()
+  return fBound;
+}
+</code></pre><p><strong>call、apply、bind区别</strong>  </p>
+<ul>
+<li>call和apply都是对函数的直接调用</li>
+<li>bind返回的是一个函数，需要配合()进行调用</li>
+<li>call和bind的传参使用,分隔，(item1,item2,item3…)</li>
+<li>apply的传参使用数组[…arguments]</li>
+<li>call的速度比apply要快，因为apply在运行前要对作为参数的数组进行一系列的检验和深拷贝，而call不用。</li>
+</ul>
+<h4 id="柯里化函数"><a href="#柯里化函数" class="headerlink" title="柯里化函数"></a>柯里化函数</h4><p>主要是将使用多个参数的一个函数转换成一系列使用一个参数的函数  </p>
+<p>辅助函数  </p>
+<pre><code>var curry = function(fn){
+    var args = [].slice.call(arguments,1);
+    return function(){
+        var newArgs = args.concat([].slice.call(arguments));
+        return fn.apply(this,newArgs);
+    }
+}
+// 使用
+function add(a, b) {
+    return a + b;
+}
+var addCurry = curry(add, 1, 2);
+addCurry() // 3
+//或者
+var addCurry = curry(add, 1);
+addCurry(2) // 3
+</code></pre><p><strong>函数参数不定回调函数数目不定</strong>  </p>
+<pre><code>function add(){
+    // 用来存储所有的参数
+    var _args = [].slice.call(arguments);
+    // 内部声明一个函数，利用闭包的特性保存_args并收集所有的参数值
+    var adder = function(){
+        var _adder = function(){
+            [].push.apply(_args, [].slice.call(arguments));
+            return _adder;
+        };
+        // 利用隐式转换特性，当最后执行时隐式转换，并计算最终的值返回
+        _adder.toString = function(){
+            return _args.reduce(function(a,b,c){
+                return a+b+c;
+            })
+        }
+        return _adder;
+    }
+    return adder.apply(null, _args);
+}  
+console.log(add(1, 2, 3, 4, 5));  // 15
+console.log(add(1, 2, 3, 4)(5));  // 15
+console.log(add(1)(2)(3)(4)(5));  // 15
+</code></pre><p><strong>柯里化函数</strong>  </p>
+<pre><code>function createCurry(func, arrArgs){
+    var args = arguments;
+    var funcLength = func.length;
+    var arrArgs = arrArgs || [];
+    return function(){
+        var _arrArgs = Array.prototype.slice.call(arguments);
+        var allArgs = arrArgs.concat(_arrArgs);
+        // 如果参数个数小于最初的func.length，则递归调用，继续收集参数
+        if(allArgs.length &lt; funcLength){
+            return args.callee.call(this, func, allArgs)
+        }
+        return func.apply(this, allArgs)
+    }
+}
+var addCurry = createCurry(function(a,b,c){
+  return a+b+c;
+})
+console.log(addCurry(1)(3,4));
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/webpack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -986,141 +1268,6 @@ win.addEventListener(&apos;resize&apos;, refreshRem)
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
-                2018-07-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
-<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
-<p>常用的场景例如：</p>
-<ul>
-<li>在用户输入时更新大量的信息，例如过滤列表。</li>
-<li>从Vuex商店中收集信息</li>
-<li>表单验证</li>
-<li>数据可视化需要依赖于用户查看的内容而变化</li>
-</ul>
-<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
-<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
-<p>1.计算属性VSmethod方法  </p>
-<ul>
-<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
-<li>method则每次都会重新计算</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/理解nextTick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1241,6 +1388,141 @@ function flushCallbacks(){
 }
 }
 </code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
+<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
+<p>常用的场景例如：</p>
+<ul>
+<li>在用户输入时更新大量的信息，例如过滤列表。</li>
+<li>从Vuex商店中收集信息</li>
+<li>表单验证</li>
+<li>数据可视化需要依赖于用户查看的内容而变化</li>
+</ul>
+<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
+<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
+<p>1.计算属性VSmethod方法  </p>
+<ul>
+<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
+<li>method则每次都会重新计算</li>
+</ul>
+
           
         
       
@@ -2219,192 +2501,6 @@ window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/模块化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/26/模块化/" itemprop="url">js模块化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T00:00:00+08:00">
-                2018-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="JavaScript模块化"><a href="#JavaScript模块化" class="headerlink" title="JavaScript模块化"></a>JavaScript模块化</h4><p>模块化可以使代码低耦合，功能模块不互相影响。模块化的核心思想：  </p>
-<ul>
-<li>拆分，将js代码按功能逻辑拆分成多个可复用的js代码文件</li>
-<li>加载，如何将模块进行加载执行和输出</li>
-<li>注入，能够将一个js模块的输出注入到另一个js模块中</li>
-<li>依赖管理，管理模块之间的依赖关系</li>
-</ul>
-<p><strong>CommonJS &amp; AMD</strong>解决模块依赖管理问题，实现不通过全局作用域来实现模块方法。  </p>
-<p><strong>CommonJS</strong><br>CommonJS模块可以很方便的将某个对象导出，让他们能够被其他模块通过require语句来引入(Node.js语法)。通过CommonJS，每个js文件独立的存储它模块的内容。在这种作用域中，通过<code>module.exports</code>语句来导出对象为模块，再通过require语句引入。</p>
-<p>nodejs的模块系统，就是参照CommonJS规范实现的。</p>
-<p>这种模式优点：  </p>
-<ul>
-<li>避免全局命名空间污染</li>
-<li>明确代码之间的依赖关系</li>
-</ul>
-<p>但是CommonJS以服务器优先的方式来同步载入模块，假如引入三个模块，会一个个被载入。这种模式在服务端还好，到时在浏览器端，只要它还在读取模块，浏览器载入的页面就会一直卡着不动。</p>
-<p><strong>AMD</strong><br>要想异步加载模块，就要用AMD，异步模块定义规范。AMD规范则是非同步加载模块，允许指定回调函数。由于Node.js主要用于服务器编程，模块文件一般都已经存在于本地硬盘，所以加载起来比较快，不用考虑非同步加载的方式，所以CommonJS规范比较适用。但是，如果是浏览器环境，要从服务器端加载模块，这时就必须采用非同步模式，因此浏览器端一般采用AMD规范。 </p>
-<pre><code>define([&apos;myModule&apos;, &apos;myOtherModule&apos;], function(myModule, myOtherModule) {
-  console.log(myModule.hello());
-});
-</code></pre><p>使用define方法，第一个参数是依赖的模块，这些模块都会在后台无阻塞地加载，第二个参数则作为加载完毕的回调函数。</p>
-<p>AMD是优先浏览器的一种异步载入模块的解决方案。AMD的另一个优点是你可以在模块里使用对象、函数、构造函数、字符串、JSON或者别的数据类型，而CommonJS只支持对象。</p>
-<p>AMD运行时的核心思想是提前执行依赖。能够带来更好的用户体验，也会产生浪费。</p>
-<p><strong>CMD规范</strong><br>通过按需加载的方式，而不是必须在模块开始就加载所有的依赖。</p>
-<p>AMD和CMD的区别：前者是对于依赖的模块提前执行，而后者是延迟执行。 前者推崇依赖前置，而后者推崇依赖就近，即只在需要用到某个模块的时候再require。</p>
-<h4 id="ES6模块化-import-export-和Node-js-require基于CommonJS-区别"><a href="#ES6模块化-import-export-和Node-js-require基于CommonJS-区别" class="headerlink" title="ES6模块化(import/export)和Node.js(require基于CommonJS)区别"></a>ES6模块化(import/export)和Node.js(require基于CommonJS)区别</h4><p>Node.js无法直接兼容ES6，所有现在require/exports仍然是必须的，目前编写的import/export最终都是会编译为require/exports来执行。</p>
-<p>require是CommonJs,AMD,CMD规范中定义的模块请求方式，import是es6规范定义的模块请求方式。</p>
-<p>从底层运行来讲，require是在程序运行的时候去解析而import是在编译的时候去做解析请求包，require是请求整个包对象而import是只请求模块中需要的请求的部分。ES6模块的设计思想，是尽量的静态化，使得编译时就能确定模块的依赖关系(“静态优化”)，以及输入和输出的变量。CommonJS和AMD模块，都只能在运行时确定这些东西(“运行时加载”)。</p>
-<p>ES6模块加载的机制，与CommonJS模块完全不同。CommonJS模块输出的是一个值的拷贝，而ES6模块输出的是值的引用</p>
-<h5 id="ES6-Module与CommonJS对比："><a href="#ES6-Module与CommonJS对比：" class="headerlink" title="ES6 Module与CommonJS对比："></a>ES6 Module与CommonJS对比：</h5><ul>
-<li><p>CommonJS的模块是对象，而es6的模块不是对象，是编译时执行的，使得编译时就能够确定依赖关系和输入输出的变量。</p>
-<pre><code>// commonJS模块
-let {stat, exists, readFile} = require(&apos;fs&apos;);
-//等同于
-let _fs = require(&apos;fs&apos;);
-let stat = _fs.stat, exists = _fs.exists, readfile = _fs.readfile;
-</code></pre><p>  上述代码实质是整体加载fs模块，生成一个对象_fs,然后再从这个对象上面读取3个方法。这种加载成为“运行时加载”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做静态优化。</p>
-<p>  ES6模块不是对象，而是通过export命令显式指定输出的代码，输入时页采用静态命令的形式。  </p>
-<pre><code>import {stat, exists,readFile} from &apos;fs&apos;
-</code></pre><p>  上面代码的实质是从fs模块加载3个方法，其他方法不加载。这种加载称为“编译时加载”，即ES6可以在编译时就完成模块加载，效率要比CommonJS模块加载方式高。</p>
-</li>
-<li><p>模块加载实质不同  </p>
-<p>  CommonJS加载的模块是对值的拷贝，而es6 Module是对值的引用，这样模块定义文件内部变量的变化会实时反映到依赖文件，而CommonJS不同。  </p>
-<pre><code>// lib.js
-export let counter=3;
-export function incCounter(){
-    counter++;
-}
-// main.js
-import { counter, incCounter } from &apos;./lib&apos;;
-console.log(counter); // 3
-incCounter();
-console.log(counter); // 4
-//模块定义文件的变量counter的变化能够实时反映
-</code></pre></li>
-</ul>
-<h5 id="export和export-default的作用及区别"><a href="#export和export-default的作用及区别" class="headerlink" title="export和export default的作用及区别"></a>export和export default的作用及区别</h5><p>export和export default实现的功能相同，即：可用于导出常量、函数、文件、模块等，以便其他文件调用。</p>
-<p><strong>区别：</strong>  </p>
-<ol>
-<li>export导出多个对象，export default只能导出一个对象</li>
-<li>export导出对象需要用{}，export default不要{}  <ul>
-<li><code>export {A,B,C}</code></li>
-<li><code>export default A</code></li>
-</ul>
-</li>
-<li>在其他文件引用export default导出的对象时不一定使用导出时的名字。因为这种方式实际上是将该导出对象设置为默认导出对象。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2459,7 +2555,7 @@ console.log(counter); // 4
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
