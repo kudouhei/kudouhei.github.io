@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="JavaScript模块化模块化可以使代码低耦合，功能模块不互相影响。模块化的核心思想：    拆分，将js代码按功能逻辑拆分成多个可复用的js代码文件 加载，如何将模块进行加载执行和输出 注入，能够将一个js模块的输出注入到另一个js模块中 依赖管理，管理模块之间的依赖关系  CommonJS &amp;amp; AMD解决模块依赖管理问题，实现不通过全局作用域来实现模块方法。   CommonJSCo">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-25T22:26:11.000Z">
+<meta property="og:updated_time" content="2018-09-04T22:51:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="js模块化">
 <meta name="twitter:description" content="JavaScript模块化模块化可以使代码低耦合，功能模块不互相影响。模块化的核心思想：    拆分，将js代码按功能逻辑拆分成多个可复用的js代码文件 加载，如何将模块进行加载执行和输出 注入，能够将一个js模块的输出注入到另一个js模块中 依赖管理，管理模块之间的依赖关系  CommonJS &amp;amp; AMD解决模块依赖管理问题，实现不通过全局作用域来实现模块方法。   CommonJSCo">
@@ -382,6 +382,12 @@ console.log(counter); // 4
 </li>
 <li>在其他文件引用export default导出的对象时不一定使用导出时的名字。因为这种方式实际上是将该导出对象设置为默认导出对象。</li>
 </ol>
+<h4 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h4><p>模块化就是将一个程序按照其功能做拆分，分成相互独立的模块，以便于每个模块只包含与其功能相关的内容。比如登录模块，搜索模块。  </p>
+<h4 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h4><p>组件化是基于可重用的目的，将一个大的软件系统按照分离关注点的形式，拆分成多个独立的组件，目的是减少耦合。</p>
+<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><ul>
+<li>模块化强调的是拆分，主要讲代码、数据等内容按其职责不同分离，使其变得更容易维护，迭代。</li>
+<li>组件化则着重于可复用性，需要进行高度封装，一般通过接口访问。 </li>
+</ul>
 
       
     </div>
@@ -412,8 +418,8 @@ console.log(counter); // 4
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/25/js闭包/" rel="next" title="闭包">
-                <i class="fa fa-chevron-left"></i> 闭包
+              <a href="/2018/06/25/尾调用/" rel="next" title="尾调用和尾递归">
+                <i class="fa fa-chevron-left"></i> 尾调用和尾递归
               </a>
             
           </div>
@@ -570,7 +576,7 @@ console.log(counter); // 4
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#JavaScript模块化"><span class="nav-number">1.</span> <span class="nav-text">JavaScript模块化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ES6模块化-import-export-和Node-js-require基于CommonJS-区别"><span class="nav-number">2.</span> <span class="nav-text">ES6模块化(import/export)和Node.js(require基于CommonJS)区别</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ES6-Module与CommonJS对比："><span class="nav-number">2.1.</span> <span class="nav-text">ES6 Module与CommonJS对比：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#export和export-default的作用及区别"><span class="nav-number">2.2.</span> <span class="nav-text">export和export default的作用及区别</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#JavaScript模块化"><span class="nav-number">1.</span> <span class="nav-text">JavaScript模块化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ES6模块化-import-export-和Node-js-require基于CommonJS-区别"><span class="nav-number">2.</span> <span class="nav-text">ES6模块化(import/export)和Node.js(require基于CommonJS)区别</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ES6-Module与CommonJS对比："><span class="nav-number">2.1.</span> <span class="nav-text">ES6 Module与CommonJS对比：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#export和export-default的作用及区别"><span class="nav-number">2.2.</span> <span class="nav-text">export和export default的作用及区别</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模块化"><span class="nav-number">3.</span> <span class="nav-text">模块化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组件化"><span class="nav-number">4.</span> <span class="nav-text">组件化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对比"><span class="nav-number">5.</span> <span class="nav-text">对比</span></a></li></ol></div>
             
 
           </div>
