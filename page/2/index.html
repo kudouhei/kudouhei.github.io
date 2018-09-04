@@ -472,6 +472,179 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
+                2018-07-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
+<p><strong>攻击分类</strong>  </p>
+<ul>
+<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
+<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
+<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
+</ul>
+<p><strong>如何防御XSS</strong>  </p>
+<ul>
+<li>转义： 转义嵌入HTML中的动态内容</li>
+<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
+<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
+</ul>
+</li>
+</ul>
+<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
+<p><strong>攻击原理</strong>  </p>
+<ol>
+<li>浏览器C浏览并登录信任网站A</li>
+<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
+<li>用户在没有登出A网站的情况下，访问危险网站B</li>
+<li>B要求访问第三方站点A，发出一个请求request</li>
+<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
+<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
+</ol>
+<p><strong>常见的防御方式</strong>  </p>
+<ul>
+<li>添加验证码</li>
+<li>验证HTTP Referer字段</li>
+<li>在HTTP头中自定义属性并验证</li>
+</ul>
+<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
+<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
+<p><strong>https作用</strong>  </p>
+<ul>
+<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
+<li>身份认证确认网站的真实性</li>
+<li>数据完整性防止内容被第三方冒充或篡改</li>
+</ul>
+<p><strong>HTTPS流程解析</strong>  </p>
+<ol>
+<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
+<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
+<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
+<li>将加密后的对称密钥发送给HTTPS服务端</li>
+<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
+</ol>
+<p><strong>https和http区别</strong>  </p>
+<ul>
+<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
+<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
+<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
+</ul>
+<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/12/call/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1493,141 +1666,6 @@ win.addEventListener(&apos;resize&apos;, refreshRem)
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
-                2018-07-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
-<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
-<p>常用的场景例如：</p>
-<ul>
-<li>在用户输入时更新大量的信息，例如过滤列表。</li>
-<li>从Vuex商店中收集信息</li>
-<li>表单验证</li>
-<li>数据可视化需要依赖于用户查看的内容而变化</li>
-</ul>
-<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
-<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
-<p>1.计算属性VSmethod方法  </p>
-<ul>
-<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
-<li>method则每次都会重新计算</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/理解nextTick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1748,6 +1786,141 @@ function flushCallbacks(){
 }
 }
 </code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Vue方法计算属性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/04/Vue方法计算属性/" itemprop="url">Vue中methods，computed，watch</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T00:00:00+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="Vue中methods，computed，watch"><a href="#Vue中methods，computed，watch" class="headerlink" title="Vue中methods，computed，watch"></a>Vue中methods，computed，watch</h4><p><strong>methods</strong>：方法是能够操作对象的函数，通常是Vue实例本身或者Vue组件。  </p>
+<p><strong>computed：</strong>计算属性对于处理已存在的数据很有价值。当需要对大量数据进行排序并且不想在每次重新计算，可以使用计算属性。  </p>
+<p>常用的场景例如：</p>
+<ul>
+<li>在用户输入时更新大量的信息，例如过滤列表。</li>
+<li>从Vuex商店中收集信息</li>
+<li>表单验证</li>
+<li>数据可视化需要依赖于用户查看的内容而变化</li>
+</ul>
+<p>计算属性是基于依赖关系进行缓存的计算，并且在依赖关系变化时进行更新。</p>
+<p><strong>watch：</strong>侦听数据变化，如果想在数据变化时添加一些功能，或对一些特定的更改做出响应，可以侦听这个属性并应用一些逻辑。</p>
+<p>1.计算属性VSmethod方法  </p>
+<ul>
+<li>计算属性根据它的依赖被缓存，如果message没有被修改，下次get不会进行重复计算</li>
+<li>method则每次都会重新计算</li>
+</ul>
+
           
         
       
@@ -2215,281 +2388,6 @@ console.log(formatNumber1(&quot;999456789&quot;)) // 1,234,567,890
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/28/常用函数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/28/常用函数/" itemprop="url">常用函数</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-28T00:00:00+08:00">
-                2018-06-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h3><h4 id="节流函数"><a href="#节流函数" class="headerlink" title="节流函数"></a>节流函数</h4><p>节流函数就是预先设定一个执行周期，当调用动作的时刻大于等于执行周期则执行该动作，然后进入下一个新周期。</p>
-<p>适用场景：  </p>
-<ul>
-<li>适合指定每隔一定时间间隔内执行不超过一次的情况</li>
-<li>window对象的resize、scroll事件</li>
-<li>拖拽时的mousemove事件</li>
-</ul>
-<p>实现：  </p>
-<pre><code>function throttle(fn, threshhold){
-    var timeout;
-    var start = new Date;
-    var threshhold = threshhold || 160;
-    return function(){
-        var context = this, args = arguments, curr = new Date() -0;
-        clearTimeout(timeout);
-        if(curr - start &gt;= threshhold){
-            fn.apply(context, args);
-            start = curr;
-        }else{
-            //让方法在脱离事件后也能执行一次
-            timeout = setTimeout(function(){
-                fn.apply(context, args);
-            }, threshhold)
-        }
-    }
-}
-</code></pre><h4 id="去抖函数"><a href="#去抖函数" class="headerlink" title="去抖函数"></a>去抖函数</h4><p>去抖函数就是调用动作n毫秒后，才会执行该动作，若在这n毫秒内又调用此动作则将重新计算执行时间。</p>
-<p>当持续触发事件时，一定时间段内没有再触发事件，事件处理函数才会执行一次，如果设定的时间到来之前，又一次触发了事件，就重新开始延时。</p>
-<p>适用场景： </p>
-<ul>
-<li>适合只执行一次的情况。</li>
-<li>文字输入、自动完成的keyup事件</li>
-</ul>
-<p>实现：  </p>
-<pre><code>function debounce(func, delay){
-    var timeout;
-    return function(e){
-        clearTimeout(timeout);
-        var context = this, args = arguments;
-        timeout = setTimeout(function(){
-            func.apply(context, args)
-        }, delay)
-    }
-}
-</code></pre><p><strong>立即执行版</strong>  </p>
-<pre><code>function debounce(func, delay){
-    var timeout;
-    return function(){
-        clearTimeout(timeout);
-        var context = this, args = arguments;
-        var callNow = !timeout;
-        timeout = setTimeout(function(){
-            timeout = null;
-        }, delay)
-        if(callNow) func.apply(context, args)
-    }
-}
-</code></pre><h4 id="深拷贝实现"><a href="#深拷贝实现" class="headerlink" title="深拷贝实现"></a>深拷贝实现</h4><p><strong>基本类型</strong><br>6种：undefined、null、Boolean、Number、String、Symbol，基本数据类型的值是按值访问的。基本类型的变量是存放在栈内存里。 </p>
-<p><strong>引用类型</strong><br>除6种基本数据类型外，剩下的就是引用类型，统称Object类型。细分包括：Object类型、Array类型、Date类型、RegExp类型、Function类型。</p>
-<ul>
-<li>引用类型的值是可变的</li>
-<li>引用类型的比较是引用的比较</li>
-<li>引用类型的值是保存在堆内存中的对象，当需要访问引用类型(对象，数组)的值时，首先从栈中获得该对象的地址指针，然后在从堆内存中取得所需的数据。</li>
-</ul>
-<blockquote>
-<p>javascript存储对象都是存地址的，所以浅拷贝会导致obj1和obj2指向同一块内存地址。改变了其中一方的内容，都是在原来的内存上做修改会导致拷贝对象和源对象都发生改变，而深拷贝是开辟一块新的内存地址，将原对象的各个属性逐个复制进去，对拷贝对象和源对象各自的操作互不影响。</p>
-</blockquote>
-<pre><code>var deepCopy = function(obj){
-    if(typeof obj !== &apos;object&apos;)return;
-    var newObj = obj instanceof Array ? []: {};
-    for(var key in obj){
-        if(obj.hasOwnProperty(key){
-            newObj[key] = typeof obj[key] === &apos;object&apos;? deepCopy(obj[key]): obj[key]
-        })
-    }
-    return newObj;
-}
-</code></pre><h4 id="JS实现reduce-方法函数"><a href="#JS实现reduce-方法函数" class="headerlink" title="JS实现reduce()方法函数"></a>JS实现reduce()方法函数</h4><p>reduce()是归并方法，接收两个参数：  </p>
-<ul>
-<li>第一个参数是在每一项上调用的函数(接收4个参数)<ul>
-<li>前一个值prev，当前值cur，项的索引index，数组对象array</li>
-</ul>
-</li>
-<li>第二个可选参数是作为归并基础的初始值</li>
-<li><p>reduce方法返回一个最终的值</p>
-<pre><code>Array.prototype.fakeReduce =  function fakeReduce(fn, base) {
-    let initialArr = this;
-    let arr = initialArr.concat();
-    if(base) arr.unshift(base);
-    let index, newValue;
-    while(arr.length &gt;1){
-        index = initialArr.length - arr.length +1;
-        newValue = fn.call(null, arr[0], arr[1], index, initialArr);
-        arr.splice(0,2,newValue);
-    }
-    return newValue;
-} 
-
-let arr = [1, 2, 3, 4, 5];
-let sum = arr.fakeReduce((prev, cur, index, arr) =&gt; {
-  return prev * cur;
-}, 100);
-console.log(sum);
-</code></pre></li>
-</ul>
-<h4 id="JS实现map-方法函数"><a href="#JS实现map-方法函数" class="headerlink" title="JS实现map()方法函数"></a>JS实现map()方法函数</h4><p>map迭代方法接收两个参数：  </p>
-<ul>
-<li>对每一项执行的函数<ul>
-<li>数组项的值</li>
-<li>数组项的下标</li>
-<li>数组对象本身</li>
-</ul>
-</li>
-<li>指定this的作用域对象</li>
-<li><p>map方法返回每次函数调用结果组成的数组</p>
-<pre><code>Array.prototype.fakeMap = function fakeMap(fn, context){
-    if(typeof fn !== &apos;function&apos;){
-        throw new TypeError(&apos;arguments[0] is not a function&apos;);
-    }
-    let arr = this;
-    let temp = [];
-    for(let i=0;i&lt;arr.length;i++){
-        let result = fn.call(context, arr[i], i, arr);
-        temp.push(result);
-    }
-    return temp;
-}
-let arr = [&quot;x&quot;, &quot;y&quot;, &quot;z&quot;];
-arr.fakeMap((item, index, arr) =&gt; console.log(item, index, arr)); 
-</code></pre></li>
-</ul>
-<h4 id="实现indexOf方法"><a href="#实现indexOf方法" class="headerlink" title="实现indexOf方法"></a>实现indexOf方法</h4><pre><code>array.indexOf(value, start)
-</code></pre><ul>
-<li>第一个参数指定要在数组查找的值，第二个可选参数指定开始查找的数组下标。如果省略，则为0.</li>
-<li><p>如果数组中存在匹配的值，就返回第一次匹配的数组下标，如果不存在匹配的值，则返回-1.</p>
-<p>  var indexof = function(array, value, start){</p>
-<pre><code>if(array == null) return -1;
-var i=0, length = array.length;
-if(start){
-    if(typeof start == &apos;number&apos;){
-        i = (start&lt;0 ? Math.max(0, length+start): start);
-    }
-}
-//如果浏览器支持ES5 indexOf，则直接使用
-if(Array.prototype.indexOf){
-    return array.indexOf(value, start);
-}
-for(;i&lt;length;i++){
-    if(array[i] === value){
-        return i;
-    }
-}
-return -1;
-</code></pre><p>  }</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2544,7 +2442,7 @@ return -1;
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">45</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
