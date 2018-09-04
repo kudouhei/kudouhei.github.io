@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有">
+<meta name="description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  在单页面应用，大部分页面结构不变，只改变部分内容的使用 前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是">
 <meta name="keywords" content="js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="前端路由">
 <meta property="og:url" content="http://yoursite.com/2018/05/19/front-router/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升  1. hash路由hash路由明显的标志是带有#，主要是通过监听">
+<meta property="og:description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  在单页面应用，大部分页面结构不变，只改变部分内容的使用 前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升  缺点">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-11T13:46:40.000Z">
+<meta property="og:updated_time" content="2018-09-04T08:16:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端路由">
-<meta name="twitter:description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升  1. hash路由hash路由明显的标志是带有#，主要是通过监听">
+<meta name="twitter:description" content="前端路由 在页面不刷新的情况下实现url的变化 捕捉url的变化，根据url更改页面内容  在单页面应用，大部分页面结构不变，只改变部分内容的使用 前端路由和服务端路由的区别    服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟 前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升  缺点">
 
 
 
@@ -319,10 +319,16 @@
 <li>在页面不刷新的情况下实现url的变化</li>
 <li>捕捉url的变化，根据url更改页面内容</li>
 </ul>
+<p><strong>在单页面应用，大部分页面结构不变，只改变部分内容的使用</strong></p>
 <p>前端路由和服务端路由的区别  </p>
 <ul>
 <li>服务端路由：每次访问一个新页面的时候都要向服务器发送请求，然后服务器再响应请求，这个过程肯定会有延迟</li>
 <li>前端路由在访问一个新页面的时候仅仅是变换了一下路径而已，没有了网络延迟，对于用户体验来说会有相当大的提升</li>
+</ul>
+<p><strong>缺点</strong>  </p>
+<ul>
+<li>使用浏览器的前进，后退键的时候会重新发送请求，没有合理地利用缓存。</li>
+<li>单页面无法记住之前滚动的位置，无法在前进，后退的时候记住滚动的位置。</li>
 </ul>
 <p><strong>1. hash路由</strong><br>hash路由明显的标志是带有#，主要是通过监听url中的hash变化来进行路由跳转。hash值变化，并不会导致浏览器向服务器发出请求，浏览器不发出请求，也就不会刷新页面。每次hash值的变化，还会触发hashchange事件，通过这个事件就可以知道hash值发生了哪些变化。优势就是兼容性好</p>
 <pre><code>class Routers {
