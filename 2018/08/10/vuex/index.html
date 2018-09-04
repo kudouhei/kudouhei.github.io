@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="Vuex主要用于对复杂应用进行状态管理。使用vuex的时候怎么用？   import Vue from &amp;apos;vue&amp;apos;; import Vuex from &amp;apos;vuex&amp;apos;; Vue.use(Vuex); new Vue.Store({     state">
+<meta name="description" content="Vuex主要用于对复杂应用进行状态管理。集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。   - 状态：泛指vue组件的一些当前的状况和性质 - 状态管理：对状态进行管理，如a组件这个状态需要通知b组件。（state会显示到View，用户会根据View上的内容进行操作，触发acti">
 <meta name="keywords" content="vue">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vuex">
 <meta property="og:url" content="http://yoursite.com/2018/08/10/vuex/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="Vuex主要用于对复杂应用进行状态管理。使用vuex的时候怎么用？   import Vue from &amp;apos;vue&amp;apos;; import Vuex from &amp;apos;vuex&amp;apos;; Vue.use(Vuex); new Vue.Store({     state: {  // 放置state的值         count: 0,         str: &amp;quot;a">
+<meta property="og:description" content="Vuex主要用于对复杂应用进行状态管理。集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。   - 状态：泛指vue组件的一些当前的状况和性质 - 状态管理：对状态进行管理，如a组件这个状态需要通知b组件。（state会显示到View，用户会根据View上的内容进行操作，触发actions，然后再去影响state。） vuex流程    每次vue组件需要给vu">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-10T06:45:54.000Z">
+<meta property="og:updated_time" content="2018-09-04T02:28:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vuex">
-<meta name="twitter:description" content="Vuex主要用于对复杂应用进行状态管理。使用vuex的时候怎么用？   import Vue from &amp;apos;vue&amp;apos;; import Vuex from &amp;apos;vuex&amp;apos;; Vue.use(Vuex); new Vue.Store({     state: {  // 放置state的值         count: 0,         str: &amp;quot;a">
+<meta name="twitter:description" content="Vuex主要用于对复杂应用进行状态管理。集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。   - 状态：泛指vue组件的一些当前的状况和性质 - 状态管理：对状态进行管理，如a组件这个状态需要通知b组件。（state会显示到View，用户会根据View上的内容进行操作，触发actions，然后再去影响state。） vuex流程    每次vue组件需要给vu">
 
 
 
@@ -315,7 +315,17 @@
       
 
       
-        <h3 id="Vuex"><a href="#Vuex" class="headerlink" title="Vuex"></a>Vuex</h3><p>主要用于对复杂应用进行状态管理。<br>使用vuex的时候怎么用？  </p>
+        <h3 id="Vuex"><a href="#Vuex" class="headerlink" title="Vuex"></a>Vuex</h3><p>主要用于对复杂应用进行状态管理。集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。  </p>
+<pre><code>- 状态：泛指vue组件的一些当前的状况和性质
+- 状态管理：对状态进行管理，如a组件这个状态需要通知b组件。（state会显示到View，用户会根据View上的内容进行操作，触发actions，然后再去影响state。）
+</code></pre><p><strong>vuex流程</strong>  </p>
+<ul>
+<li>每次vue组件需要给vuex分派一个actions，actions提交一个mutation，由mutation来修改state，然后再返回给vue组件渲染。</li>
+<li>state状态只能由mutation来修改</li>
+<li>actions可以封装各自mutation来进行修改state</li>
+<li>总的来说，vuex的状态是存储在store里面的，要修改状态就只能进行mutation的提交commit，一旦进行提交成功，状态被改变后，相关使用该状态的组件也会更新状态信息。</li>
+</ul>
+<p>使用vuex的时候怎么用？  </p>
 <pre><code>import Vue from &apos;vue&apos;;
 import Vuex from &apos;vuex&apos;;
 Vue.use(Vuex);
