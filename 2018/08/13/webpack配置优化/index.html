@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="webpack配置优化DefinePlugin    DefinePlugin 允许创建一个在编译时可以配置的全局常量。这可能会对开发模式和发布模式的构建允许不同的行为非常有用。 比如一些 debug 的功能在生产环境中需要关闭、开发环境中和生产环境中 api 地址的不同。  CommonsChunkPlugin    用于提取一些公共代码，一般是用于提取第三方库，这个在上线部署时很有必要，因为出">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-12T08:15:14.000Z">
+<meta property="og:updated_time" content="2018-09-12T08:20:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Webpack配置优化">
 <meta name="twitter:description" content="webpack配置优化DefinePlugin    DefinePlugin 允许创建一个在编译时可以配置的全局常量。这可能会对开发模式和发布模式的构建允许不同的行为非常有用。 比如一些 debug 的功能在生产环境中需要关闭、开发环境中和生产环境中 api 地址的不同。  CommonsChunkPlugin    用于提取一些公共代码，一般是用于提取第三方库，这个在上线部署时很有必要，因为出">
@@ -398,9 +398,9 @@ module.exports = {
 <h4 id="babel工作原理"><a href="#babel工作原理" class="headerlink" title="babel工作原理"></a>babel工作原理</h4><p>babel的主要功能就是个编译器，输入语言ES6+，编译目标语言是ES5。以字符串的形式将源代码传给他，它就会返回一段新的代码字符串。</p>
 <p><strong>babel的编译过程</strong>  </p>
 <ul>
-<li>解析：将代码字符串解析成抽象语法树</li>
+<li>解析：使用Babylon解析器，会根据输入的js代码将代码字符串解析成抽象语法树</li>
 <li>变换：对抽象语法树进行变换操作</li>
-<li>再建：根据变换后的抽象语法树再生成代码字符串</li>
+<li>再建：使用babel-generator根据变换后的抽象语法树再生成代码字符串</li>
 </ul>
 
       
