@@ -93,7 +93,7 @@
 <meta property="og:description" content="ajax跨域ajax跨域属于浏览器“同源策略”中的一部分。 原因：    浏览器限制 跨域（同源策略） XHR请求  当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。  跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的 如何解决">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/ajax/jsonp.jpg">
-<meta property="og:updated_time" content="2018-09-18T03:51:56.000Z">
+<meta property="og:updated_time" content="2018-09-18T22:40:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="解决跨域">
 <meta name="twitter:description" content="ajax跨域ajax跨域属于浏览器“同源策略”中的一部分。 原因：    浏览器限制 跨域（同源策略） XHR请求  当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。  跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的 如何解决">
@@ -572,6 +572,16 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
 <p><strong>异步请求</strong><br>异步请求是当发出请求的同时，浏览器可以继续做任何事，Ajax发送请求并不会影响页面的加载与用户操作，相当于两条线互不影响。</p>
 <p><strong>ajax默认是异步的，async的值是true</strong>  </p>
 <p><strong>如何选择同步还是异步模式</strong><br>在发送ajax请求后，还需要继续处理服务器的响应结果，如果这是使用异步请求模式同时未将结果的处理交由另一个JS函数进行处理。会导致异步请求的响应还没有到达，函数已经执行完了return，会导致return的结果为空字符串。  </p>
+<p><strong>ajax异步请求302</strong><br>当服务器将302响应发给浏览器时，浏览器并不是直接进行ajax回调处理，而是先执行302重定向—从response headers中读取Location信息，然后向location中的Url发出请求，在收到这个请求的响应后才会进行ajax回调处理。</p>
+<p><strong>ajax -&gt; browser -&gt; server -&gt; 302 -&gt; browser(redirect) -&gt; server -&gt; browser -&gt; ajax callback</strong>  </p>
+<p>由于302返回的重定向URL在服务器上有相应的处理程序，所以ajax回调函数中得到的状态码是200，所以想在ajax请求中根据302响应通过location.href进行重定向是不可行的。</p>
+<p>状态码status&gt;=200&amp;&amp;status&lt;300||status==304，才会被视为success，才会走success的回调方法。</p>
+<p><strong>解决方法</strong>  </p>
+<ol>
+<li><p>不用ajax，改用form  </p>
+<pre><code>&lt;form method=&quot;post&quot; action=&quot;/url/respond&quot;&gt;&lt;/form&gt;
+</code></pre></li>
+</ol>
 
       
     </div>
