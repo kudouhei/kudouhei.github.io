@@ -1374,7 +1374,7 @@ h1.getName();
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-source/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/js事件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -1393,7 +1393,7 @@ h1.getName();
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/01/vue-source/" itemprop="url">vue-source</a></h1>
+                <a class="post-title-link" href="/2018/08/01/js事件/" itemprop="url">javascript事件</a></h1>
         
 
         <div class="post-meta">
@@ -1445,265 +1445,43 @@ h1.getName();
       
         
           
-            <h3 id="Vue源码学习"><a href="#Vue源码学习" class="headerlink" title="Vue源码学习"></a>Vue源码学习</h3><p>Vue的核心可以分为三个大块：数据处理和双向绑定、模板编译、虚拟dom。</p>
-<h4 id="1-vue响应式原理"><a href="#1-vue响应式原理" class="headerlink" title="1.vue响应式原理"></a>1.vue响应式原理</h4><p><strong>基本概念</strong>  </p>
+            <h3 id="JavaScript事件"><a href="#JavaScript事件" class="headerlink" title="JavaScript事件"></a>JavaScript事件</h3><p><strong>事件级别</strong>  </p>
 <ul>
-<li>data: vue实例中的数据项</li>
-<li>observer：数据属性的观察者，监控对象的读写操作</li>
-<li>dep：消息订阅器，拥有收集订阅者、发布更新的功能</li>
-<li>watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。</li>
+<li>DOM0：element.onclick = function(){}</li>
+<li>DOM2: element.addEventListener(‘click’,function(){}, false)</li>
+<li>DOM3:element.addEventListener(‘keyup’,function(){},false)</li>
 </ul>
-<p><img src="/images/vue/source.png" alt=""></p>
-<p>vue的数据响应式实现分为两个部分：  </p>
-<ol>
-<li>把数据转化为getter和setter</li>
-<li>建立watcher并收集依赖</li>
-</ol>
-<h4 id="对vue双向数据绑定原理的理解"><a href="#对vue双向数据绑定原理的理解" class="headerlink" title="对vue双向数据绑定原理的理解"></a>对vue双向数据绑定原理的理解</h4><p>vue是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。</p>
-<ol>
-<li>首先，通过Observer类将数据转换成可被观察的对象。</li>
-<li>在Observer类的构造方法里间接调用Object.defineProperty()，Object.defineProperty()参数中的getter方法会使用一个new Dep()的闭包实例对象，该实例主要用于依赖收集，即收集Watcher实例。<strong>每个可被观察的对象都与一个Dep类实例绑定在一起，一对一关系</strong>。</li>
-<li>当data值被读取时，并且有Watcher实例，就会收集依赖，将该Watcher实例与闭包的Dep实例相互引用。当setter方法被调用时，就可以通过闭包的Dep实例通知所有的Watcher实例执行一个回调。</li>
-<li>最终达到数据变化-&gt;视图更新；视图交互变化-&gt;数据model变更的双向绑定效果。</li>
-</ol>
-<h4 id="Vue的生命周期"><a href="#Vue的生命周期" class="headerlink" title="Vue的生命周期"></a>Vue的生命周期</h4><p>Vue的生命周期，首先需要创建一个实例，也就是在new Vue()的对象过程当中，首先默认执行了init，在init的过程当中首先调用beforeCreate，然后再去调用created。所以一般beforeCreate的时候不要去修改data里赋值的数据，最早要等到created里面去做。</p>
-<p>当created完成后，会去判断instance实例里是否含有“el”，如果没有的话，会调用<code>vm.$mount(el)</code>这个方法，然后执行。如果有的话，直接执行下一步。然后会判断是否含有“template”，如果有的话，会把template解析成一个render函数。render函数是发生在beforeMount和mounted之间的，所以在beforeMount的时候，<code>$el</code>还只是HTML里面写的节点，然后mounted的时候，它就把渲染出来的内容挂载到了DOM节点上。</p>
-<p>beforeMount在有了render函数的时候才会去执行，当执行完了render函数后，就会调用mounted这个钩子，在mounted挂载完毕之后，这个实例就算走完流程了。</p>
-<p>后续的钩子函数执行的过程都是需要外部的触发才会执行的。比如有数据的变化会调用beforeUpdate，然后经过Virtual Dom,最后updated更新完毕。当组件被销毁的时候，它会调用beforeDestory，以destoryed。</p>
-<h4 id="模板编译"><a href="#模板编译" class="headerlink" title="模板编译"></a>模板编译</h4><p>模板编译分为三个阶段：生成ast、优化静态内容、生成render。</p>
-<h4 id="实现vue-watch"><a href="#实现vue-watch" class="headerlink" title="实现vue.watch"></a>实现vue.watch</h4><pre><code>class watcher {
-  constructor(opts){
-    this.$data = this.getBaseType(opts.data) === &apos;Object&apos;?opts.data: {};
-    this.$watch = this.getBaseType(opts.watch)=== &apos;Object&apos; ? opts.watch: {};
-    for(let key in opts.data){
-      this.setData(key)
-    }
-  }
-  getBaseType(target){
-    return Object.prototype.toString.call(target).slice(8, -1);
-  }
-  setData(_key, _val){
-    Object.defineProperty(this, _key, {
-      get: function(){
-        return this.$data[_key];
-      },
-      set: function(newVal){
-        const oldVal = this.$data[_key];
-        if(oldVal === newVal) return newVal;
-        this.$data[_key] = newVal;
-        this.$watch[_key] &amp;&amp; typeof this.$watch[_key] === &apos;function&apos;
-          &amp;&amp; (this.$watch[_key].call(this, newVal, oldVal))
-        return newVal
-      }
-    })
-  }
-}
-let vm = new watcher({
-  data: {
-    a: 0,
-    b: &apos;hello&apos;
-  },
-  watch: {
-    a(newVal, oldVal){
-      console.log(this.b);
-      console.log(&quot;old:&quot;+oldVal)
-      console.log(&quot;new:&quot;+newVal)
-    }
-  }
-})
-</code></pre><h4 id="监听数组变化"><a href="#监听数组变化" class="headerlink" title="监听数组变化"></a>监听数组变化</h4><p>Object.defineProperty通过对象的 getter/setter简单的实现了对象属性变化的监听，并且去通过依赖关系去做相应的依赖处理。<br>存在问题：当对象中某个属性的值是数组的时候，由于JavaScript的限制，Vue无法检测到下面数组的变动：  </p>
+<p><strong>事件流(事件三个阶段)</strong><br>事件流三个阶段，首先捕获阶段，事件通过捕获，到达目标阶段，从目标元素在上传到window对象，为冒泡阶段</p>
+<p><strong>描述DOM事件捕获的具体流程</strong><br>window -&gt; document -&gt; html标签(document.documentElement) -&gt; body -&gt;…-&gt;目标元素</p>
+<p><strong>Event对象</strong>  </p>
 <ul>
-<li>当使用索引直接设置一项时，例如<code>vm.items[indexOfItem] = newValue</code></li>
-<li>当修改数组长度的时候，例如<code>vm.items.length= newLength</code></li>
+<li>event.preventDefault()阻止默认行为 </li>
+<li>event.stopPropagation()阻止冒泡</li>
+<li>event.stopImmediatePropagation()注册两个事件，优先级执行  </li>
+<li>event.currentTarget当前绑定事件的对象</li>
+<li>event.target：触发事件的某个具体的对象，只会出现在事件机制的目标阶段</li>
 </ul>
-<p>数组的length属性，被初始化为  </p>
-<ul>
-<li>enumberable：false</li>
-<li>configurable：false</li>
-<li>writable：true</li>
-</ul>
-<p>原因简单来说，操作数组的方法，也就是Array.prototype上挂载的方法并不能触发该属性的setter，因为这个属性并没有做赋值操作。  </p>
-<p>对于defineProperty来说，处理数组与对象是一视同仁的，只是在初始化时去改写 get 和 set 达到监测数组或对象的变化，对于新增的属性，需要手动再初始化。对于数组来说，只不过特别了点，push、unshift值也会新增索引，对于新增的索引也是可以添加observe从而达到监听的效果；pop、shift值会删除更新索引，也会触发defineProperty的get和set。对于重新赋值length的数组，不会新增索引，因为不清楚新增的索引有多少。</p>
-<p><strong>解决</strong><br>Vue中解决这个问题的方法，是将数组常用的方法进行重写，通过包装之后的数组方法就能够去在调用的时候被监听到。</p>
-<p><strong>方法1</strong><br>通过原型链去拦截对数组的操作，从而实现对操作数组这个行为的监听。</p>
-<pre><code>// 继承Array本身的所有属性
-const arrExtend = Object.create(Array.prototype)
-const arrMethods = [
-    &apos;push&apos;,
-    &apos;pop&apos;,
-    &apos;shift&apos;,
-    &apos;unshift&apos;,
-    &apos;splice&apos;,
-    &apos;sort&apos;,
-    &apos;reverse&apos;
-]
-// arrExtend作为一个拦截对象，对其中的方法进行重写
-arrMethods.forEach(method =&gt; {
-    const oldMethod = Array.prototype[method]
-    const newMethod = function(...args){
-        oldMethod.apply(this, args)
-        console.log(`${method}方法被执行了`)
-    }
-    arrExtend[method] = newMethod
-})
-</code></pre><p>需要在 defineReactive 函数中添加的代码为：</p>
-<pre><code>if (Array.isArray(value)) {
-    value.__proto__ = arrExtend
- }
-</code></pre><p><strong>方法2： Proxy</strong><br>通过调用 new Proxy() ，你可以创建一个代理用来替代另一个对象(被称为目标)，这个代理对目标对象进行了虚拟，因此该代理与该目标对象表面上可以被当作同一个对象来对待。<br>代理允许你拦截在目标对象上的底层操作，而这原本是 JS 引擎的内部能力。拦截行为使用了一个能够响应特定操作的函数(被称为陷阱)</p>
-<pre><code>const createProxy = data =&gt; {
-  if (typeof data === &apos;object&apos; &amp;&amp; data.toString() === &apos;[object Object]&apos;) {
-    for (let k in data) {
-      if (typeof data[k] === &apos;object&apos;) {
-        defineObjectReactive(data, k, data[k])
-      } else {
-        defineBasicReactive(data, k, data[k])
-      }
-    }
-  }
-}
-
-function defineObjectReactive(obj, key, value) {
-  // 递归
-  createProxy(value)
-  obj[key] = new Proxy(value, {
-    set(target, property, val, receiver) {
-      if (property !== &apos;length&apos;) {
-        console.log(&apos;Set %s to %o&apos;, property, val)
-      }
-      return Reflect.set(target, property, val, receiver)
-    }
-  })
-}
-
-function defineBasicReactive(obj, key, value) {
-  Object.defineProperty(obj, key, {
-    enumerable: true,
-    configurable: false,
-    get() {
-      return value
-    },
-    set(newValue) {
-      if (value === newValue) return
-      console.log(`发现 ${key} 属性 ${value} -&gt; ${newValue}`)
-      value = newValue
-    }
-  })
-}
-
-export default {
-  createProxy
-}
-</code></pre><p>实现对Object类型的属性进行监听的时候，我采用的是创建代理，因为我们之前的痛点在于无法去有效监听数组的变化。当我们使用这种改进方法之后，我们不用像之前通过重写数组的方法来实现对数组操作的监听了，因为之前这种方法存在很多的局限性，我们不能覆盖所有的数组操作，同时，我们也不能响应到类似于data.array.length = 0这种操作。通过代理实现之后，一切都不一样了。我们可以从底层就实现对数组的变化进行监听。甚至能watch到数组长度的变化等等各种更加细节的东西。这无疑解决了很大的问题。</p>
-<h4 id="详细介绍对vue生命周期的理解"><a href="#详细介绍对vue生命周期的理解" class="headerlink" title="详细介绍对vue生命周期的理解"></a>详细介绍对vue生命周期的理解</h4><p>vue生命周期总共分为8个阶段创建前后，载入前后，更新前后，销毁前后。  </p>
-<blockquote>
-<p>创建前后：在beforeCreate阶段，vue实例的挂载元素el和数据对象data都为undefined，还未初始化。在created阶段，vue实例的数据对象data有了，el还没有。</p>
-<p>载入前后：在beforeMounted阶段，vue实例的$el和data都初始化了，但还是挂载之前为虚拟的dom节点，data.message还未替换。在mounted阶段，vue实例挂载完成，data.message成功渲染。  </p>
-<p>更新前后：当data变化时，会触发beforeUpdate和updated方法。</p>
-<p>销毁前后：在执行destroy方法后，对data的改变不会再触发周期函数，说明此时vue实例已经解除了事件监听以及和dom的绑定，但是dom结构依然存在。</p>
-</blockquote>
-<h4 id="对vue的template编译理解"><a href="#对vue的template编译理解" class="headerlink" title="对vue的template编译理解"></a>对vue的template编译理解</h4><p>简单讲，先转化成AST树，得到的render函数返回VNode(Vue的虚拟DOM节点)</p>
-<ol>
-<li>将模板字符串转换成<code>element AST</code>(解析器)</li>
-<li>对AST进行静态节点标记（为后面patch过程中对比新旧VNode树形结构做优化），主要用来做虚拟DOM的渲染优化(优化器)</li>
-<li>使用<code>element AST</code>（根据AST结构拼接）生成render函数代码字符串(代码生成器)</li>
-</ol>
-<h4 id="详解vue的diff算法"><a href="#详解vue的diff算法" class="headerlink" title="详解vue的diff算法"></a>详解vue的diff算法</h4><p><strong>1. 当数据发生变化时，vue怎么更新节点</strong><br>先根据真实DOM生成一棵virtual DOM，当virtual DOM某个节点的数据改变后会生成一个新的VNode，然后VNode和oldVNode作对比，发现有不一样的地方就直接修改在真实的DOM上，然后使oldVNode的值为VNode。</p>
-<p>diff的过程就是调用名为patch的函数，比较新旧节点，一边比较一边给真实的DOM打补丁。</p>
-<p><strong>diff流程图</strong>  </p>
-<p>当数据发生改变时，set方法会让调用Dep.notify通知所有订阅者Watcher，订阅者就会调用patch给真实的DOM打补丁，更新相应的视图。  </p>
-<p><img src="/images/vue/diff.jpg" alt="">  </p>
-<p><strong>patch打补丁(核心)</strong>  </p>
-<pre><code>function patch(oldVnode, vnode){
-    if(sameVnode(oldVnode, vnode)){
-        patchVnode(oldVnode, vnode)
+<p><strong>先捕获，再冒泡</strong><br><strong>在target注册的监听器，不分捕获和冒泡</strong></p>
+<p><strong>事件委托</strong><br>事件委托是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件</p>
+<pre><code>function delegateEvent(ele, selector, type, fn){
+    if(ele.addEventListener){
+        ele.addEventListener(type, eventfn, false);
+    }else if(ele.attachEvent){
+        ele.attachEvent(&quot;on&quot;+type, eventfn);
     }else{
-        const oEl = oldVnode.el //当前oldVNode对应的真实元素节点
-        let parentEle = api.parentNode(oEl) // 父元素
-        createEle(vnode) //根据vnode生成新元素
-        if(parentEle!==null){
-            api.insertBefore(parentEle,vnode.el,api.nextSibling(oEl)) // 将新元素添加进父元素
-            api.removeChild(parentEle, oldVnode.el) //移除以前的旧元素节点
-            oldVnode = null
+        ele[&apos;on&apos;+type] = eventfn;
+    }
+    function eventfn(e){
+        var e = e||window.e;
+        var target = e.target || e.srcElement;
+        if(target.matches(selector)){
+            if(fn){
+                fn.call(target, e);
+            }
         }
     }
-    return vnode;
 }
-</code></pre><ul>
-<li>判断两节点是否值得比较，值得比较则执行patchVnode</li>
-<li>不值得比较则用Vnode替换oldVnode</li>
-</ul>
-<p><strong>patchVnode</strong><br>当我们确定两个节点值得比较之后我们会对两个节点指定patchVnode方法。</p>
-<pre><code>patchVnode(oldVnode, vnode){
-//让vnode.el引用到现在的真实dom，当el修改时，vnode.el会同步变化
-    const el = vnode.el = oldVnode.el
-    let i, oldCh = oldVnode.children, ch = vnode.children
-    if(oldVnode === vnode) return;
-    if (oldVnode.text !== null &amp;&amp; vnode.text !== null &amp;&amp; oldVnode.text !== vnode.text) {
-    api.setTextContent(el, vnode.text)
-}else {
-    updateEle(el, vnode, oldVnode)
-    if (oldCh &amp;&amp; ch &amp;&amp; oldCh !== ch) {
-        updateChildren(el, oldCh, ch) //比较子节点
-    }else if (ch){
-        //只有新的节点有子节点，vnode.el已经引用了老的dom节点，createEle函数会在老dom节点上添加子节点
-        createEle(vnode) //create el&apos;s children dom
-    }else if (oldCh){
-        //新节点没有子节点，老节点有子节点，直接删除老节点
-        api.removeChildren(el)
-    }
- }
-}
-</code></pre><ul>
-<li>判断Vnode和oldVnode是否指向同一个对象，如果是，那么直接return</li>
-<li>如果他们都有文本节点并且不相等，那么将el的文本节点设置为Vnode的文本节点。</li>
-<li>如果oldVnode有子节点而Vnode没有，则删除el的子节点</li>
-<li>如果oldVnode没有子节点而Vnode有，则将Vnode的子节点真实化之后添加到el</li>
-<li>如果两者都有子节点，则执行updateChildren函数比较子节点</li>
-</ul>
-<h4 id="谈谈VUE中的MVVM模式"><a href="#谈谈VUE中的MVVM模式" class="headerlink" title="谈谈VUE中的MVVM模式"></a>谈谈VUE中的MVVM模式</h4><p>MVVM全称Model-View-ViewModel。Vue是以数据为驱动，Vue自身将DOM和数据进行绑定，一旦创建绑定，DOM和数据将保持同步，每当数据发生变化，DOM会跟着变化。ViewModel是Vue的核心，是Vue的一个实例。</p>
-<p>DOMListeners和DataBindings是实现双向绑定的关键。DOMListeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；DataBindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化</p>
-<h4 id="React和vue深入对比"><a href="#React和vue深入对比" class="headerlink" title="React和vue深入对比"></a>React和vue深入对比</h4><blockquote>
-<p>virtual DOM  </p>
-</blockquote>
-<ul>
-<li>Vue2.0引入了virtual DOM的概念。Vue在渲染过程中，会跟踪每一个组件的依赖关系，不需要重新渲染整个组件树。在Vue2里，就是通过Render函数来实现Virtual DOM的</li>
-<li>而React，每当应用的状态被改变时，全部子组件都会重新渲染。</li>
-</ul>
-<blockquote>
-<p>组件与数据流</p>
-</blockquote>
-<ul>
-<li>在Vue中，可以使用单文件组件，将样式，模板和逻辑写在一起；React可以将js和jsx写在一起。</li>
-<li>react和vue组件中，都存在一个props属性的概念，允许父组件往子组件传递数据，而且都是单向流动，不可逆向流动。</li>
-<li>在React中，父与子之间的数据通信通过props属性传递；而子与父之间的数据通信可以通过父组件定义事件，子组件触发父组件中的事件时，通过实参的形式来改变父组件中的数据来通信；</li>
-<li><p>React是单向数据流，从父节点传递到子节点（通过props）。Vue则实现了双向数据绑定，vue通过Object.defineProperty()定义数据的set和get。</p>
-</li>
-<li><p>Vue2.x <code>Parent -&gt; Props -&gt; Child -&gt; v-model双向 -&gt; Dom</code></p>
-</li>
-<li>React <code>Parent -&gt; Props -&gt; Child -&gt; state单向 -&gt; Dom</code></li>
-</ul>
-<blockquote>
-<p>组件生命周期</p>
-<p>模板与jsx</p>
-</blockquote>
-<ul>
-<li>React与Vue最大的不同是模板的编写。vue的template主要是写在单文件组件中的，使用了基于HTML的模板语法。</li>
-<li>React使用了jsx，通过render渲染方法，将jsx + inline style + DOM写在一起</li>
-</ul>
-<blockquote>
-<p>状态管理</p>
-</blockquote>
-<ul>
-<li>状态state在react中是关键的概念，是不可变的，在react中需要使用setState()方法去更新状态。</li>
-<li>在vue中，state对象并不是必须的，数据由data属性在vue对象中进行管理。</li>
-<li>当非父子组件之间嵌套过深的时候都建议使用状态管理来维护数据的变化。</li>
-</ul>
-<h3 id="Vue从Virtual-DOM映射到真实DOM的过程"><a href="#Vue从Virtual-DOM映射到真实DOM的过程" class="headerlink" title="Vue从Virtual DOM映射到真实DOM的过程"></a>Vue从Virtual DOM映射到真实DOM的过程</h3><p>DOM模型用一个逻辑树来表示一个文档，树的每个分支的终点都是一个节点(node)，每个节点都包含着对象。简单粗暴的方法将整个DOM结构用innerHTML修改到页面上，这样进行重绘整个视图层是相当消耗性能的。</p>
-<p>Virtual DOM其实就是以VNode节点（JavaScript对象）作为基础，用对象属性来描述节点，实际上它是一层对真实DOM的封装。Virtual DOM上定义了关于真实DOM的一些关键的信息，Virtual DOM完全是用JS去实现，和宿主浏览器没有关系，此外由于js的执行速度，将原本需要在真实DOM进行的创建节点，删除节点，添加节点等一系列复杂的DOM操作全部放到Virtual DOM中进行。这样相对与用innerHTML重绘整个视图性能将大大提高。将Virtual DOM修改的地方用diff算法来更新只修改的地方，这样就能避免很多不需要的dom修改，提高了性能。</p>
-<p>在更新视图的时候，如果需要diff的prevVNode不存在，那么就用新的vnode创建一个真实dom节点；如果需要diff的prevVNode存在，首先对prevVNode和VNode进行diff，并将需要的更新的dom操作已patch的形式打到prevVNode上，并完成真实dom的更新工作。</p>
-<p>patch方法为整个Virtual DOM的核心方法，主要完成了新的虚拟dom节点和旧的虚拟dom节点的diff过程，经过patch过程之后生成真实的dom节点并完成视图的更新工作。</p>
-
+</code></pre>
           
         
       
@@ -2041,7 +1819,7 @@ export default {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/js事件/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-source/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -2060,7 +1838,7 @@ export default {
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/01/js事件/" itemprop="url">javascript事件</a></h1>
+                <a class="post-title-link" href="/2018/08/01/vue-source/" itemprop="url">vue-source</a></h1>
         
 
         <div class="post-meta">
@@ -2112,43 +1890,265 @@ export default {
       
         
           
-            <h3 id="JavaScript事件"><a href="#JavaScript事件" class="headerlink" title="JavaScript事件"></a>JavaScript事件</h3><p><strong>事件级别</strong>  </p>
+            <h3 id="Vue源码学习"><a href="#Vue源码学习" class="headerlink" title="Vue源码学习"></a>Vue源码学习</h3><p>Vue的核心可以分为三个大块：数据处理和双向绑定、模板编译、虚拟dom。</p>
+<h4 id="1-vue响应式原理"><a href="#1-vue响应式原理" class="headerlink" title="1.vue响应式原理"></a>1.vue响应式原理</h4><p><strong>基本概念</strong>  </p>
 <ul>
-<li>DOM0：element.onclick = function(){}</li>
-<li>DOM2: element.addEventListener(‘click’,function(){}, false)</li>
-<li>DOM3:element.addEventListener(‘keyup’,function(){},false)</li>
+<li>data: vue实例中的数据项</li>
+<li>observer：数据属性的观察者，监控对象的读写操作</li>
+<li>dep：消息订阅器，拥有收集订阅者、发布更新的功能</li>
+<li>watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。</li>
 </ul>
-<p><strong>事件流(事件三个阶段)</strong><br>事件流三个阶段，首先捕获阶段，事件通过捕获，到达目标阶段，从目标元素在上传到window对象，为冒泡阶段</p>
-<p><strong>描述DOM事件捕获的具体流程</strong><br>window -&gt; document -&gt; html标签(document.documentElement) -&gt; body -&gt;…-&gt;目标元素</p>
-<p><strong>Event对象</strong>  </p>
-<ul>
-<li>event.preventDefault()阻止默认行为 </li>
-<li>event.stopPropagation()阻止冒泡</li>
-<li>event.stopImmediatePropagation()注册两个事件，优先级执行  </li>
-<li>event.currentTarget当前绑定事件的对象</li>
-<li>event.target：触发事件的某个具体的对象，只会出现在事件机制的目标阶段</li>
-</ul>
-<p><strong>先捕获，再冒泡</strong><br><strong>在target注册的监听器，不分捕获和冒泡</strong></p>
-<p><strong>事件委托</strong><br>事件委托是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件</p>
-<pre><code>function delegateEvent(ele, selector, type, fn){
-    if(ele.addEventListener){
-        ele.addEventListener(type, eventfn, false);
-    }else if(ele.attachEvent){
-        ele.attachEvent(&quot;on&quot;+type, eventfn);
-    }else{
-        ele[&apos;on&apos;+type] = eventfn;
+<p><img src="/images/vue/source.png" alt=""></p>
+<p>vue的数据响应式实现分为两个部分：  </p>
+<ol>
+<li>把数据转化为getter和setter</li>
+<li>建立watcher并收集依赖</li>
+</ol>
+<h4 id="对vue双向数据绑定原理的理解"><a href="#对vue双向数据绑定原理的理解" class="headerlink" title="对vue双向数据绑定原理的理解"></a>对vue双向数据绑定原理的理解</h4><p>vue是采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty()来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。</p>
+<ol>
+<li>首先，通过Observer类将数据转换成可被观察的对象。</li>
+<li>在Observer类的构造方法里间接调用Object.defineProperty()，Object.defineProperty()参数中的getter方法会使用一个new Dep()的闭包实例对象，该实例主要用于依赖收集，即收集Watcher实例。<strong>每个可被观察的对象都与一个Dep类实例绑定在一起，一对一关系</strong>。</li>
+<li>当data值被读取时，并且有Watcher实例，就会收集依赖，将该Watcher实例与闭包的Dep实例相互引用。当setter方法被调用时，就可以通过闭包的Dep实例通知所有的Watcher实例执行一个回调。</li>
+<li>最终达到数据变化-&gt;视图更新；视图交互变化-&gt;数据model变更的双向绑定效果。</li>
+</ol>
+<h4 id="Vue的生命周期"><a href="#Vue的生命周期" class="headerlink" title="Vue的生命周期"></a>Vue的生命周期</h4><p>Vue的生命周期，首先需要创建一个实例，也就是在new Vue()的对象过程当中，首先默认执行了init，在init的过程当中首先调用beforeCreate，然后再去调用created。所以一般beforeCreate的时候不要去修改data里赋值的数据，最早要等到created里面去做。</p>
+<p>当created完成后，会去判断instance实例里是否含有“el”，如果没有的话，会调用<code>vm.$mount(el)</code>这个方法，然后执行。如果有的话，直接执行下一步。然后会判断是否含有“template”，如果有的话，会把template解析成一个render函数。render函数是发生在beforeMount和mounted之间的，所以在beforeMount的时候，<code>$el</code>还只是HTML里面写的节点，然后mounted的时候，它就把渲染出来的内容挂载到了DOM节点上。</p>
+<p>beforeMount在有了render函数的时候才会去执行，当执行完了render函数后，就会调用mounted这个钩子，在mounted挂载完毕之后，这个实例就算走完流程了。</p>
+<p>后续的钩子函数执行的过程都是需要外部的触发才会执行的。比如有数据的变化会调用beforeUpdate，然后经过Virtual Dom,最后updated更新完毕。当组件被销毁的时候，它会调用beforeDestory，以destoryed。</p>
+<h4 id="模板编译"><a href="#模板编译" class="headerlink" title="模板编译"></a>模板编译</h4><p>模板编译分为三个阶段：生成ast、优化静态内容、生成render。</p>
+<h4 id="实现vue-watch"><a href="#实现vue-watch" class="headerlink" title="实现vue.watch"></a>实现vue.watch</h4><pre><code>class watcher {
+  constructor(opts){
+    this.$data = this.getBaseType(opts.data) === &apos;Object&apos;?opts.data: {};
+    this.$watch = this.getBaseType(opts.watch)=== &apos;Object&apos; ? opts.watch: {};
+    for(let key in opts.data){
+      this.setData(key)
     }
-    function eventfn(e){
-        var e = e||window.e;
-        var target = e.target || e.srcElement;
-        if(target.matches(selector)){
-            if(fn){
-                fn.call(target, e);
-            }
+  }
+  getBaseType(target){
+    return Object.prototype.toString.call(target).slice(8, -1);
+  }
+  setData(_key, _val){
+    Object.defineProperty(this, _key, {
+      get: function(){
+        return this.$data[_key];
+      },
+      set: function(newVal){
+        const oldVal = this.$data[_key];
+        if(oldVal === newVal) return newVal;
+        this.$data[_key] = newVal;
+        this.$watch[_key] &amp;&amp; typeof this.$watch[_key] === &apos;function&apos;
+          &amp;&amp; (this.$watch[_key].call(this, newVal, oldVal))
+        return newVal
+      }
+    })
+  }
+}
+let vm = new watcher({
+  data: {
+    a: 0,
+    b: &apos;hello&apos;
+  },
+  watch: {
+    a(newVal, oldVal){
+      console.log(this.b);
+      console.log(&quot;old:&quot;+oldVal)
+      console.log(&quot;new:&quot;+newVal)
+    }
+  }
+})
+</code></pre><h4 id="监听数组变化"><a href="#监听数组变化" class="headerlink" title="监听数组变化"></a>监听数组变化</h4><p>Object.defineProperty通过对象的 getter/setter简单的实现了对象属性变化的监听，并且去通过依赖关系去做相应的依赖处理。<br>存在问题：当对象中某个属性的值是数组的时候，由于JavaScript的限制，Vue无法检测到下面数组的变动：  </p>
+<ul>
+<li>当使用索引直接设置一项时，例如<code>vm.items[indexOfItem] = newValue</code></li>
+<li>当修改数组长度的时候，例如<code>vm.items.length= newLength</code></li>
+</ul>
+<p>数组的length属性，被初始化为  </p>
+<ul>
+<li>enumberable：false</li>
+<li>configurable：false</li>
+<li>writable：true</li>
+</ul>
+<p>原因简单来说，操作数组的方法，也就是Array.prototype上挂载的方法并不能触发该属性的setter，因为这个属性并没有做赋值操作。  </p>
+<p>对于defineProperty来说，处理数组与对象是一视同仁的，只是在初始化时去改写 get 和 set 达到监测数组或对象的变化，对于新增的属性，需要手动再初始化。对于数组来说，只不过特别了点，push、unshift值也会新增索引，对于新增的索引也是可以添加observe从而达到监听的效果；pop、shift值会删除更新索引，也会触发defineProperty的get和set。对于重新赋值length的数组，不会新增索引，因为不清楚新增的索引有多少。</p>
+<p><strong>解决</strong><br>Vue中解决这个问题的方法，是将数组常用的方法进行重写，通过包装之后的数组方法就能够去在调用的时候被监听到。</p>
+<p><strong>方法1</strong><br>通过原型链去拦截对数组的操作，从而实现对操作数组这个行为的监听。</p>
+<pre><code>// 继承Array本身的所有属性
+const arrExtend = Object.create(Array.prototype)
+const arrMethods = [
+    &apos;push&apos;,
+    &apos;pop&apos;,
+    &apos;shift&apos;,
+    &apos;unshift&apos;,
+    &apos;splice&apos;,
+    &apos;sort&apos;,
+    &apos;reverse&apos;
+]
+// arrExtend作为一个拦截对象，对其中的方法进行重写
+arrMethods.forEach(method =&gt; {
+    const oldMethod = Array.prototype[method]
+    const newMethod = function(...args){
+        oldMethod.apply(this, args)
+        console.log(`${method}方法被执行了`)
+    }
+    arrExtend[method] = newMethod
+})
+</code></pre><p>需要在 defineReactive 函数中添加的代码为：</p>
+<pre><code>if (Array.isArray(value)) {
+    value.__proto__ = arrExtend
+ }
+</code></pre><p><strong>方法2： Proxy</strong><br>通过调用 new Proxy() ，你可以创建一个代理用来替代另一个对象(被称为目标)，这个代理对目标对象进行了虚拟，因此该代理与该目标对象表面上可以被当作同一个对象来对待。<br>代理允许你拦截在目标对象上的底层操作，而这原本是 JS 引擎的内部能力。拦截行为使用了一个能够响应特定操作的函数(被称为陷阱)</p>
+<pre><code>const createProxy = data =&gt; {
+  if (typeof data === &apos;object&apos; &amp;&amp; data.toString() === &apos;[object Object]&apos;) {
+    for (let k in data) {
+      if (typeof data[k] === &apos;object&apos;) {
+        defineObjectReactive(data, k, data[k])
+      } else {
+        defineBasicReactive(data, k, data[k])
+      }
+    }
+  }
+}
+
+function defineObjectReactive(obj, key, value) {
+  // 递归
+  createProxy(value)
+  obj[key] = new Proxy(value, {
+    set(target, property, val, receiver) {
+      if (property !== &apos;length&apos;) {
+        console.log(&apos;Set %s to %o&apos;, property, val)
+      }
+      return Reflect.set(target, property, val, receiver)
+    }
+  })
+}
+
+function defineBasicReactive(obj, key, value) {
+  Object.defineProperty(obj, key, {
+    enumerable: true,
+    configurable: false,
+    get() {
+      return value
+    },
+    set(newValue) {
+      if (value === newValue) return
+      console.log(`发现 ${key} 属性 ${value} -&gt; ${newValue}`)
+      value = newValue
+    }
+  })
+}
+
+export default {
+  createProxy
+}
+</code></pre><p>实现对Object类型的属性进行监听的时候，我采用的是创建代理，因为我们之前的痛点在于无法去有效监听数组的变化。当我们使用这种改进方法之后，我们不用像之前通过重写数组的方法来实现对数组操作的监听了，因为之前这种方法存在很多的局限性，我们不能覆盖所有的数组操作，同时，我们也不能响应到类似于data.array.length = 0这种操作。通过代理实现之后，一切都不一样了。我们可以从底层就实现对数组的变化进行监听。甚至能watch到数组长度的变化等等各种更加细节的东西。这无疑解决了很大的问题。</p>
+<h4 id="详细介绍对vue生命周期的理解"><a href="#详细介绍对vue生命周期的理解" class="headerlink" title="详细介绍对vue生命周期的理解"></a>详细介绍对vue生命周期的理解</h4><p>vue生命周期总共分为8个阶段创建前后，载入前后，更新前后，销毁前后。  </p>
+<blockquote>
+<p>创建前后：在beforeCreate阶段，vue实例的挂载元素el和数据对象data都为undefined，还未初始化。在created阶段，vue实例的数据对象data有了，el还没有。</p>
+<p>载入前后：在beforeMounted阶段，vue实例的$el和data都初始化了，但还是挂载之前为虚拟的dom节点，data.message还未替换。在mounted阶段，vue实例挂载完成，data.message成功渲染。  </p>
+<p>更新前后：当data变化时，会触发beforeUpdate和updated方法。</p>
+<p>销毁前后：在执行destroy方法后，对data的改变不会再触发周期函数，说明此时vue实例已经解除了事件监听以及和dom的绑定，但是dom结构依然存在。</p>
+</blockquote>
+<h4 id="对vue的template编译理解"><a href="#对vue的template编译理解" class="headerlink" title="对vue的template编译理解"></a>对vue的template编译理解</h4><p>简单讲，先转化成AST树，得到的render函数返回VNode(Vue的虚拟DOM节点)</p>
+<ol>
+<li>将模板字符串转换成<code>element AST</code>(解析器)</li>
+<li>对AST进行静态节点标记（为后面patch过程中对比新旧VNode树形结构做优化），主要用来做虚拟DOM的渲染优化(优化器)</li>
+<li>使用<code>element AST</code>（根据AST结构拼接）生成render函数代码字符串(代码生成器)</li>
+</ol>
+<h4 id="详解vue的diff算法"><a href="#详解vue的diff算法" class="headerlink" title="详解vue的diff算法"></a>详解vue的diff算法</h4><p><strong>1. 当数据发生变化时，vue怎么更新节点</strong><br>先根据真实DOM生成一棵virtual DOM，当virtual DOM某个节点的数据改变后会生成一个新的VNode，然后VNode和oldVNode作对比，发现有不一样的地方就直接修改在真实的DOM上，然后使oldVNode的值为VNode。</p>
+<p>diff的过程就是调用名为patch的函数，比较新旧节点，一边比较一边给真实的DOM打补丁。</p>
+<p><strong>diff流程图</strong>  </p>
+<p>当数据发生改变时，set方法会让调用Dep.notify通知所有订阅者Watcher，订阅者就会调用patch给真实的DOM打补丁，更新相应的视图。  </p>
+<p><img src="/images/vue/diff.jpg" alt="">  </p>
+<p><strong>patch打补丁(核心)</strong>  </p>
+<pre><code>function patch(oldVnode, vnode){
+    if(sameVnode(oldVnode, vnode)){
+        patchVnode(oldVnode, vnode)
+    }else{
+        const oEl = oldVnode.el //当前oldVNode对应的真实元素节点
+        let parentEle = api.parentNode(oEl) // 父元素
+        createEle(vnode) //根据vnode生成新元素
+        if(parentEle!==null){
+            api.insertBefore(parentEle,vnode.el,api.nextSibling(oEl)) // 将新元素添加进父元素
+            api.removeChild(parentEle, oldVnode.el) //移除以前的旧元素节点
+            oldVnode = null
         }
     }
+    return vnode;
 }
-</code></pre>
+</code></pre><ul>
+<li>判断两节点是否值得比较，值得比较则执行patchVnode</li>
+<li>不值得比较则用Vnode替换oldVnode</li>
+</ul>
+<p><strong>patchVnode</strong><br>当我们确定两个节点值得比较之后我们会对两个节点指定patchVnode方法。</p>
+<pre><code>patchVnode(oldVnode, vnode){
+//让vnode.el引用到现在的真实dom，当el修改时，vnode.el会同步变化
+    const el = vnode.el = oldVnode.el
+    let i, oldCh = oldVnode.children, ch = vnode.children
+    if(oldVnode === vnode) return;
+    if (oldVnode.text !== null &amp;&amp; vnode.text !== null &amp;&amp; oldVnode.text !== vnode.text) {
+    api.setTextContent(el, vnode.text)
+}else {
+    updateEle(el, vnode, oldVnode)
+    if (oldCh &amp;&amp; ch &amp;&amp; oldCh !== ch) {
+        updateChildren(el, oldCh, ch) //比较子节点
+    }else if (ch){
+        //只有新的节点有子节点，vnode.el已经引用了老的dom节点，createEle函数会在老dom节点上添加子节点
+        createEle(vnode) //create el&apos;s children dom
+    }else if (oldCh){
+        //新节点没有子节点，老节点有子节点，直接删除老节点
+        api.removeChildren(el)
+    }
+ }
+}
+</code></pre><ul>
+<li>判断Vnode和oldVnode是否指向同一个对象，如果是，那么直接return</li>
+<li>如果他们都有文本节点并且不相等，那么将el的文本节点设置为Vnode的文本节点。</li>
+<li>如果oldVnode有子节点而Vnode没有，则删除el的子节点</li>
+<li>如果oldVnode没有子节点而Vnode有，则将Vnode的子节点真实化之后添加到el</li>
+<li>如果两者都有子节点，则执行updateChildren函数比较子节点</li>
+</ul>
+<h4 id="谈谈VUE中的MVVM模式"><a href="#谈谈VUE中的MVVM模式" class="headerlink" title="谈谈VUE中的MVVM模式"></a>谈谈VUE中的MVVM模式</h4><p>MVVM全称Model-View-ViewModel。Vue是以数据为驱动，Vue自身将DOM和数据进行绑定，一旦创建绑定，DOM和数据将保持同步，每当数据发生变化，DOM会跟着变化。ViewModel是Vue的核心，是Vue的一个实例。</p>
+<p>DOMListeners和DataBindings是实现双向绑定的关键。DOMListeners监听页面所有View层DOM元素的变化，当发生变化，Model层的数据随之变化；DataBindings监听Model层的数据，当数据发生变化，View层的DOM元素随之变化</p>
+<h4 id="React和vue深入对比"><a href="#React和vue深入对比" class="headerlink" title="React和vue深入对比"></a>React和vue深入对比</h4><blockquote>
+<p>virtual DOM  </p>
+</blockquote>
+<ul>
+<li>Vue2.0引入了virtual DOM的概念。Vue在渲染过程中，会跟踪每一个组件的依赖关系，不需要重新渲染整个组件树。在Vue2里，就是通过Render函数来实现Virtual DOM的</li>
+<li>而React，每当应用的状态被改变时，全部子组件都会重新渲染。</li>
+</ul>
+<blockquote>
+<p>组件与数据流</p>
+</blockquote>
+<ul>
+<li>在Vue中，可以使用单文件组件，将样式，模板和逻辑写在一起；React可以将js和jsx写在一起。</li>
+<li>react和vue组件中，都存在一个props属性的概念，允许父组件往子组件传递数据，而且都是单向流动，不可逆向流动。</li>
+<li>在React中，父与子之间的数据通信通过props属性传递；而子与父之间的数据通信可以通过父组件定义事件，子组件触发父组件中的事件时，通过实参的形式来改变父组件中的数据来通信；</li>
+<li><p>React是单向数据流，从父节点传递到子节点（通过props）。Vue则实现了双向数据绑定，vue通过Object.defineProperty()定义数据的set和get。</p>
+</li>
+<li><p>Vue2.x <code>Parent -&gt; Props -&gt; Child -&gt; v-model双向 -&gt; Dom</code></p>
+</li>
+<li>React <code>Parent -&gt; Props -&gt; Child -&gt; state单向 -&gt; Dom</code></li>
+</ul>
+<blockquote>
+<p>组件生命周期</p>
+<p>模板与jsx</p>
+</blockquote>
+<ul>
+<li>React与Vue最大的不同是模板的编写。vue的template主要是写在单文件组件中的，使用了基于HTML的模板语法。</li>
+<li>React使用了jsx，通过render渲染方法，将jsx + inline style + DOM写在一起</li>
+</ul>
+<blockquote>
+<p>状态管理</p>
+</blockquote>
+<ul>
+<li>状态state在react中是关键的概念，是不可变的，在react中需要使用setState()方法去更新状态。</li>
+<li>在vue中，state对象并不是必须的，数据由data属性在vue对象中进行管理。</li>
+<li>当非父子组件之间嵌套过深的时候都建议使用状态管理来维护数据的变化。</li>
+</ul>
+<h3 id="Vue从Virtual-DOM映射到真实DOM的过程"><a href="#Vue从Virtual-DOM映射到真实DOM的过程" class="headerlink" title="Vue从Virtual DOM映射到真实DOM的过程"></a>Vue从Virtual DOM映射到真实DOM的过程</h3><p>DOM模型用一个逻辑树来表示一个文档，树的每个分支的终点都是一个节点(node)，每个节点都包含着对象。简单粗暴的方法将整个DOM结构用innerHTML修改到页面上，这样进行重绘整个视图层是相当消耗性能的。</p>
+<p>Virtual DOM其实就是以VNode节点（JavaScript对象）作为基础，用对象属性来描述节点，实际上它是一层对真实DOM的封装。Virtual DOM上定义了关于真实DOM的一些关键的信息，Virtual DOM完全是用JS去实现，和宿主浏览器没有关系，此外由于js的执行速度，将原本需要在真实DOM进行的创建节点，删除节点，添加节点等一系列复杂的DOM操作全部放到Virtual DOM中进行。这样相对与用innerHTML重绘整个视图性能将大大提高。将Virtual DOM修改的地方用diff算法来更新只修改的地方，这样就能避免很多不需要的dom修改，提高了性能。</p>
+<p>在更新视图的时候，如果需要diff的prevVNode不存在，那么就用新的vnode创建一个真实dom节点；如果需要diff的prevVNode存在，首先对prevVNode和VNode进行diff，并将需要的更新的dom操作已patch的形式打到prevVNode上，并完成真实dom的更新工作。</p>
+<p>patch方法为整个Virtual DOM的核心方法，主要完成了新的虚拟dom节点和旧的虚拟dom节点的diff过程，经过patch过程之后生成真实的dom节点并完成视图的更新工作。</p>
+
           
         
       

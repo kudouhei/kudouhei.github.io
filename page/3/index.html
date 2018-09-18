@@ -1094,6 +1094,169 @@ window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/尾调用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/25/尾调用/" itemprop="url">尾调用和尾递归</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T00:00:00+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="尾调用和尾递归"><a href="#尾调用和尾递归" class="headerlink" title="尾调用和尾递归"></a>尾调用和尾递归</h4><p><strong>1. 尾调用：</strong>当一个函数执行时的最后一个步骤是返回另一个函数的调用  </p>
+<p>调用方式，可以是：  </p>
+<pre><code>函数调用： func(...)
+方法调用： obj.method(...)
+call调用: func.call(...)
+apply调用: func.apply(...)
+</code></pre><p><strong>2. 尾调用优化：</strong>函数在调用的时候会调用栈(call stack)中存有记录，每一条记录叫做一个调用帧，每调用一个函数，就向栈中push一条记录，函数执行结束后依次向外弹出，直到清空调用栈。</p>
+<pre><code>function foo(){console.log(111);}
+function bar(){foo();}
+function baz(){bar();}
+baz();
+</code></pre><p><img src="/images/wei/1.png" alt=""></p>
+<p>造成这种结果是因为每个函数在调用另一个函数的时候，并没有return该调用，所有JS引擎会认为还没有执行完，会保留你的调用帧。  </p>
+<p>对上面的例子做修改：  </p>
+<pre><code>function foo(){console.log(111)}
+function bar(){return foo();}
+function baz(){return bar();}
+baz();
+</code></pre><p>尾调用优化只有在严格模式下有效。<br>在非严格模式下，大多数引擎包含下面两个属性  </p>
+<ul>
+<li>func.arguments:表示对func最近一次调用所包含的参数</li>
+<li><p>func.caller:引用对func最近一次调用的那个函数</p>
+<pre><code>baz() -&gt; bar() -&gt; foo()
+</code></pre></li>
+</ul>
+<p>尾调用用于是函数的最后一步操作，所有不需要保留外层函数的调用记录，只要直接用内层函数的调用取代外层函数的调用就可以了，调用栈中始终只保持一条调用帧。–尾调用优化，节省一大部分内存。  </p>
+<p><strong>3. 尾递归：</strong>当一个函数尾调用自身，就叫做尾递归。</p>
+<pre><code>function factorial (num) {
+    if (num === 1) return 1;
+    return num * factorial(num - 1);
+}
+factorial(10);           // 3628800
+factorial(500000);       // Uncaught RangeError: Maximum call stack size exceeded
+</code></pre><p>操作系统为JS引擎调用栈分配的内存是有大小限制的，如果计算的数字足够大，超出了内存最大范围，就会出现栈溢出错误。</p>
+<pre><code>function factorial (num, total = 1) {
+    if (num === 1) return total;
+    return factorial(num - 1, num * total);
+}
+factorial(5)
+</code></pre><p>再如斐波那契数列值  </p>
+<pre><code>function fibonacci(n, ac1, ac2){
+    (ac1 = ac1 ||1), (ac2 = ac2 || 1);
+    return n&lt;= 1 ? ac2 : fibonacci(n-1, ac2, ac1+ac2)
+}
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/js闭包/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1219,169 +1382,6 @@ console.log(myModule.name); //test
         }
     }
 })
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/尾调用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/25/尾调用/" itemprop="url">尾调用和尾递归</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T00:00:00+08:00">
-                2018-06-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="尾调用和尾递归"><a href="#尾调用和尾递归" class="headerlink" title="尾调用和尾递归"></a>尾调用和尾递归</h4><p><strong>1. 尾调用：</strong>当一个函数执行时的最后一个步骤是返回另一个函数的调用  </p>
-<p>调用方式，可以是：  </p>
-<pre><code>函数调用： func(...)
-方法调用： obj.method(...)
-call调用: func.call(...)
-apply调用: func.apply(...)
-</code></pre><p><strong>2. 尾调用优化：</strong>函数在调用的时候会调用栈(call stack)中存有记录，每一条记录叫做一个调用帧，每调用一个函数，就向栈中push一条记录，函数执行结束后依次向外弹出，直到清空调用栈。</p>
-<pre><code>function foo(){console.log(111);}
-function bar(){foo();}
-function baz(){bar();}
-baz();
-</code></pre><p><img src="/images/wei/1.png" alt=""></p>
-<p>造成这种结果是因为每个函数在调用另一个函数的时候，并没有return该调用，所有JS引擎会认为还没有执行完，会保留你的调用帧。  </p>
-<p>对上面的例子做修改：  </p>
-<pre><code>function foo(){console.log(111)}
-function bar(){return foo();}
-function baz(){return bar();}
-baz();
-</code></pre><p>尾调用优化只有在严格模式下有效。<br>在非严格模式下，大多数引擎包含下面两个属性  </p>
-<ul>
-<li>func.arguments:表示对func最近一次调用所包含的参数</li>
-<li><p>func.caller:引用对func最近一次调用的那个函数</p>
-<pre><code>baz() -&gt; bar() -&gt; foo()
-</code></pre></li>
-</ul>
-<p>尾调用用于是函数的最后一步操作，所有不需要保留外层函数的调用记录，只要直接用内层函数的调用取代外层函数的调用就可以了，调用栈中始终只保持一条调用帧。–尾调用优化，节省一大部分内存。  </p>
-<p><strong>3. 尾递归：</strong>当一个函数尾调用自身，就叫做尾递归。</p>
-<pre><code>function factorial (num) {
-    if (num === 1) return 1;
-    return num * factorial(num - 1);
-}
-factorial(10);           // 3628800
-factorial(500000);       // Uncaught RangeError: Maximum call stack size exceeded
-</code></pre><p>操作系统为JS引擎调用栈分配的内存是有大小限制的，如果计算的数字足够大，超出了内存最大范围，就会出现栈溢出错误。</p>
-<pre><code>function factorial (num, total = 1) {
-    if (num === 1) return total;
-    return factorial(num - 1, num * total);
-}
-factorial(5)
-</code></pre><p>再如斐波那契数列值  </p>
-<pre><code>function fibonacci(n, ac1, ac2){
-    (ac1 = ac1 ||1), (ac2 = ac2 || 1);
-    return n&lt;= 1 ? ac2 : fibonacci(n-1, ac2, ac1+ac2)
-}
 </code></pre>
           
         

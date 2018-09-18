@@ -93,7 +93,7 @@
 <meta property="og:description" content="ajax跨域ajax跨域属于浏览器“同源策略”中的一部分。 原因：    浏览器限制 跨域（同源策略） XHR请求  当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。  跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的 如何解决">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/ajax/jsonp.jpg">
-<meta property="og:updated_time" content="2018-07-16T14:00:15.000Z">
+<meta property="og:updated_time" content="2018-09-18T03:51:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="解决跨域">
 <meta name="twitter:description" content="ajax跨域ajax跨域属于浏览器“同源策略”中的一部分。 原因：    浏览器限制 跨域（同源策略） XHR请求  当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。  跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的 如何解决">
@@ -418,30 +418,54 @@ ws.onerror = function(event){
 <li>支持POST请求方式</li>
 <li>CORS存在兼容问题，仅支持IE10以上</li>
 </ul>
-<h4 id="手写原生ajax请求"><a href="#手写原生ajax请求" class="headerlink" title="手写原生ajax请求"></a>手写原生ajax请求</h4><pre><code>function createXHR(){
-    if(window.XMLHttpRequest){
-        return new XMLHttpRequest();
-    }else{
-        return new ActiveXObject(&apos;Microsoft.XMLHttp&apos;);
+<h4 id="手写原生ajax请求"><a href="#手写原生ajax请求" class="headerlink" title="手写原生ajax请求"></a>手写原生ajax请求</h4><pre><code>ajax({
+    url: &apos;/url&apos;,
+    type: &apos;post&apos;,
+    data: {name: &apos;test&apos;},
+    dataType: &apos;json&apos;,
+    success: function(response){
+        console.log(&quot;success&quot;);
+    },
+    fail: function(status){
+        console.log(&quot;fail&quot;);
     }
-}
-var xhr = createXHR();
-xhr.onReadyStateChange = function(){
-    if(xhr.readyState == 4){
-        // 状态码为200至300之间或304都表示这一请求已经成功
-        if(xhr.status &gt;= 200 &amp;&amp; xhr.status &lt; 300 || xhr.status ==304){
-            console.log(xhr.responseText);
-        }else{
-            ...
+})
+function ajax(options){
+    options = options || {};
+    options.type = (options.type || &quot;GET&quot;).toUpperCase();
+    options.dataType = options.dataType || &quot;json&quot;;
+    var params = formatParams(options.data);
+    if(window.XMLHttpRequest){
+        var xhr = new XMLHttpRequest();
+    }else{
+        var xhr = new ActiveXObject(&apos;Microsoft.XMLHTTP&apos;);
+    }
+    if(options.type===&quot;GET&quot;){
+        xhr.open(&quot;GET&quot;, options.url+&quot;?&quot;+params, true);
+        xhr.send(null);
+    }else if(options.type===&quot;POST&quot;){
+        xhr.open(&quot;POST&quot;, options.url, true);
+        xhr.setRequestHeader(&quot;Content-Type&quot;, &apos;application/x-www-form-urlencoded&apos;);
+        xhr.send(params);
+    }
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState ==4){
+            var status = xhr.status;
+            if(status&gt;=200 &amp;&amp; status&lt;300 || status==304){
+                options.success &amp;&amp; options.success(xhr.responseText);
+            }else{
+                options.fail &amp;&amp; options.fail(status)
+            }
         }
     }
 }
-xhr.open(&apos;GET&apos;, url, true);
-xhr.send(null);
-...
-xhr.open(&apos;POST&apos;, url, true);
-xhr.setRequestHeader(&apos;Content-Type&apos;,&apos;application/x-www-form-urlencoded;charset=UTF-8&apos;);
-xhr.send(data);
+function formatParams(data){
+    var arr = [];
+    for(var i in data){
+        arr.push(encodeURIComponent(i)+&quot;=&quot;+encodeURIComponent(data[i]));
+    }
+    return arr;
+}
 </code></pre><h4 id="完全不同源的跨域-两个页面之间的通信"><a href="#完全不同源的跨域-两个页面之间的通信" class="headerlink" title="完全不同源的跨域(两个页面之间的通信)"></a>完全不同源的跨域(两个页面之间的通信)</h4><p><strong>1. 通过location.hash跨域</strong><br>通过设置/监听url的hash部分，来实现跨域，借助第三个页面进行辅助。</p>
 <pre><code>A域 a.html -&gt; B域 b.html -&gt; A域 c.html -&gt; A域 a.html
 
@@ -578,8 +602,8 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/19/front-router/" rel="next" title="前端路由">
-                <i class="fa fa-chevron-left"></i> 前端路由
+              <a href="/2018/05/28/性能优化/" rel="next" title="前端性能优化">
+                <i class="fa fa-chevron-left"></i> 前端性能优化
               </a>
             
           </div>
@@ -588,8 +612,8 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/05/28/性能优化/" rel="prev" title="前端性能优化">
-                前端性能优化 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/02/js二叉树/" rel="prev" title="javascript二叉树">
+                javascript二叉树 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
