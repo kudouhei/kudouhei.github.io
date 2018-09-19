@@ -247,6 +247,143 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/01/单例模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/01/单例模式/" itemprop="url">单例模式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-01T00:00:00+08:00">
+                2018-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h4><pre><code>var SingleTest = (function(){
+    var _instance = null;
+    var _default = {};
+    function _init(ops){
+        for(var prop in ops){
+            this[prop] = ops[prop];
+        }
+    }
+    return function(ops=_default){
+        if(!_instance){
+            _instance = this;
+            _init.call(_instance, ops)
+        }else{
+            _init.call(_instance, ops)
+        }
+        return _instance;
+    }
+})()
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/29/千分符/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -699,6 +836,198 @@ test();
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/模块化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/26/模块化/" itemprop="url">js模块化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T00:00:00+08:00">
+                2018-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="JavaScript模块化"><a href="#JavaScript模块化" class="headerlink" title="JavaScript模块化"></a>JavaScript模块化</h4><p>模块化可以使代码低耦合，功能模块不互相影响。模块化的核心思想：  </p>
+<ul>
+<li>拆分，将js代码按功能逻辑拆分成多个可复用的js代码文件</li>
+<li>加载，如何将模块进行加载执行和输出</li>
+<li>注入，能够将一个js模块的输出注入到另一个js模块中</li>
+<li>依赖管理，管理模块之间的依赖关系</li>
+</ul>
+<p><strong>CommonJS &amp; AMD</strong>解决模块依赖管理问题，实现不通过全局作用域来实现模块方法。  </p>
+<p><strong>CommonJS</strong><br>CommonJS模块可以很方便的将某个对象导出，让他们能够被其他模块通过require语句来引入(Node.js语法)。通过CommonJS，每个js文件独立的存储它模块的内容。在这种作用域中，通过<code>module.exports</code>语句来导出对象为模块，再通过require语句引入。</p>
+<p>nodejs的模块系统，就是参照CommonJS规范实现的。</p>
+<p>这种模式优点：  </p>
+<ul>
+<li>避免全局命名空间污染</li>
+<li>明确代码之间的依赖关系</li>
+</ul>
+<p>但是CommonJS以服务器优先的方式来同步载入模块，假如引入三个模块，会一个个被载入。这种模式在服务端还好，到时在浏览器端，只要它还在读取模块，浏览器载入的页面就会一直卡着不动。</p>
+<p><strong>AMD</strong><br>要想异步加载模块，就要用AMD，异步模块定义规范。AMD规范则是非同步加载模块，允许指定回调函数。由于Node.js主要用于服务器编程，模块文件一般都已经存在于本地硬盘，所以加载起来比较快，不用考虑非同步加载的方式，所以CommonJS规范比较适用。但是，如果是浏览器环境，要从服务器端加载模块，这时就必须采用非同步模式，因此浏览器端一般采用AMD规范。 </p>
+<pre><code>define([&apos;myModule&apos;, &apos;myOtherModule&apos;], function(myModule, myOtherModule) {
+  console.log(myModule.hello());
+});
+</code></pre><p>使用define方法，第一个参数是依赖的模块，这些模块都会在后台无阻塞地加载，第二个参数则作为加载完毕的回调函数。</p>
+<p>AMD是优先浏览器的一种异步载入模块的解决方案。AMD的另一个优点是你可以在模块里使用对象、函数、构造函数、字符串、JSON或者别的数据类型，而CommonJS只支持对象。</p>
+<p>AMD运行时的核心思想是提前执行依赖。能够带来更好的用户体验，也会产生浪费。</p>
+<p><strong>CMD规范</strong><br>通过按需加载的方式，而不是必须在模块开始就加载所有的依赖。</p>
+<p>AMD和CMD的区别：前者是对于依赖的模块提前执行，而后者是延迟执行。 前者推崇依赖前置，而后者推崇依赖就近，即只在需要用到某个模块的时候再require。</p>
+<h4 id="ES6模块化-import-export-和Node-js-require基于CommonJS-区别"><a href="#ES6模块化-import-export-和Node-js-require基于CommonJS-区别" class="headerlink" title="ES6模块化(import/export)和Node.js(require基于CommonJS)区别"></a>ES6模块化(import/export)和Node.js(require基于CommonJS)区别</h4><p>Node.js无法直接兼容ES6，所有现在require/exports仍然是必须的，目前编写的import/export最终都是会编译为require/exports来执行。</p>
+<p>require是CommonJs,AMD,CMD规范中定义的模块请求方式，import是es6规范定义的模块请求方式。</p>
+<p>从底层运行来讲，require是在程序运行的时候去解析而import是在编译的时候去做解析请求包，require是请求整个包对象而import是只请求模块中需要的请求的部分。ES6模块的设计思想，是尽量的静态化，使得编译时就能确定模块的依赖关系(“静态优化”)，以及输入和输出的变量。CommonJS和AMD模块，都只能在运行时确定这些东西(“运行时加载”)。</p>
+<p>ES6模块加载的机制，与CommonJS模块完全不同。CommonJS模块输出的是一个值的拷贝，而ES6模块输出的是值的引用</p>
+<h5 id="ES6-Module与CommonJS对比："><a href="#ES6-Module与CommonJS对比：" class="headerlink" title="ES6 Module与CommonJS对比："></a>ES6 Module与CommonJS对比：</h5><ul>
+<li><p>CommonJS的模块是对象，而es6的模块不是对象，是编译时执行的，使得编译时就能够确定依赖关系和输入输出的变量。</p>
+<pre><code>// commonJS模块
+let {stat, exists, readFile} = require(&apos;fs&apos;);
+//等同于
+let _fs = require(&apos;fs&apos;);
+let stat = _fs.stat, exists = _fs.exists, readfile = _fs.readfile;
+</code></pre><p>  上述代码实质是整体加载fs模块，生成一个对象_fs,然后再从这个对象上面读取3个方法。这种加载成为“运行时加载”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做静态优化。</p>
+<p>  ES6模块不是对象，而是通过export命令显式指定输出的代码，输入时页采用静态命令的形式。  </p>
+<pre><code>import {stat, exists,readFile} from &apos;fs&apos;
+</code></pre><p>  上面代码的实质是从fs模块加载3个方法，其他方法不加载。这种加载称为“编译时加载”，即ES6可以在编译时就完成模块加载，效率要比CommonJS模块加载方式高。</p>
+</li>
+<li><p>模块加载实质不同  </p>
+<p>  CommonJS加载的模块是对值的拷贝，而es6 Module是对值的引用，这样模块定义文件内部变量的变化会实时反映到依赖文件，而CommonJS不同。  </p>
+<pre><code>// lib.js
+export let counter=3;
+export function incCounter(){
+    counter++;
+}
+// main.js
+import { counter, incCounter } from &apos;./lib&apos;;
+console.log(counter); // 3
+incCounter();
+console.log(counter); // 4
+//模块定义文件的变量counter的变化能够实时反映
+</code></pre></li>
+</ul>
+<h5 id="export和export-default的作用及区别"><a href="#export和export-default的作用及区别" class="headerlink" title="export和export default的作用及区别"></a>export和export default的作用及区别</h5><p>export和export default实现的功能相同，即：可用于导出常量、函数、文件、模块等，以便其他文件调用。</p>
+<p><strong>区别：</strong>  </p>
+<ol>
+<li>export导出多个对象，export default只能导出一个对象</li>
+<li>export导出对象需要用{}，export default不要{}  <ul>
+<li><code>export {A,B,C}</code></li>
+<li><code>export default A</code></li>
+</ul>
+</li>
+<li>在其他文件引用export default导出的对象时不一定使用导出时的名字。因为这种方式实际上是将该导出对象设置为默认导出对象。</li>
+</ol>
+<h4 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h4><p>模块化就是将一个程序按照其功能做拆分，分成相互独立的模块，以便于每个模块只包含与其功能相关的内容。比如登录模块，搜索模块。  </p>
+<h4 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h4><p>组件化是基于可重用的目的，将一个大的软件系统按照分离关注点的形式，拆分成多个独立的组件，目的是减少耦合。</p>
+<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><ul>
+<li>模块化强调的是拆分，主要讲代码、数据等内容按其职责不同分离，使其变得更容易维护，迭代。</li>
+<li>组件化则着重于可复用性，需要进行高度封装，一般通过接口访问。 </li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/图片懒加载/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -888,198 +1217,6 @@ query(&apos;img&apos;).forEach((item) =&gt; {
 }
 window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))                
 </code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/模块化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/26/模块化/" itemprop="url">js模块化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T00:00:00+08:00">
-                2018-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="JavaScript模块化"><a href="#JavaScript模块化" class="headerlink" title="JavaScript模块化"></a>JavaScript模块化</h4><p>模块化可以使代码低耦合，功能模块不互相影响。模块化的核心思想：  </p>
-<ul>
-<li>拆分，将js代码按功能逻辑拆分成多个可复用的js代码文件</li>
-<li>加载，如何将模块进行加载执行和输出</li>
-<li>注入，能够将一个js模块的输出注入到另一个js模块中</li>
-<li>依赖管理，管理模块之间的依赖关系</li>
-</ul>
-<p><strong>CommonJS &amp; AMD</strong>解决模块依赖管理问题，实现不通过全局作用域来实现模块方法。  </p>
-<p><strong>CommonJS</strong><br>CommonJS模块可以很方便的将某个对象导出，让他们能够被其他模块通过require语句来引入(Node.js语法)。通过CommonJS，每个js文件独立的存储它模块的内容。在这种作用域中，通过<code>module.exports</code>语句来导出对象为模块，再通过require语句引入。</p>
-<p>nodejs的模块系统，就是参照CommonJS规范实现的。</p>
-<p>这种模式优点：  </p>
-<ul>
-<li>避免全局命名空间污染</li>
-<li>明确代码之间的依赖关系</li>
-</ul>
-<p>但是CommonJS以服务器优先的方式来同步载入模块，假如引入三个模块，会一个个被载入。这种模式在服务端还好，到时在浏览器端，只要它还在读取模块，浏览器载入的页面就会一直卡着不动。</p>
-<p><strong>AMD</strong><br>要想异步加载模块，就要用AMD，异步模块定义规范。AMD规范则是非同步加载模块，允许指定回调函数。由于Node.js主要用于服务器编程，模块文件一般都已经存在于本地硬盘，所以加载起来比较快，不用考虑非同步加载的方式，所以CommonJS规范比较适用。但是，如果是浏览器环境，要从服务器端加载模块，这时就必须采用非同步模式，因此浏览器端一般采用AMD规范。 </p>
-<pre><code>define([&apos;myModule&apos;, &apos;myOtherModule&apos;], function(myModule, myOtherModule) {
-  console.log(myModule.hello());
-});
-</code></pre><p>使用define方法，第一个参数是依赖的模块，这些模块都会在后台无阻塞地加载，第二个参数则作为加载完毕的回调函数。</p>
-<p>AMD是优先浏览器的一种异步载入模块的解决方案。AMD的另一个优点是你可以在模块里使用对象、函数、构造函数、字符串、JSON或者别的数据类型，而CommonJS只支持对象。</p>
-<p>AMD运行时的核心思想是提前执行依赖。能够带来更好的用户体验，也会产生浪费。</p>
-<p><strong>CMD规范</strong><br>通过按需加载的方式，而不是必须在模块开始就加载所有的依赖。</p>
-<p>AMD和CMD的区别：前者是对于依赖的模块提前执行，而后者是延迟执行。 前者推崇依赖前置，而后者推崇依赖就近，即只在需要用到某个模块的时候再require。</p>
-<h4 id="ES6模块化-import-export-和Node-js-require基于CommonJS-区别"><a href="#ES6模块化-import-export-和Node-js-require基于CommonJS-区别" class="headerlink" title="ES6模块化(import/export)和Node.js(require基于CommonJS)区别"></a>ES6模块化(import/export)和Node.js(require基于CommonJS)区别</h4><p>Node.js无法直接兼容ES6，所有现在require/exports仍然是必须的，目前编写的import/export最终都是会编译为require/exports来执行。</p>
-<p>require是CommonJs,AMD,CMD规范中定义的模块请求方式，import是es6规范定义的模块请求方式。</p>
-<p>从底层运行来讲，require是在程序运行的时候去解析而import是在编译的时候去做解析请求包，require是请求整个包对象而import是只请求模块中需要的请求的部分。ES6模块的设计思想，是尽量的静态化，使得编译时就能确定模块的依赖关系(“静态优化”)，以及输入和输出的变量。CommonJS和AMD模块，都只能在运行时确定这些东西(“运行时加载”)。</p>
-<p>ES6模块加载的机制，与CommonJS模块完全不同。CommonJS模块输出的是一个值的拷贝，而ES6模块输出的是值的引用</p>
-<h5 id="ES6-Module与CommonJS对比："><a href="#ES6-Module与CommonJS对比：" class="headerlink" title="ES6 Module与CommonJS对比："></a>ES6 Module与CommonJS对比：</h5><ul>
-<li><p>CommonJS的模块是对象，而es6的模块不是对象，是编译时执行的，使得编译时就能够确定依赖关系和输入输出的变量。</p>
-<pre><code>// commonJS模块
-let {stat, exists, readFile} = require(&apos;fs&apos;);
-//等同于
-let _fs = require(&apos;fs&apos;);
-let stat = _fs.stat, exists = _fs.exists, readfile = _fs.readfile;
-</code></pre><p>  上述代码实质是整体加载fs模块，生成一个对象_fs,然后再从这个对象上面读取3个方法。这种加载成为“运行时加载”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做静态优化。</p>
-<p>  ES6模块不是对象，而是通过export命令显式指定输出的代码，输入时页采用静态命令的形式。  </p>
-<pre><code>import {stat, exists,readFile} from &apos;fs&apos;
-</code></pre><p>  上面代码的实质是从fs模块加载3个方法，其他方法不加载。这种加载称为“编译时加载”，即ES6可以在编译时就完成模块加载，效率要比CommonJS模块加载方式高。</p>
-</li>
-<li><p>模块加载实质不同  </p>
-<p>  CommonJS加载的模块是对值的拷贝，而es6 Module是对值的引用，这样模块定义文件内部变量的变化会实时反映到依赖文件，而CommonJS不同。  </p>
-<pre><code>// lib.js
-export let counter=3;
-export function incCounter(){
-    counter++;
-}
-// main.js
-import { counter, incCounter } from &apos;./lib&apos;;
-console.log(counter); // 3
-incCounter();
-console.log(counter); // 4
-//模块定义文件的变量counter的变化能够实时反映
-</code></pre></li>
-</ul>
-<h5 id="export和export-default的作用及区别"><a href="#export和export-default的作用及区别" class="headerlink" title="export和export default的作用及区别"></a>export和export default的作用及区别</h5><p>export和export default实现的功能相同，即：可用于导出常量、函数、文件、模块等，以便其他文件调用。</p>
-<p><strong>区别：</strong>  </p>
-<ol>
-<li>export导出多个对象，export default只能导出一个对象</li>
-<li>export导出对象需要用{}，export default不要{}  <ul>
-<li><code>export {A,B,C}</code></li>
-<li><code>export default A</code></li>
-</ul>
-</li>
-<li>在其他文件引用export default导出的对象时不一定使用导出时的名字。因为这种方式实际上是将该导出对象设置为默认导出对象。</li>
-</ol>
-<h4 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h4><p>模块化就是将一个程序按照其功能做拆分，分成相互独立的模块，以便于每个模块只包含与其功能相关的内容。比如登录模块，搜索模块。  </p>
-<h4 id="组件化"><a href="#组件化" class="headerlink" title="组件化"></a>组件化</h4><p>组件化是基于可重用的目的，将一个大的软件系统按照分离关注点的形式，拆分成多个独立的组件，目的是减少耦合。</p>
-<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><ul>
-<li>模块化强调的是拆分，主要讲代码、数据等内容按其职责不同分离，使其变得更容易维护，迭代。</li>
-<li>组件化则着重于可复用性，需要进行高度封装，一般通过接口访问。 </li>
-</ul>
-
           
         
       
@@ -2180,243 +2317,6 @@ const demandData = [].concat(demandData, originalData.slice(from, to))
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/07/js引擎机制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/07/js引擎机制/" itemprop="url">JS引擎解析过程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-07T00:00:00+08:00">
-                2018-06-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="JS引擎解析过程"><a href="#JS引擎解析过程" class="headerlink" title="JS引擎解析过程"></a>JS引擎解析过程</h4><p><strong>1.解释阶段</strong><br>js是解释型语言，所有无需提前编译，而是解释器实时运行。</p>
-<ol>
-<li>读取代码，进行词法分析（Lexical analysis），然后将代码分解成词元（token）</li>
-<li>对词元进行语法分析（parsing），然后将代码整理成语法树（syntax tree）</li>
-<li>使用翻译器（translator），将代码转为字节码（bytecode）</li>
-<li>使用字节码解释器（bytecode interpreter），将字节码转为机器码。最终计算机执行的就是机器码。</li>
-</ol>
-<p><strong>2.js的预处理阶段</strong><br>预处理阶段主要为了确保JS可以正确执行，会做一些事情，诸如变量提升，分号补全。</p>
-<p>变量提升：  </p>
-<ul>
-<li><strong>函数声明提升优先级高于变量声明提升</strong></li>
-<li><p>变量对象/活动对象（VO/AO）填充的顺序也是按照以上顺序：函数的形参-&gt;函数声明-&gt;变量声明；<br>在变量对象/活动对象（VO/AO）中权重高低也按照函数的形参-&gt;函数声明-&gt;变量声明顺序来。</p>
-<pre><code>var a=1;
-function b(a){ console.log(a)}
-var b;
-console.log(b); // function b(a){console.log(a)}
-b();  //undefined
-</code></pre></li>
-</ul>
-<p>按照优先级只要console.log(a)中的a是函数中的形参，就永远不会被函数和变量声明覆盖，就算没有赋值也是默认填充的undefined值。</p>
-<p><strong>3.JS的执行阶段</strong><br>执行流程大概：  </p>
-<ul>
-<li>执行上下文，执行堆栈(全局上下文，当前活动上下文)</li>
-<li>VO(变量对象，会放一些变量信息，如声明的变量，函数，arguments参数等)和AO(活动对象)</li>
-<li>作用域链</li>
-<li>this机制</li>
-</ul>
-<p>VO与AO：  </p>
-<ul>
-<li>VO是执行上下文的属性，但是只有全局上下文的变量对象允许通过VO的属性名称来间接访问。（因为在全局上下文里，全局对象自身就是变量对象）。</li>
-<li>AO当函数被调用者激活，AO就被创建了</li>
-</ul>
-<p>可以理解为：  </p>
-<ul>
-<li>在函数上下文中：VO===AO</li>
-<li>在全局上下文中：VO === this === global</li>
-</ul>
-<p><strong>js执行上下文细节</strong><br>每次调用函数都会创建新的执行上下文，但是在js解释器内部，每次调用执行上下文，分为两个阶段：  </p>
-<ol>
-<li>创建阶段【当函数被调用，但未执行任何其内部代码之前】<ul>
-<li>创建作用域链</li>
-<li>创建变量，函数和参数</li>
-<li>求this的值</li>
-</ul>
-</li>
-<li>激活/代码执行阶段<ul>
-<li>指派变量的值和函数的引用，解释/执行代码。</li>
-</ul>
-</li>
-</ol>
-<p><strong>解释器如何执行代码的伪逻辑</strong>  </p>
-<ol>
-<li>查找调用函数的代码</li>
-<li>执行函数代码之前，先创建执行上下文</li>
-<li>进入创建阶段：<ul>
-<li>初始化作用域链</li>
-<li>创建变量对象<ul>
-<li>创建arguments对象，检查上下文，初始化参数名称和值并创建引用的复制</li>
-<li>扫描上下文的函数声明：为发现的每一个函数，在变量对象上创建一个属性(函数的名字)，其有一个指向函数在内存中的引用。如果函数的名字已经存在，引用指针将被重写。</li>
-<li>扫描上下文的变量声明：为发现的每个变量声明，在变量对象上创建一个属性(变量的名字)，并且将变量的值初始化为undefined。如果变量的名字已经存在，将不会进行任何操作并继续扫描。</li>
-</ul>
-</li>
-<li>求出上下文内部的this值</li>
-</ul>
-</li>
-<li>激活/代码执行阶段<ul>
-<li>在当前上下文上运行/解释函数代码，并随着代码一行行执行指派变量的值</li>
-</ul>
-</li>
-</ol>
-<p><strong>例如</strong>  </p>
-<pre><code>function foo(i){
-    var a = &quot;hello&quot;;
-    var b = function privateB(){};
-    function c(){};
-}    
-foo(22);
-</code></pre><p>当调用foo(22)时，创建状态如下： </p>
-<pre><code>fooExecutionContext = {
-    scopeChain: {...},
-    variableObject: {
-        arguments: {
-            0: 22,
-            length:1
-        },
-        i:22,
-        c: pointer to function c(),
-        a: undefined,
-        b: undefined
-    },
-    this: {...}
-}
-</code></pre><p>函数执行完成后：  </p>
-<pre><code>fooExecutionContext = {
-    scopeChain: {...},
-    variableObject: {
-        arguments: {
-            0: 22,
-            length:1
-        },
-        i:22,
-        c: pointer to function c(),
-        a: &apos;hello&apos;,
-        b: pointer to function privateB()
-    },
-    this: {...}
-}
-</code></pre><h4 id="JS事件循环机制-Event-Loop"><a href="#JS事件循环机制-Event-Loop" class="headerlink" title="JS事件循环机制 Event Loop"></a>JS事件循环机制 Event Loop</h4><p>首先JS语言的一个特点就是单线程，主要是考虑js多是操作dom，否则会带来复杂的同步问题。单线程就意味着任务需要排队，前一个任务结束，后一个任务才会执行。</p>
-<p>所有任务的可分为两种类型，一是同步任务，一个是异步任务。</p>
-<ol>
-<li>同步任务指的是在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务，构成一个执行栈。</li>
-<li>异步任务指的是不进入主线程，而进入任务队列的任务。</li>
-<li>当执行栈中的所有同步任务执行完毕，系统就会读取任务队列，看看里面有哪些事件。此时对应的异步任务，结束等待状态，进入执行栈，开始执行。</li>
-<li>主线程不断重复上面的第三步。只要主线程空了，就会去读取任务队列，这个过程不断重复。</li>
-</ol>
-<p>不同的异步任务被分为两类：微任务（micro task）和宏任务（macro task）<br>宏任务： setInterval() 、setTimeout()<br>微任务： new Promise() 、new MutationObserver()  </p>
-<p>当前执行栈为空的时候，主线程会 查看微任务队列是否有事件存在。如果不存在，那么再去宏任务队列中取出一个事件并把对应的回到加入当前执行栈；如果存在，则会依次执行队列中事件对应的回调，直到微任务队列为空，然后去宏任务队列中取出最前面的一个事件，把对应的回调加入当前执行栈…如此反复，进入循环。</p>
-<p>当前执行栈执行完毕时会立刻先处理所有微任务队列中的事件，然后再去宏任务队列中取出一个事件。同一次事件循环中，微任务永远在宏任务之前执行。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2471,7 +2371,7 @@ foo(22);
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
