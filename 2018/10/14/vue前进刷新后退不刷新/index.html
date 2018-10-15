@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="JavaScript," />
+  <meta name="keywords" content="vue," />
 
 
 
@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="箭头函数this箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。 var person = {   name: &amp;quot;test&amp;quot;,   getName: () =&amp;gt; console.log(this.name) } person.get">
-<meta name="keywords" content="JavaScript">
+<meta name="description" content="vue单页应用前进刷新后退不刷新 前进刷新后退不刷新是指组件是否重新渲染，比如列表A页面，点击其中的每一项进入详情B页面，然后从B页面后退到列表A页面，A页面没有重新渲染，也没有重新发送ajax请求。 keep-Alive方案 1.模板中使用keep-alive来缓存对应的路由组件 在app.vue中改写,具体可以 &">
+<meta name="keywords" content="vue">
 <meta property="og:type" content="article">
-<meta property="og:title" content="箭头函数this">
-<meta property="og:url" content="http://yoursite.com/2018/05/07/this/index.html">
+<meta property="og:title" content="Vue解决前进刷新后退不刷新">
+<meta property="og:url" content="http://yoursite.com/2018/10/14/vue前进刷新后退不刷新/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="箭头函数this箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。 var person = {   name: &amp;quot;test&amp;quot;,   getName: () =&amp;gt; console.log(this.name) } person.getName() // undefined 事实上，箭头函数的this是其所在上下文的this决定的。这里的">
+<meta property="og:description" content="vue单页应用前进刷新后退不刷新 前进刷新后退不刷新是指组件是否重新渲染，比如列表A页面，点击其中的每一项进入详情B页面，然后从B页面后退到列表A页面，A页面没有重新渲染，也没有重新发送ajax请求。 keep-Alive方案 1.模板中使用keep-alive来缓存对应的路由组件 在app.vue中改写,具体可以 &amp;lt;keep-alive&amp;gt;     &amp;lt;router-view v-">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-19T22:33:38.000Z">
+<meta property="og:updated_time" content="2018-10-14T14:48:35.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="箭头函数this">
-<meta name="twitter:description" content="箭头函数this箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。 var person = {   name: &amp;quot;test&amp;quot;,   getName: () =&amp;gt; console.log(this.name) } person.getName() // undefined 事实上，箭头函数的this是其所在上下文的this决定的。这里的">
+<meta name="twitter:title" content="Vue解决前进刷新后退不刷新">
+<meta name="twitter:description" content="vue单页应用前进刷新后退不刷新 前进刷新后退不刷新是指组件是否重新渲染，比如列表A页面，点击其中的每一项进入详情B页面，然后从B页面后退到列表A页面，A页面没有重新渲染，也没有重新发送ajax请求。 keep-Alive方案 1.模板中使用keep-alive来缓存对应的路由组件 在app.vue中改写,具体可以 &amp;lt;keep-alive&amp;gt;     &amp;lt;router-view v-">
 
 
 
@@ -125,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/07/this/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/14/vue前进刷新后退不刷新/"/>
 
 
 
 
 
-  <title>箭头函数this | FE_hei</title>
+  <title>Vue解决前进刷新后退不刷新 | FE_hei</title>
   
 
 
@@ -248,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/this/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/14/vue前进刷新后退不刷新/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -265,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">箭头函数this</h1>
+          <h1 class="post-title" itemprop="name headline">Vue解决前进刷新后退不刷新</h1>
         
 
         <div class="post-meta">
@@ -277,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T00:00:00+08:00">
-                2018-05-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-14T00:00:00+08:00">
+                2018-10-14
               </time>
             
 
@@ -315,42 +315,114 @@
       
 
       
-        <h4 id="箭头函数this"><a href="#箭头函数this" class="headerlink" title="箭头函数this"></a>箭头函数this</h4><p>箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName: () =&gt; console.log(this.name)
-}
-person.getName() // undefined
-</code></pre><p>事实上，箭头函数的this是其所在上下文的this决定的。这里的箭头函数<code>()=&gt;console.log(this.name)</code>的上下文是全局上下文也就是<code>window</code>。<code>person.getName()</code>调用getName函数时，this指向全局上下文，而此时全局上下文中没有name（因为箭头函数没有自己的this上下文，那么当它作为对象的方法函数运行时，this并不指向这个对象）</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName(){
-    return () =&gt; console.log(this.name)
-  }
-}
-person.getName()(); // test
-</code></pre><p>此时，<code>()=&gt;console.log(this.name)</code>中的this是由getName()的上下文的this决定的，当调用person.getName()时，getName()的上下文是person对象，因此箭头函数的上下文为person对象。所以<code>person.getName()()</code>虽然执行时的上下文是window，但是箭头函数的this却是指向person对象。</p>
-<pre><code>function Person(){
-  this.count = 0;
-  setInterval(()=&gt; {
-    console.log(this.count++);
-  },1000)
-}
-var p = new Person() // 0 1 2...
-</code></pre><p>如果定时器内部的函数是普通函数，那么函数的上下文是全局window，改为箭头函数之后，<code>()=&gt;{this.count++}</code>的this是由所在的上下文决定的，当执行 var p = new Person()时，Person函数内部的上下文的this便指向p，因此箭头函数内部的上下文也必定是p，this.count++可正常执行。</p>
-<h4 id="this对象的理解"><a href="#this对象的理解" class="headerlink" title="this对象的理解"></a>this对象的理解</h4><p>this是js的一个关键字，随着函数使用场合不同，this的值会发生变化。但是有一个总原则，this是运行时绑定的，总是指向函数的直接调用者。</p>
-<p>作为方法调用时，this就是这这个对象。如果有new关键字，this指向new出来的那个对象；在事件中，this指向触发这个事件的对象，但是IE中的attachEvent中的this总是指向全局对象Window</p>
-<p><strong>箭头函数与普通函数区别</strong>  </p>
+        <p>vue单页应用前进刷新后退不刷新</p>
+<p>前进刷新后退不刷新是指组件是否重新渲染，比如列表A页面，点击其中的每一项进入详情B页面，然后从B页面后退到列表A页面，A页面没有重新渲染，也没有重新发送ajax请求。</p>
+<p>keep-Alive方案</p>
+<p>1.模板中使用keep-alive来缓存对应的路由组件</p>
+<p>在app.vue中改写<router-view>,具体可以</router-view></p>
+<pre><code>&lt;keep-alive&gt;
+    &lt;router-view v-if=&quot;$route.meta.keepAlive&quot;&gt;
+        &lt;!--这里为会被缓存的视图组件，比如列表A页面--&gt;
+    &lt;/router-view&gt;
+&lt;/keep-alive&gt;
+&lt;router-view v-if=&quot;!$route.meta.keepAlive&quot;&gt;
+    &lt;!-- 这里是不被缓存的视图组件，比如详情B页面--&gt;
+&lt;/router-view&gt;
+</code></pre><p>2.在路由配置文件中配置路由元信息</p>
+<p>对应上面模板文件中的路由元数据配置：</p>
+<pre><code>routes: [{
+    path: &apos;/list&apos;,
+    name: &apos;list&apos;,
+    component: List,
+    meta: {
+        keepAlive: true // 此组件需要被缓存
+    }
+},
+{
+    path: &apos;/detail&apos;,
+    name: &apos;detail&apos;,
+    component: Detail,
+    meta: {
+        keepAlive: false // 此组件不需要被缓存
+    }
+}]
+</code></pre><p>3.在keep-alive组件提供activated钩子函数实现数据更新逻辑</p>
+<p>keep-alive包裹的路由组件，额外增加了两个相关的钩子函数：</p>
 <ul>
-<li>箭头函数没有this，所以需要通过查找作用域链来确定this的值。</li>
-<li>箭头函数没有自己的arguments对象，因为箭头函数可以访问外围函数的arguments对象。</li>
-<li>不能通过new关键字调用</li>
-<li>没有new.target</li>
-<li>没有原型，由于不能使用new调用箭头函数，所有没有构建原型的需求。</li>
-<li>没有super，由于没有原型，所有不能通过super来访问原型的属性，所有箭头函数也没有super</li>
+<li>activated：缓存的组件再次进入时会触发</li>
+<li>deactivated：缓存的组件离开时会触发</li>
 </ul>
-<p>箭头在声明的时候就绑定了执行上下文，要动态改变上下文是不可能的。</p>
-<p><strong>定义构造函数</strong><br>构造函数中的this指向新创建的对象，当执行<code>new Car()</code>的时候，构造函数Car的上下文就是新创建的对象，<code>this instanceof Car ===true</code>.箭头函数是不能用来做构造函数的。</p>
+<p>钩子函数执行顺序：</p>
+<p>第一次进入keep-alive组件时：</p>
+<p>beforeRouteEnter -&gt; created -&gt; mounted -&gt; activated -&gt; deactivated</p>
+<p>非首次进入时：</p>
+<p>beforeRouteEnter -&gt; activated -&gt; deactivated</p>
+<p>非首次进入时，正常的vue组件生命周期函数不会执行，同时离开keep-alive组件时其destroy周期函数并没有执行，证明了缓存组件并没有销毁。</p>
+<p>通过利用keep-alive提供的activate的钩子函数来决定是否进行ajax请求来更新组件，以及deactivated钩子函数来重置页面相关状态。</p>
+<p>注意：</p>
+<ul>
+<li>keep-alive组件的更新时机</li>
+</ul>
+<p>例如需要知道列表A页面对应的keep-alive组件在何时更新，因为进入A页面的入口可以是从B页面后退来的，也可能是从其他页面前进而来，所以需要加以区分，否则A页面的数据会一直是第一次缓存过的数据。</p>
+<p>解决：</p>
+<p>在每个路由元信息meta中添加一个isBack字段，用来解决beforeRouteEnter不能直接访问vue实例。</p>
+<pre><code>{
+        path: &apos;/list&apos;,
+        name: &apos;list&apos;,
+        component: List,
+        meta: {
+            keepAlive: true, //此组件需要被缓存
+            isBack: false
+        }
+    }
+</code></pre><p>然后，借助beforeRouteEnter钩子函数来判断页面来源：</p>
+<pre><code>beforeRouteEnter(to, from, next) {
+    if(from.name === &apos;detail&apos;){ //判断是从哪个路由过来的，若是detail页面不需要刷新获取新数据，直接用之前缓存的数据即可
+        to.meta.isBack = true;
+    }
+    next();
+}
+</code></pre><p>最后，需要借助keep-alive提供钩子函数activated来完成是否更新。</p>
+<pre><code>activated() {
+    if(!this.$route.meta.isBack){
+        // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
+        this.getData();
+    }
+    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
+    this.$route.meta.isBack = false
+}
+</code></pre><ul>
+<li>在keep-alive组件前进的页面刷新导致keep-alive组件状态丢失</li>
+</ul>
+<p>在进入详情B页面后，然后刷新，这时列表A页面的缓存的数据都丢失了，由于上面的判断规则也会导致不会重新获取数据。所以对于这种问题，还需要额外加一些判断条件。由于keep-alive第一次进入时会执行created方法，所以利用这点加一个标识来加以判断：</p>
+<pre><code>// 第一次进入keep-alive路由组件时
+created() {
+    this.isFirstEnter = true;
+}
+</code></pre><p>activated钩子函数需要增加对应的判断：</p>
+<pre><code>activated() {
+    if(!this.$route.meta.isBack || this.isFirstEnter){
+    // 如果isBack是false，表明需要获取新数据，否则就不再请求，直接使用缓存的数据
+    // 如果isFirstEnter是true，表明是第一次进入此页面或用户刷新了页面，需获取新数据
+    this.data = &apos;&apos;// 把数据清空，可以稍微避免让用户看到之前缓存的数据
+    this.getData();
+    }
+    // 恢复成默认的false，避免isBack一直是true，导致下次无法获取数据
+    this.$route.meta.isBack=false
+    // 恢复成默认的false，避免isBack一直是true，导致每次都获取新数据
+    this.isFirstEnter=false;
+}
+</code></pre><ul>
+<li>缓存过多keep-alive组件，因常驻内存会导致内存占用过多</li>
+</ul>
+<p>待</p>
+<p>嵌套路由</p>
+<p>使用路由嵌套来实现这种后退不刷新的过程，主界面页作为父路由，其他跳转项可以作为其子路由。</p>
+<p>注意：</p>
+<ul>
+<li>进入子路由后，若是在子路由强制刷新后，父子路由的组件都会重新渲染，执行各自路由组件的生命周期；父路由中设置相关逻辑都会执行。</li>
+<li>子路由若被其他页面共用，这时进入子路由时会触发第一点的情况，所有最好子路由时父路由独占的。</li>
+</ul>
 
       
     </div>
@@ -368,7 +440,7 @@ var p = new Person() // 0 1 2...
       
         <div class="post-tags">
           
-            <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
+            <a href="/tags/vue/" rel="tag"><i class="fa fa-tag"></i> vue</a>
           
         </div>
       
@@ -381,8 +453,8 @@ var p = new Person() // 0 1 2...
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/06/三栏布局/" rel="next" title="CSS三栏布局">
-                <i class="fa fa-chevron-left"></i> CSS三栏布局
+              <a href="/2018/09/19/二叉树/" rel="next" title="二叉树汇总">
+                <i class="fa fa-chevron-left"></i> 二叉树汇总
               </a>
             
           </div>
@@ -390,10 +462,6 @@ var p = new Person() // 0 1 2...
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/10/jsextend/" rel="prev" title="javascript实现继承的方式">
-                javascript实现继承的方式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -445,17 +513,8 @@ var p = new Person() // 0 1 2...
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -529,22 +588,6 @@ var p = new Person() // 0 1 2...
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#箭头函数this"><span class="nav-number">1.</span> <span class="nav-text">箭头函数this</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this对象的理解"><span class="nav-number">2.</span> <span class="nav-text">this对象的理解</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

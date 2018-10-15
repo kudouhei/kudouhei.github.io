@@ -247,6 +247,349 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/15/css/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/15/css/" itemprop="url">css性能</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T00:00:00+08:00">
+                2018-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h2><h4 id="css处理内容溢出"><a href="#css处理内容溢出" class="headerlink" title="css处理内容溢出"></a>css处理内容溢出</h4><p>对于单行省略  </p>
+<pre><code>overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+</code></pre><p>对于多行省略<br>WebKit内核的浏览器实现起来比较简单，可以通过添加一个-webkit-line-clamp的私有属性来实现，-webkit-line-clamp是用来限制在一个块元素显示的文本的行数。</p>
+<pre><code>overflow : hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;    
+</code></pre><p>其他浏览器，利用相对定位在最后面加上一个省略号。  </p>
+<pre><code>&lt;p&gt;XX&lt;/p&gt;
+p{
+    position: relative;
+    line-height:1.5em;
+    /*高度为要显示的行数x行高*/
+    height: 3em;
+    overflow: hidden;
+}
+p:after{
+    content: &apos;...&apos;;
+    position: absolute;
+    bottom: 0;
+    right:0;
+    padding:0 5px;
+    background-color: #fff;
+}
+</code></pre><h4 id="行内元素视觉格式化"><a href="#行内元素视觉格式化" class="headerlink" title="行内元素视觉格式化"></a>行内元素视觉格式化</h4><ul>
+<li>非替换元素：将内容直接告诉浏览器，将其显示出来，例如包含文字的段落</li>
+<li>替换元素：浏览器根据其标签的元素与属性来判断显示的具体内容。例如img、textarea、input<ul>
+<li>这些元素拥有内在尺寸，可以设置width/height属性</li>
+<li>内容区高度值=padding-top + padding-bottom + margin-top + margin-bottom + height。</li>
+</ul>
+</li>
+<li>行间距：行间距为line-height和font-size值之差。<strong>行间距只应用于非替换元素，可为负。</strong>    </li>
+<li>行内框：行内框是通过向内容区增加行间距来描述。<strong>对于非替换元素，元素行内框的高度刚好等于line-height值。对于替换元素，元素行内框的高度等于内容区高度</strong>。</li>
+</ul>
+<h4 id="offsetWidth、clientWidth、scrollWidth如何计算"><a href="#offsetWidth、clientWidth、scrollWidth如何计算" class="headerlink" title="offsetWidth、clientWidth、scrollWidth如何计算"></a>offsetWidth、clientWidth、scrollWidth如何计算</h4><ul>
+<li>offsetWidth,offsetHeight:包含所有边框的可视框的大小。可以通过添加宽高和padding、边框。</li>
+<li>clientWidth,clientHeight:框内容的视觉部分，不包括边框或滚动条，但包括填充。</li>
+<li>scrollWidth，scrollHeight：所有框的内容大小，包括当前在滚动区域之外隐藏的部分。</li>
+</ul>
+<p><img src="/images/css/off.png" alt=""></p>
+<h4 id="css实现自适应正方形"><a href="#css实现自适应正方形" class="headerlink" title="css实现自适应正方形"></a>css实现自适应正方形</h4><p><strong>1. CSS3 vw单位</strong><br>vw是相对于视口宽度百分比的单位，1vw = 1% viewport width</p>
+<pre><code>&lt;div class=&quot;placeholder&quot;&gt;&lt;/div&gt;
+.placeholder{
+  width:50vw;
+  height:50vw;
+}
+</code></pre><p><strong>2. 设置垂直方向的padding撑开容器</strong><br>margin, padding 的百分比数值是相对父元素宽度的宽度计算的。由此可以发现只需将元素垂直方向的一个 padding 值设定为与 width 相同的百分比就可以制作出自适应正方形。  </p>
+<pre><code>.placeholder{
+  width:100%;
+  padding:bottom:100%;
+}
+</code></pre><p>缺点：如果正方形中有内容，容器的高度就会被拉伸，可以通过设置height：0解决。</p>
+<p><strong>3. 利用伪元素的margin(padding)-top撑开容器</strong><br>利用百分比数值的 padding-bottom 属性撑开容器内部空间，但是这样做会导致在元素上设置的 max-height 属性失效。失效的原因是max-height 属性只限制于 height，也就是只会对元素的 content height 起作用。</p>
+<pre><code>.placeholder {
+  width: 100%;
+  overflow: hidden;
+}
+.placeholder:after {
+  content: &apos;&apos;;
+  display: block;
+  margin-top: 100%; /* margin 百分比相对父元素宽度计算 */
+}
+</code></pre><h4 id="列表数据展示优化"><a href="#列表数据展示优化" class="headerlink" title="列表数据展示优化"></a>列表数据展示优化</h4><p>某用户有 1000 条交易数据需要在客户端全部展示，那么，这种场景下，该怎么去优化列表数据的展示呢？</p>
+<p><strong>按需显示</strong><br>按需显示是指根据容器元素的高度以及列表项元素的高度来显示数据。    </p>
+<pre><code>const demandData = originalData.slice(0, Math.ceil(containerHeight / itemHeight))
+</code></pre><blockquote>
+<p>originalData 表示原始数据，containerHeight 表示容器元素高度，itemHeight 表示列表项高度，demandData 表示按需显示需要的数据，scrollTop 表示容器元素的 Y 轴滚动值。</p>
+</blockquote>
+<p>当页面发生滚动时，重新计算容器元素内所能展示的第一个数据项和最后一个数据项，然后根据originalData进行对应的数据项截取。  </p>
+<pre><code>const from = Math.floor(scrollTop / itemHeight);
+const to = Math.ceil((scrollTop + containerHeight) / itemHeight);
+
+const demandData = originalData.slice(from, to)    
+</code></pre><p><strong>延迟显示</strong><br>延迟加载是一种常见的首屏优化方案，其基本思路是应用初始化时，首屏根据客户端的 Viewport 只加载用户可见的部分，当用户滚动对应位置时，才去加载对应元素，以缩减首屏的加载时间。</p>
+<p>列表初始化时，根据容器元素的高度以及列表项元素的高度，依然只是加载列表初始化所需的数据项。</p>
+<pre><code>const demandData = originalData.slice(0, Math.ceil(containerHeight / itemHeight))
+</code></pre><p>当用户往下滚动时，再动态计算需要往列表后追加的数据项。 </p>
+<pre><code>const from = demandData.length; 
+const to = Math.ceil((scrollTop + containerHeight) / itemHeight);    
+const demandData = [].concat(demandData, originalData.slice(from, to))    
+</code></pre><p>与按需显示不同的是，延迟显示不再是对 originalData 进行截取，而是对 demandData 进行追加，直到用户滚动到底部，所有数据全部显示完毕为止。</p>
+<pre><code>页面上有个空的无序列表节点，用 &lt;ul&gt;&lt;/ul&gt; 表示，要往列表中插入 30000个 &lt;li&gt;，每个列表项的文本内容是列表项的插入顺序，取值 1, 2, 3, ... ,30000，怎么用原生的 JS 实现这个需求？
+</code></pre><p>思路：可以从减少 DOM 操作次数、缩短循环时间两个方面减少主线程阻塞的时间。减少 DOM 操作次数的良方是 DocumentFragment；而缩短循环时间则需要考虑使用分治的思想把 30000 个 <li> 分批次插入到页面中，每次插入的时机是在页面重新渲染之前。</li></p>
+<pre><code>(()=&gt;{
+    const ndContainer = document.getElementById(&apos;js-list&apos;);
+    if(!ndContainer){
+        return;
+    }
+    const total = 30000;
+    const batchSize = 4 //每批插入的节点次数
+    const batchCount = total/batchSize //需要批处理次数
+    let batchDone = 0 //已经完成批处理个数
+    function appendItems(){
+        const fragement = document.createDocumentFragment();
+        for(let i=0;i&lt;batchSize;i++){
+            const ndItem = document.createElement(&apos;li&apos;);
+            ndItem.innerText = (batchDone * batchSize)+i+1;
+            fragment.appendChild(ndItem);
+        }
+        ndContainer.appendChild(fragment);
+        batchDone +=1;
+        doBatchAppend();
+    }
+    function doBatchAppend(){
+        if(batchDone &lt; batchCount){
+            window.requestAnimationFrame(appendItems);
+        }
+    }
+    doBatchAppend();
+    ndContainer.addEventListener(&apos;click&apos;,function(e){
+        const target = e.target;
+        if(target.tagName === &apos;LI&apos;){
+            alert(target.innerHTML);
+        }
+    })
+})()
+</code></pre><h4 id="CSS3主要新特性"><a href="#CSS3主要新特性" class="headerlink" title="CSS3主要新特性"></a>CSS3主要新特性</h4><p><strong>盒模型</strong>  </p>
+<ul>
+<li>可以通过设置盒模型属性<code>box-sizing:border-box</code>（默认值：content-box）来让W3C兼容传统的IE盒模型。</li>
+<li>box-shadow增加阴影</li>
+<li>边框圆角：border-radius</li>
+</ul>
+<p><strong>CSS3选择器</strong>  </p>
+<ul>
+<li><code>E[foo^=&quot;bar&quot;]</code>，选择匹配E的元素，且该元素定义了foo属性，foo属性值以“bar”开始。</li>
+<li><code>E[foo$=&quot;bar&quot;]</code>,foo属性值以“bar”结束</li>
+<li><code>E[foo*=&quot;bar&quot;]</code>,foo属性值包含“bar”</li>
+<li>:first-child,选中的元素集合中的第一个元素</li>
+<li>:not,否定选择器</li>
+<li><strong>:nth-child</strong>,选择器匹配属于其父元素的第N个子元素，不论元素的类型。如果第N个子元素与选择的元素类型不同则样式无效！（div+空格，只根据父元素选择）</li>
+<li><strong>:nth-of-type</strong>,选择器匹配属于父元素的特定类型的第N个子元素的每个元素。</li>
+</ul>
+<p><strong>CSS3变形：transform</strong>  </p>
+<p><strong>CSS3过渡：transition</strong>  </p>
+<ul>
+<li>每组transition包含四个属性：transition-property，transition-duration，transition-time-function，transition-delay</li>
+<li>transition是异步的</li>
+</ul>
+<p><strong>CSS3动画：通过设置@keyframes来定义一种动画效果</strong>，动画的实现用animation。</p>
+<p><strong>CSS3伸缩布局</strong>  </p>
+<ul>
+<li>display：flex|inline-flex。值为flex时将会按block元素进行渲染。</li>
+<li>伸缩容器属性<ul>
+<li>伸缩主轴方向：flex-direction</li>
+<li>伸缩容器内项目是否换行：flex-wrap</li>
+<li>主轴对齐方式：justify-content</li>
+<li>侧轴对齐方式：align-items</li>
+</ul>
+</li>
+<li>伸缩项目的属性<ul>
+<li>显示顺序：order</li>
+<li>伸缩性放大缩小比例：flex：none|flex-grow|flex-shrink|flex-basis</li>
+</ul>
+</li>
+</ul>
+<p><strong>CSS3背景</strong>  </p>
+<ul>
+<li>background-size：规定背景图片的尺寸</li>
+<li>background-origin：规定背景图片的定位区域(content-box|padding-box|border-box)</li>
+<li>background-clip:规定背景的绘制区域，参数同上。</li>
+</ul>
+<h4 id="CSS盒模型"><a href="#CSS盒模型" class="headerlink" title="CSS盒模型"></a>CSS盒模型</h4><ul>
+<li>标准盒模型<ul>
+<li>width/height指的是content区域的宽度和高度</li>
+<li>一个块的总宽度=width+margin+padding+border</li>
+</ul>
+</li>
+<li>IE盒模型<ul>
+<li>width/height指的是content+padding+border</li>
+<li>一个块的总宽度=width+margin</li>
+</ul>
+</li>
+</ul>
+<p>如何设置这两种模型：<br>box-sizing: content-box(默认)，border-box(IE模型)</p>
+<p><strong>js如何设置获取盒模型对应的宽高</strong>  </p>
+<ol>
+<li><code>dom.style.width/height</code>只能取内联样式的宽和高</li>
+<li><code>dom.currentStyle.width/height</code>只能IE浏览器</li>
+<li><code>window.getComputedStyle(dom).width/height</code>通用性最好<ul>
+<li>getComputedStyle会获取当前元素所有最终使用的css属性值，以数组形式返回，只读。</li>
+<li>getComputedStyle会引起回流，因为它需要获取祖先节点的一些信息进行计算(譬如宽高等)。其他一些会引发回流的操作，如offsetXXX，scrollXXX，clientXXX，currentStyle等</li>
+</ul>
+</li>
+<li><code>dom.getBoundingClientRect().width/height</code>返回元素的大小及其相对于视口的位置。</li>
+</ol>
+<h4 id="BFC"><a href="#BFC" class="headerlink" title="BFC"></a>BFC</h4><p>块级格式化上下文，BFC是一个独立的布局环境，其中的元素布局是不受外界的影响，并且在一个BFC中，块盒与行盒都会垂直的沿着其父元素的边框排列。<br><strong>原理</strong>：  </p>
+<ul>
+<li>垂直方向会发生边距重叠</li>
+<li>BFC区域不会与浮动元素的box重叠，可以用来清除浮动</li>
+<li>BFC在页面上是一个容器，外面的元素不会影响里面的元素</li>
+<li>计算BFC高度的时候，浮动元素也会参与计算</li>
+</ul>
+<p><strong>如何创建一个BFC</strong>  </p>
+<ul>
+<li>float值不为none</li>
+<li>position的值不是static或relative</li>
+<li>display属性为inline-box，table相关</li>
+<li>overflow为auto，hidden</li>
+</ul>
+<p><strong>使用场景</strong>  </p>
+<ul>
+<li>利用BFC避免外边距折叠<ul>
+<li>BFC可能会造成外边距折叠，也可以利用它来避免这种情况</li>
+<li>BFC产生外边距折叠要满足一个条件：两个相邻元素要处于同一个BFC中。所有若两个相邻元素在不同的BFC中，就能避免外边距折叠。</li>
+</ul>
+</li>
+<li>BFC包含浮动<ul>
+<li>浮动元素会脱离文档流，如果一个没有高度或者height为auto的容器的子元素是浮动元素，则该容器的高度是不会被撑开的。通常会利用伪元素(:after或:before)来解决这个问题</li>
+<li>BFC能包含浮动，也能解决容器高度不会被撑开的问题</li>
+</ul>
+</li>
+<li>使用BFC避免文字环绕<ul>
+<li>在BFC上下文中，每个盒子的左外侧紧贴包含块的左侧，有浮动也是如此，除非盒子创建了一个新的BFC。</li>
+</ul>
+</li>
+<li>在多列布局中使用BFC<ul>
+<li>如果创建一个占满整个容器宽度的多列布局，在某些浏览器中最后一列有时会掉到下一行。可能是因为浏览器四舍五入了列宽从而所有列的总宽度会超出容器</li>
+<li>如果我们在多列布局中的最后一列里创建一个新的BFC，它将总是占据其他列先占位完毕后剩下的空间。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/07/js引擎机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1893,6 +2236,248 @@ console.log(result)
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/性能优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/28/性能优化/" itemprop="url">前端性能优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
+                2018-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="前端性能优化"><a href="#前端性能优化" class="headerlink" title="前端性能优化"></a>前端性能优化</h4><p><strong>1. 网络方面（网络传输性能）</strong><br>浏览器同一时间所发送的网络请求数是有限的。浏览器处理用户请求的过程：<strong>浏览器在得到用户请求之后，经历了下面阶段：重定向-&gt;拉取缓存-&gt;DNS查询-&gt;建立TCP链接-&gt;发起请求-&gt;接收响应-&gt;处理HTML元素-&gt;元素加载完成</strong></p>
+<ul>
+<li>减少http请求，必要的资源合并</li>
+<li>减小资源体积，资源压缩(图片体积，雪碧图，使用字体图标，使用webp格式)</li>
+<li>缓存<ul>
+<li>DNS缓存：浏览器会在DNS解析步骤中消耗一定的时间<ul>
+<li>DNS预解析<ul>
+<li><code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;A.com&quot;&gt;</code></li>
+<li><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</code></li>
+</ul>
+</li>
+<li>当浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行DNS解析，减少用户的等待时间，提高用户体验</li>
+</ul>
+</li>
+<li>CDN部署与缓存：CDN作为静态资源文件的分发网络，本身就已经提升了，网站静态资源的获取速度，加快网站的加载速度，同时也给静态资源做好缓存工作，有效的利用已缓存的静态资源，加快获取速度</li>
+<li>http缓存：给资源设定缓存时间，防止在有效的缓存时间内对资源进行重复的下载，从而提升整体网页的加载速度</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/css/c1.png" alt="">  </p>
+<p>浏览器默认的缓存是放在内存里，内存里的缓存会因为进程的结束或浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。<code>from memory cache</code>和<code>from dis cache</code>，通过在服务器上设置的Etag字段控制缓存存放的位置，在浏览器接收到服务器响应后，会检测响应头部Header，如果有Etag字段，那么浏览器就会将本次缓存写入磁盘中。</p>
+<p>拉取缓存会出现200、304两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回304状态码。</p>
+<p><strong>2. 渲染和DOM操作方面</strong>  </p>
+<ul>
+<li>减少重排和重绘<ul>
+<li>DOM渲染层与GPU硬件加速：布局是由CPU处理的，绘制则是由GPU完成的<ul>
+<li>浏览器会先获取DOM树并依据样式将其分割成多个独立的渲染层</li>
+<li>CPU将每个层绘制进绘图中</li>
+<li>将位图作为纹理上传至GPU绘制</li>
+<li>GPU将所有的渲染层缓存，如果下次上传的渲染层没有发生变化，GPU就不需要对其进行重绘，并复合多个渲染层最终形成图像</li>
+</ul>
+</li>
+<li>重排：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加DOM元素，修改了影响元素盒子大小的CSS属性。获取某些属性，浏览器为了获得正确的值也会触发重排。<ul>
+<li>offset</li>
+<li>scroll</li>
+<li>client(top/left/width/height)</li>
+<li>width,height</li>
+<li>调用了getComputedStyle()或者IE的currentStyle</li>
+</ul>
+</li>
+<li>重绘：绘制，即渲染上色，所有对元素的视觉表现属性的修改，会引发重绘</li>
+</ul>
+</li>
+<li>优化网页渲染<ul>
+<li>css的文件放在头部，js文件放在尾部或者异步加载<ul>
+<li>动态脚本加载</li>
+<li>defer：defer是在HTML解析完之后才执行，如果是多个，按照加载的顺序依次执行</li>
+<li>async：async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</li>
+</ul>
+</li>
+<li>尽量避免内联样式 </li>
+</ul>
+</li>
+<li>DOM操作优化<ul>
+<li>避免在document上直接进行频繁的DOM操作</li>
+<li>使用classname代替大量的内联样式修改</li>
+<li>使用requestAnimationFrame代替setInterval操作</li>
+<li>使用事件代理</li>
+</ul>
+</li>
+</ul>
+<p><strong>async和defer区别</strong>  </p>
+<ul>
+<li>没有defer或async，浏览器会立即加载并执行指定脚本，所有script元素都会按照在页面出现的先后顺序依次被解析，只有在解析完前面的script代码后，才会解析后面的script代码。</li>
+<li>async标志，使用async属性表示当前脚本不必等待其他脚本，也不必阻塞文档呈现。但是不能保证异步脚本按照他们在页面出现的顺序执行。</li>
+<li>defer，使用defer属性可以让脚本在文档完成呈现之后再执行，延迟脚本总是按照指定的顺序执行。</li>
+</ul>
+<p><strong>3. 数据方面</strong>  </p>
+<ul>
+<li>图片加载处理（懒加载，预加载）</li>
+<li>json数据格式交互</li>
+<li>部分常用数据的缓存</li>
+</ul>
+<h5 id="浏览器显示页面的原理"><a href="#浏览器显示页面的原理" class="headerlink" title="浏览器显示页面的原理"></a>浏览器显示页面的原理</h5><p>流程  </p>
+<ol>
+<li>获取HTML文档及样式表文件</li>
+<li>解析成对应的树形数据结构<ul>
+<li>DOM tree</li>
+<li>CSSOM tree</li>
+</ul>
+</li>
+<li>计算可见节点形成render tree</li>
+<li>计算DOM的形状及位置进行布局</li>
+<li>将每个节点转化为实际像素绘制到视口上</li>
+</ol>
+<p><strong>资源加载：</strong>  </p>
+<ul>
+<li>执行JavaScript会阻止DOM tree构建</li>
+<li>加载CSS会阻止render tree构建</li>
+</ul>
+<p>默认情况下，JavaScript脚本会在引入它的位置执行，这是会阻断DOM tree的构建；如果在运行脚本时浏览器尚未完成CSS的下载和CSSOM tree的构建，浏览器会将脚本执行延迟到这些操作结束之后。</p>
+<p><strong>影响性能的因素</strong>  </p>
+<ul>
+<li>白屏<ul>
+<li>HTML和CSS的加载及解析速度</li>
+<li><code>&lt;head&gt;</code>内的脚本加载及执行</li>
+</ul>
+</li>
+<li>首屏<ul>
+<li>图片加载</li>
+<li><code>&lt;body&gt;</code>内的脚本加载及执行</li>
+</ul>
+</li>
+</ul>
+<p><strong>提高前端性能</strong>  </p>
+<ul>
+<li>缩短白屏时间</li>
+<li>加快首屏显示</li>
+<li>尽快监听主要操作的事件  </li>
+</ul>
+<h4 id="对移动端的认识"><a href="#对移动端的认识" class="headerlink" title="对移动端的认识"></a>对移动端的认识</h4><p>从兼容上讲  </p>
+<ul>
+<li>PC要兼容IE6+，Firefox，chrome，Safari</li>
+<li>mobile的网页开发，只需要考虑webkit内核的浏览器和chrome，uc，qq，小米手机浏览器，兼容的东西少了些</li>
+</ul>
+<p>从开发上讲  </p>
+<ul>
+<li>mobile端的网页开发比PC页面小了，装的东西要少些，相对交互稍简单些（滑动，触屏，手势） </li>
+</ul>
+<p>移动端前端开发：分为移动端web app和移动端网页</p>
+<p><strong>移动端网页布局和PC差异</strong><br>主要是css方面，外加如何做到同一url，不同客户端展现不一致的做法，俗称pc和mobile都兼容。</p>
+<p>rem在移动端布局  </p>
+<p>移动端的字体默认为16px，那么1rem我想表示为10px的话，我们就需要 10 % 16 = 0.625 即为62.5%，这样就可以比较方便的把设计稿里的px转换成rem单位来做到自适应了。这样无论用户如何设置电脑或者手机的默认字体大小，设置为rem的单位的长度都会随比例变化。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/ajax/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2229,248 +2814,6 @@ jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
 <pre><code>&lt;form method=&quot;post&quot; action=&quot;/url/respond&quot;&gt;&lt;/form&gt;
 </code></pre></li>
 </ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/性能优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/28/性能优化/" itemprop="url">前端性能优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-28T00:00:00+08:00">
-                2018-05-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="前端性能优化"><a href="#前端性能优化" class="headerlink" title="前端性能优化"></a>前端性能优化</h4><p><strong>1. 网络方面（网络传输性能）</strong><br>浏览器同一时间所发送的网络请求数是有限的。浏览器处理用户请求的过程：<strong>浏览器在得到用户请求之后，经历了下面阶段：重定向-&gt;拉取缓存-&gt;DNS查询-&gt;建立TCP链接-&gt;发起请求-&gt;接收响应-&gt;处理HTML元素-&gt;元素加载完成</strong></p>
-<ul>
-<li>减少http请求，必要的资源合并</li>
-<li>减小资源体积，资源压缩(图片体积，雪碧图，使用字体图标，使用webp格式)</li>
-<li>缓存<ul>
-<li>DNS缓存：浏览器会在DNS解析步骤中消耗一定的时间<ul>
-<li>DNS预解析<ul>
-<li><code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;A.com&quot;&gt;</code></li>
-<li><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</code></li>
-</ul>
-</li>
-<li>当浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行DNS解析，减少用户的等待时间，提高用户体验</li>
-</ul>
-</li>
-<li>CDN部署与缓存：CDN作为静态资源文件的分发网络，本身就已经提升了，网站静态资源的获取速度，加快网站的加载速度，同时也给静态资源做好缓存工作，有效的利用已缓存的静态资源，加快获取速度</li>
-<li>http缓存：给资源设定缓存时间，防止在有效的缓存时间内对资源进行重复的下载，从而提升整体网页的加载速度</li>
-</ul>
-</li>
-</ul>
-<p><img src="/images/css/c1.png" alt="">  </p>
-<p>浏览器默认的缓存是放在内存里，内存里的缓存会因为进程的结束或浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。<code>from memory cache</code>和<code>from dis cache</code>，通过在服务器上设置的Etag字段控制缓存存放的位置，在浏览器接收到服务器响应后，会检测响应头部Header，如果有Etag字段，那么浏览器就会将本次缓存写入磁盘中。</p>
-<p>拉取缓存会出现200、304两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回304状态码。</p>
-<p><strong>2. 渲染和DOM操作方面</strong>  </p>
-<ul>
-<li>减少重排和重绘<ul>
-<li>DOM渲染层与GPU硬件加速：布局是由CPU处理的，绘制则是由GPU完成的<ul>
-<li>浏览器会先获取DOM树并依据样式将其分割成多个独立的渲染层</li>
-<li>CPU将每个层绘制进绘图中</li>
-<li>将位图作为纹理上传至GPU绘制</li>
-<li>GPU将所有的渲染层缓存，如果下次上传的渲染层没有发生变化，GPU就不需要对其进行重绘，并复合多个渲染层最终形成图像</li>
-</ul>
-</li>
-<li>重排：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加DOM元素，修改了影响元素盒子大小的CSS属性。获取某些属性，浏览器为了获得正确的值也会触发重排。<ul>
-<li>offset</li>
-<li>scroll</li>
-<li>client(top/left/width/height)</li>
-<li>width,height</li>
-<li>调用了getComputedStyle()或者IE的currentStyle</li>
-</ul>
-</li>
-<li>重绘：绘制，即渲染上色，所有对元素的视觉表现属性的修改，会引发重绘</li>
-</ul>
-</li>
-<li>优化网页渲染<ul>
-<li>css的文件放在头部，js文件放在尾部或者异步加载<ul>
-<li>动态脚本加载</li>
-<li>defer：defer是在HTML解析完之后才执行，如果是多个，按照加载的顺序依次执行</li>
-<li>async：async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</li>
-</ul>
-</li>
-<li>尽量避免内联样式 </li>
-</ul>
-</li>
-<li>DOM操作优化<ul>
-<li>避免在document上直接进行频繁的DOM操作</li>
-<li>使用classname代替大量的内联样式修改</li>
-<li>使用requestAnimationFrame代替setInterval操作</li>
-<li>使用事件代理</li>
-</ul>
-</li>
-</ul>
-<p><strong>async和defer区别</strong>  </p>
-<ul>
-<li>没有defer或async，浏览器会立即加载并执行指定脚本，所有script元素都会按照在页面出现的先后顺序依次被解析，只有在解析完前面的script代码后，才会解析后面的script代码。</li>
-<li>async标志，使用async属性表示当前脚本不必等待其他脚本，也不必阻塞文档呈现。但是不能保证异步脚本按照他们在页面出现的顺序执行。</li>
-<li>defer，使用defer属性可以让脚本在文档完成呈现之后再执行，延迟脚本总是按照指定的顺序执行。</li>
-</ul>
-<p><strong>3. 数据方面</strong>  </p>
-<ul>
-<li>图片加载处理（懒加载，预加载）</li>
-<li>json数据格式交互</li>
-<li>部分常用数据的缓存</li>
-</ul>
-<h5 id="浏览器显示页面的原理"><a href="#浏览器显示页面的原理" class="headerlink" title="浏览器显示页面的原理"></a>浏览器显示页面的原理</h5><p>流程  </p>
-<ol>
-<li>获取HTML文档及样式表文件</li>
-<li>解析成对应的树形数据结构<ul>
-<li>DOM tree</li>
-<li>CSSOM tree</li>
-</ul>
-</li>
-<li>计算可见节点形成render tree</li>
-<li>计算DOM的形状及位置进行布局</li>
-<li>将每个节点转化为实际像素绘制到视口上</li>
-</ol>
-<p><strong>资源加载：</strong>  </p>
-<ul>
-<li>执行JavaScript会阻止DOM tree构建</li>
-<li>加载CSS会阻止render tree构建</li>
-</ul>
-<p>默认情况下，JavaScript脚本会在引入它的位置执行，这是会阻断DOM tree的构建；如果在运行脚本时浏览器尚未完成CSS的下载和CSSOM tree的构建，浏览器会将脚本执行延迟到这些操作结束之后。</p>
-<p><strong>影响性能的因素</strong>  </p>
-<ul>
-<li>白屏<ul>
-<li>HTML和CSS的加载及解析速度</li>
-<li><code>&lt;head&gt;</code>内的脚本加载及执行</li>
-</ul>
-</li>
-<li>首屏<ul>
-<li>图片加载</li>
-<li><code>&lt;body&gt;</code>内的脚本加载及执行</li>
-</ul>
-</li>
-</ul>
-<p><strong>提高前端性能</strong>  </p>
-<ul>
-<li>缩短白屏时间</li>
-<li>加快首屏显示</li>
-<li>尽快监听主要操作的事件  </li>
-</ul>
-<h4 id="对移动端的认识"><a href="#对移动端的认识" class="headerlink" title="对移动端的认识"></a>对移动端的认识</h4><p>从兼容上讲  </p>
-<ul>
-<li>PC要兼容IE6+，Firefox，chrome，Safari</li>
-<li>mobile的网页开发，只需要考虑webkit内核的浏览器和chrome，uc，qq，小米手机浏览器，兼容的东西少了些</li>
-</ul>
-<p>从开发上讲  </p>
-<ul>
-<li>mobile端的网页开发比PC页面小了，装的东西要少些，相对交互稍简单些（滑动，触屏，手势） </li>
-</ul>
-<p>移动端前端开发：分为移动端web app和移动端网页</p>
-<p><strong>移动端网页布局和PC差异</strong><br>主要是css方面，外加如何做到同一url，不同客户端展现不一致的做法，俗称pc和mobile都兼容。</p>
-<p>rem在移动端布局  </p>
-<p>移动端的字体默认为16px，那么1rem我想表示为10px的话，我们就需要 10 % 16 = 0.625 即为62.5%，这样就可以比较方便的把设计稿里的px转换成rem单位来做到自适应了。这样无论用户如何设置电脑或者手机的默认字体大小，设置为rem的单位的长度都会随比例变化。</p>
 
           
         
@@ -3031,161 +3374,6 @@ Person.__proto__ === Function.prototype  // true
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/this/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/07/this/" itemprop="url">箭头函数this</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T00:00:00+08:00">
-                2018-05-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="箭头函数this"><a href="#箭头函数this" class="headerlink" title="箭头函数this"></a>箭头函数this</h4><p>箭头函数不会创造独立的上下文，它的上下文来自其所在上下文的this作为自己的this。</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName: () =&gt; console.log(this.name)
-}
-person.getName() // undefined
-</code></pre><p>事实上，箭头函数的this是其所在上下文的this决定的。这里的箭头函数<code>()=&gt;console.log(this.name)</code>的上下文是全局上下文也就是<code>window</code>。<code>person.getName()</code>调用getName函数时，this指向全局上下文，而此时全局上下文中没有name（因为箭头函数没有自己的this上下文，那么当它作为对象的方法函数运行时，this并不指向这个对象）</p>
-<pre><code>var person = {
-  name: &quot;test&quot;,
-  getName(){
-    return () =&gt; console.log(this.name)
-  }
-}
-person.getName()(); // test
-</code></pre><p>此时，<code>()=&gt;console.log(this.name)</code>中的this是由getName()的上下文的this决定的，当调用person.getName()时，getName()的上下文是person对象，因此箭头函数的上下文为person对象。所以<code>person.getName()()</code>虽然执行时的上下文是window，但是箭头函数的this却是指向person对象。</p>
-<pre><code>function Person(){
-  this.count = 0;
-  setInterval(()=&gt; {
-    console.log(this.count++);
-  },1000)
-}
-var p = new Person() // 0 1 2...
-</code></pre><p>如果定时器内部的函数是普通函数，那么函数的上下文是全局window，改为箭头函数之后，<code>()=&gt;{this.count++}</code>的this是由所在的上下文决定的，当执行 var p = new Person()时，Person函数内部的上下文的this便指向p，因此箭头函数内部的上下文也必定是p，this.count++可正常执行。</p>
-<h4 id="this对象的理解"><a href="#this对象的理解" class="headerlink" title="this对象的理解"></a>this对象的理解</h4><p>this是js的一个关键字，随着函数使用场合不同，this的值会发生变化。但是有一个总原则，this是运行时绑定的，总是指向函数的直接调用者。</p>
-<p>作为方法调用时，this就是这这个对象。如果有new关键字，this指向new出来的那个对象；在事件中，this指向触发这个事件的对象，但是IE中的attachEvent中的this总是指向全局对象Window</p>
-<p><strong>箭头函数与普通函数区别</strong>  </p>
-<ul>
-<li>箭头函数没有this，所以需要通过查找作用域链来确定this的值。</li>
-<li>箭头函数没有自己的arguments对象，因为箭头函数可以访问外围函数的arguments对象。</li>
-<li>不能通过new关键字调用</li>
-<li>没有new.target</li>
-<li>没有原型，由于不能使用new调用箭头函数，所有没有构建原型的需求。</li>
-<li>没有super，由于没有原型，所有不能通过super来访问原型的属性，所有箭头函数也没有super</li>
-</ul>
-<p>箭头在声明的时候就绑定了执行上下文，要动态改变上下文是不可能的。</p>
-<p><strong>定义构造函数</strong><br>构造函数中的this指向新创建的对象，当执行<code>new Car()</code>的时候，构造函数Car的上下文就是新创建的对象，<code>this instanceof Car ===true</code>.箭头函数是不能用来做构造函数的。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3240,7 +3428,7 @@ var p = new Person() // 0 1 2...
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

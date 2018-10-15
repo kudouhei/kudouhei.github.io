@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="Vue组件通信父组件向子组件通信    props，父组件使用props向子组件传递数据 使用$children，可以在父组件中访问子组件  子组件向父组件中传递数据    父组件向子组件传递事件方法，子组件通过$emit触发事件，回调给父组件。 &amp;lt;template&amp;gt;     &amp;lt">
+<meta name="description" content="Vue组件通信父组件向子组件通信    props，父组件使用props向子组件传递数据 使用$children，可以在父组件中访问子组件 // 父组件，传递数据 &amp;lt;editor :inputIndex=&amp;quot;data&amp;quot; :inputName=&amp;quot;test&">
 <meta name="keywords" content="vue">
 <meta property="og:type" content="article">
 <meta property="og:title" content="vue组件通信">
 <meta property="og:url" content="http://yoursite.com/2018/06/19/vue组件通信/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="Vue组件通信父组件向子组件通信    props，父组件使用props向子组件传递数据 使用$children，可以在父组件中访问子组件  子组件向父组件中传递数据    父组件向子组件传递事件方法，子组件通过$emit触发事件，回调给父组件。 &amp;lt;template&amp;gt;     &amp;lt;child @msgFunc=&amp;quot;func&amp;quot;&amp;gt;&amp;lt;/child&amp;gt; &amp;">
+<meta property="og:description" content="Vue组件通信父组件向子组件通信    props，父组件使用props向子组件传递数据 使用$children，可以在父组件中访问子组件 // 父组件，传递数据 &amp;lt;editor :inputIndex=&amp;quot;data&amp;quot; :inputName=&amp;quot;test&amp;quot;&amp;gt;&amp;lt;/editor&amp;gt; // 子组件，接受数据，定义传递数据的类型type与默认值 p">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-08T14:13:16.000Z">
+<meta property="og:updated_time" content="2018-10-15T23:22:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vue组件通信">
-<meta name="twitter:description" content="Vue组件通信父组件向子组件通信    props，父组件使用props向子组件传递数据 使用$children，可以在父组件中访问子组件  子组件向父组件中传递数据    父组件向子组件传递事件方法，子组件通过$emit触发事件，回调给父组件。 &amp;lt;template&amp;gt;     &amp;lt;child @msgFunc=&amp;quot;func&amp;quot;&amp;gt;&amp;lt;/child&amp;gt; &amp;">
+<meta name="twitter:description" content="Vue组件通信父组件向子组件通信    props，父组件使用props向子组件传递数据 使用$children，可以在父组件中访问子组件 // 父组件，传递数据 &amp;lt;editor :inputIndex=&amp;quot;data&amp;quot; :inputName=&amp;quot;test&amp;quot;&amp;gt;&amp;lt;/editor&amp;gt; // 子组件，接受数据，定义传递数据的类型type与默认值 p">
 
 
 
@@ -318,7 +318,23 @@
         <h4 id="Vue组件通信"><a href="#Vue组件通信" class="headerlink" title="Vue组件通信"></a>Vue组件通信</h4><p><strong>父组件向子组件通信</strong>  </p>
 <ul>
 <li>props，父组件使用props向子组件传递数据</li>
-<li>使用$children，可以在父组件中访问子组件</li>
+<li><p>使用$children，可以在父组件中访问子组件</p>
+<pre><code>// 父组件，传递数据
+&lt;editor :inputIndex=&quot;data&quot; :inputName=&quot;test&quot;&gt;&lt;/editor&gt;
+// 子组件，接受数据，定义传递数据的类型type与默认值
+props: {
+    inputIndex: {
+        type: Object,
+        default: function(){
+            return {}
+        }
+    },
+    inputName: {
+        type: String,
+        default: &apos;&apos;
+    }
+}
+</code></pre></li>
 </ul>
 <p><strong>子组件向父组件中传递数据</strong>  </p>
 <ul>
@@ -412,13 +428,50 @@ export default {
 &lt;comp :foo=&apos;bar&apos; @update:foo=&quot;val=&gt; bar=val&quot;&gt;&lt;/comp&gt;
 需要在子组件中改变父组件数据时，需要触发以下自定义事件  
 this.$emit(&apos;update:foo&apos;, newValue)
-</code></pre><p><strong>v-model语法糖</strong>  </p>
+</code></pre><p><strong>兄弟组件通信</strong>  </p>
+<ol>
+<li><p>bus通信，在组件之外定义一个bus.js作为组件间通信的桥梁，适用比较小型不需要vuex情况。</p>
+<pre><code>// bus.js
+import Vue from &apos;vue&apos;
+export default new Vue
+
+// 组件中调用bus.js通过自定义事件传递数据
+import Bus from &apos;./bus.js&apos;
+export default {
+    methods: {
+        bus(){
+            Bus.$emit(&apos;msg&apos;,&apos;给兄弟组件传数据&apos;)
+        }
+    }
+}
+
+// 兄弟组件中监听事件接受数据
+import Bus from &apos;./bus.js&apos;
+export default {
+    mounted(){
+        Bus.$on(&apos;msg&apos;, (e)=&gt;{
+            console.log(e)
+        })
+    }
+}
+</code></pre></li>
+<li><p>Vuex状态管理</p>
+</li>
+</ol>
+<ul>
+<li>vuex分模块：项目不同模块间维护各自的vuex数据</li>
+<li>限制调用：只允许action操作数据，getters获取数据，使用mapGetters，mapActions辅助函数调用数据</li>
+</ul>
+<p><strong>v-model语法糖</strong>  </p>
 <pre><code>&lt;comp v-model=&apos;something&apos;&gt;&lt;/comp&gt;
 相当于  
 &lt;comp v-bind:value=&apos;something&apos; v-on:input=&apos;something =$event.target.value&apos;&gt;
-</code></pre><p><strong>vue2.2+中provide/inject</strong>  </p>
-<p>provide/inject：就是在父组件中通过provide提供变量，然后在在子组件中通过inject来注入变量。</p>
-<p>不论子组件有多深，只要调用了inject就可以注入provide中的数据。</p>
+</code></pre><p><strong>vue2.2+中provide/inject，祖先组件与子组件数据传递</strong>  </p>
+<ul>
+<li>provide/inject：在父组件中通过provide来提供变量，然后在子组件中通过inject注入变量。</li>
+<li>不论子组件有多深，只要调用了inject那么就可以注入provide中的数据，而不是局限于只能从当前父组件的prop属性来获取数据。</li>
+<li>provide和inject绑定不是可响应，如果传入了一个可监听的对象，那么其对象的属性还是可响应的。</li>
+</ul>
 
       
     </div>
@@ -542,7 +595,7 @@ this.$emit(&apos;update:foo&apos;, newValue)
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
