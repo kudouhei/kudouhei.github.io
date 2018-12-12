@@ -73,7 +73,7 @@
 
 
 
-  <meta name="keywords" content="Vue," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,18 +84,16 @@
 
 
 
-<meta name="description" content="Vue.extendVue.extend返回的是一个扩展实例构造器，也就是预设了部分选项的Vue实例构造器。主要用来服务Vue.component，用来生成组件。 let baseOptions = {     template: `&amp;lt;p&amp;gt; {{ firstName }} {{ lastNa">
-<meta name="keywords" content="Vue">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Vue.extend">
-<meta property="og:url" content="http://yoursite.com/2018/07/03/Vue.extend/index.html">
+<meta name="description" content="Keep for all">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FE_hei">
+<meta property="og:url" content="http://yoursite.com/tags/JavaScript/page/3/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="Vue.extendVue.extend返回的是一个扩展实例构造器，也就是预设了部分选项的Vue实例构造器。主要用来服务Vue.component，用来生成组件。 let baseOptions = {     template: `&amp;lt;p&amp;gt; {{ firstName }} {{ lastName }}·&amp;lt;/p&amp;gt;`,     data () {         return">
+<meta property="og:description" content="Keep for all">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-03T22:05:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Vue.extend">
-<meta name="twitter:description" content="Vue.extendVue.extend返回的是一个扩展实例构造器，也就是预设了部分选项的Vue实例构造器。主要用来服务Vue.component，用来生成组件。 let baseOptions = {     template: `&amp;lt;p&amp;gt; {{ firstName }} {{ lastName }}·&amp;lt;/p&amp;gt;`,     data () {         return">
+<meta name="twitter:title" content="FE_hei">
+<meta name="twitter:description" content="Keep for all">
 
 
 
@@ -125,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/03/Vue.extend/"/>
+  <link rel="canonical" href="http://yoursite.com/tags/JavaScript/page/3/"/>
 
 
 
 
 
-  <title>Vue.extend | FE_hei</title>
+  <title>标签: JavaScript | FE_hei</title>
   
 
 
@@ -150,7 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -234,183 +232,58 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block tag">
 
-  
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1>JavaScript<small>标签</small>
+        </h1>
+      </div>
 
-  
-  
-  
+      
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/03/Vue.extend/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">Vue.extend</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
+            <a class="post-title-link" href="/2017/11/22/js-array-weighting/" itemprop="url">
               
-                <span class="post-meta-item-text">发表于</span>
+                <span itemprop="name">js实现数组去除重复项</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-03T00:00:00+08:00">
-                2018-07-03
-              </time>
-            
+            </a>
+        
+      </h2>
 
-            
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2017-11-22T22:46:34+08:00"
+              content="2017-11-22" >
+          11-22
+        </time>
+      </div>
 
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h4 id="Vue-extend"><a href="#Vue-extend" class="headerlink" title="Vue.extend"></a>Vue.extend</h4><p>Vue.extend返回的是一个扩展实例构造器，也就是预设了部分选项的Vue实例构造器。主要用来服务Vue.component，用来生成组件。</p>
-<pre><code>let baseOptions = {
-    template: `&lt;p&gt; {{ firstName }} {{ lastName }}·&lt;/p&gt;`,
-    data () {
-        return {
-            firstName: &apos;大漠&apos;,
-            lastName: &apos;w3cplus&apos;,
-        }
-    }
-}
-// 此时可以：  
-let baseExtend = Vue.extend(baseOptions)
-// 借用new关键词来声明这个构造器
-new baseExtend()
-// Vue的实例最终是要挂载到一个元素上，那么Vue.extend也是，也要挂载到一个元素上 
-new baseExtend().$mount(&apos;#app&apos;)
-// 或 
-let app = new baseExtend({
-    el: &apos;#app&apos;
-})
-</code></pre><p><strong>Vue.extend作用</strong><br>Vue.extend 是构造一个组件的语法器，你给这个构造器预设一些参数，而这个构造器给你一个组件，然后这个组件你就可以用到 Vue.component 这个全局注册方法里，也可以在任意Vue模板里使用这个构造器。Vue.component作用是将通过Vue.extend生成的扩展实例构造器注册为一个组件。</p>
-<p>在Vue.component()创建组件：  </p>
-<pre><code>Vue.component(&apos;base-component&apos;,baseOptions)
-Vue.component(&apos;base-component&apos;,baseExtend)
-// 其等于
-Vue.component(&apos;base-component&apos;, Vue.extend(baseOptions))    
-    let app = new Vue({
-        el: &apos;#app&apos;
-    })
-&lt;!-- HTMl --&gt;
-&lt;div id=&quot;app&quot;&gt;
-    &lt;base-component&gt;&lt;/base-component&gt;
-&lt;/div&gt;
-</code></pre>
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Vue/" rel="tag"><i class="fa fa-tag"></i> Vue</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/07/01/单例模式/" rel="next" title="单例模式">
-                <i class="fa fa-chevron-left"></i> 单例模式
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/07/04/理解nextTick/" rel="prev" title="理解Vue.nextTick">
-                理解Vue.nextTick <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
       
     </div>
+
   </div>
+  
+  
+  
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/tags/JavaScript/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/tags/JavaScript/">1</a><a class="page-number" href="/tags/JavaScript/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
 
 
           </div>
@@ -418,10 +291,6 @@ Vue.component(&apos;base-component&apos;, Vue.extend(baseOptions))
 
 
           
-
-  
-
-
 
         </div>
         
@@ -442,17 +311,8 @@ Vue.component(&apos;base-component&apos;, Vue.extend(baseOptions))
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -526,22 +386,6 @@ Vue.component(&apos;base-component&apos;, Vue.extend(baseOptions))
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue-extend"><span class="nav-number">1.</span> <span class="nav-text">Vue.extend</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -662,10 +506,6 @@ Vue.component(&apos;base-component&apos;, Vue.extend(baseOptions))
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
-
-
 
   
 
