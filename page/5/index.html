@@ -879,6 +879,25 @@ var p = new Person() // 0 1 2...
 </ul>
 <p>箭头在声明的时候就绑定了执行上下文，要动态改变上下文是不可能的。</p>
 <p><strong>定义构造函数</strong><br>构造函数中的this指向新创建的对象，当执行<code>new Car()</code>的时候，构造函数Car的上下文就是新创建的对象，<code>this instanceof Car ===true</code>.箭头函数是不能用来做构造函数的。</p>
+<p><strong>何时避免使用箭头函数</strong>  </p>
+<ol>
+<li>对象中的方法  </li>
+</ol>
+<p>当你调用cat.jumps，lives的数量并不会减少，这是因为this没有被绑定在cat对象上，而是使用父作用域的this。</p>
+<pre><code>var cat = {
+    lives: 9,
+    jumps: () =&gt; {
+        this.lives--;
+    }
+}
+</code></pre><ol>
+<li><p>动态上下文的回调函数  </p>
+<pre><code>var button = document.getElementById(&apos;press&apos;);
+button.addEventListener(&apos;click&apos;, () =&gt; {
+    this.classList.toggle(&apos;on&apos;);
+});
+</code></pre></li>
+</ol>
 
           
         
