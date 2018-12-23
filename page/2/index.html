@@ -595,6 +595,451 @@ h1.getName();
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-ticks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/01/vue-ticks/" itemprop="url">vue-ticks</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="Vue实践技巧"><a href="#Vue实践技巧" class="headerlink" title="Vue实践技巧"></a>Vue实践技巧</h4><p><strong>1. 多个页面都使用到的方法，可以放在vue.prototype上</strong>  </p>
+<p>在vue的入口文件(vue-cli生成的项目的话，默认/src/main.js)  </p>
+<pre><code>import port from &apos;./xxx/xxx/post&apos;
+vue.prototype.$post = post
+</code></pre><p>这样就可以在所有的vue组件页面使用this.post()方法了。把方法挂载到prototype上的时候，最好加一个$前缀，避免跟其他变量冲突。不要挂载太多方法到prototype上，只挂载一些使用频率高的。</p>
+<p><strong>封装全局基于Promise的异步请求方法</strong><br>大部分的异步请求都是直接使用axios之类的方法。  </p>
+<pre><code>axios({
+    method: &apos;post&apos;,
+    url: &apos;/user/12345&apos;,
+    data: {
+        firstName: &apos;Fred&apos;
+    }
+})
+.then(function(response){
+    console.log(response)
+})
+.catch(function(error){
+    console.log(error)
+})
+</code></pre><p>如果有跨域，或者需要设置 http 头等，还需要加入更多的配置，而这些配置，对于同一个项目来说，基本都是一样的，不一样的只有 url 跟参数，可以把它封装成一个方法。</p>
+<pre><code>function post(url, param){
+    return new Promise((resolve, reject) =&gt; {
+        axios({
+            method: &apos;post&apos;,
+            url: url,
+            data: param
+        })
+        .then(function(response){
+            resolve(response);
+        })
+        .catch(function(error){
+            reject(error);
+        })
+    })
+}
+</code></pre><p>结合第一点，可以这样使用  </p>
+<pre><code>let param = { firstName: &apos;Fred&apos;}
+this.post(&apos;/user/1234&apos;, param).then(...).catch(...)
+</code></pre><p><strong>路由参数变化组件不更新</strong><br>路由参数变化，但是组件没有对应的更新，主要是因为一般获取参数写在了created路由钩子函数中，路由参数变化的时候，这个生命周期不会重新执行。  </p>
+<p>解决方案： <strong>watch监听router</strong>  </p>
+<pre><code>watch: {
+    // 方法1
+    &apos;$route&apos;(to, from){ // 监听路由是否变化
+        if(this.$route.params.articleId){ // 判断传递值的变化
+            // 获取文章数据
+        }
+    }
+    // 方法2
+    &apos;$route&apos;(to, from){
+        if(to.path ==&quot;/page&quot;){ // 监听路由名 监听你从什么路由跳转过来的
+            this.message = this.$route.query.msg
+        }
+    }
+}
+</code></pre><p><strong>动态懒加载组件</strong><br>在webpack的新特性中支持组件的懒加载，我们可以在加载到该路由的时候再把这部分脚本进行加载，同时这个项目进行打包时，对应的文件也会被单独打包，对于首屏优化及其他页面资源加载优化都很好。  </p>
+<pre><code>const Foo = () =&gt; import(&apos;./Foo.vue&apos;)
+// 使用
+const router = new VueRouter({
+    routes: [
+        { path: &apos;/foo&apos;, component:Foo}
+    ]
+})
+</code></pre><p><strong>vue中data属性为什么不能是一个对象</strong><br>因为组件可能被用来创建多个实例，如果data是一个对象，则所有的实例将共享引用同一个数据对象。通过提供data函数，每次创建一个新实例后，我们能够调用data函数，从而返回初始数据的一个全新副本数据对象。</p>
+<p><strong>列表进入详情页的传参问题</strong><br>商品列表页面前往商品详情页面，需要传一个商品id  </p>
+<pre><code>&lt;router-link :to=&quot;{path: &apos;detail&apos;, query: {id:1}}&quot;&gt;前往detail页面&lt;/router-link&gt;
+</code></pre><p>c页面的路径为<code>http://localhost:8080/#/detail?id=1</code>，可以看到传了一个参数id=1，并且就算刷新页面id也还会存在。此时在c页面可以通过id来获取对应的详情数据，获取id的方式是<code>this.$route.query.id</code></p>
+<pre><code>// query通过path切换路由
+&lt;router-link :to=&quot;{path: &apos;Detail&apos;, query: { id: 1 }}&quot;&gt;前往Detail页面&lt;/router-link&gt;
+// params通过name切换路由
+&lt;router-link :to=&quot;{name: &apos;Detail&apos;, params: { id: 1 }}&quot;&gt;前往Detail页面&lt;/router-link&gt;
+</code></pre><p><strong>本地开发环境请求服务器接口跨域问题</strong>  </p>
+<pre><code>// 本地开发环境的跨域代理
+proxyTable: {
+    &apos;/api&apos;: {
+        target: &apos;http://jr01.0791jr.com&apos;, // 设置调用接口域名和端口号
+        changeOrigin: true,
+        pathRewrite: {
+            &apos;^/api&apos;: &apos;&apos; // 理解为用&apos;/api&apos;代替target里面的地址
+        }
+    }
+}
+</code></pre><p><strong>定时器问题</strong><br>我在a页面写一个定时，让他每秒钟打印一个1，然后跳转到b页面，此时可以看到，定时器依然在执行。这样是非常消耗性能的。</p>
+<p>方法1：<br>首先在data函数里面进行定义定时器名称：  </p>
+<pre><code>data(){
+    return {
+        timer: null
+    }
+}
+</code></pre><p>使用定时器：  </p>
+<pre><code>this.timer = (() =&gt; {
+    // 某些动作
+}, 1000)
+</code></pre><p>最后在beforeDestroy()生命周期内清除定时器  </p>
+<pre><code>beforeDestroy() {
+    clearInterval(this.timer);
+    this.timer = null;
+}
+</code></pre><p>方案2：<br>通过$once这个事件侦听器在定义完定时器之后的位置来清除定时器。  </p>
+<pre><code>const timer = setInterval(() =&gt; {
+    // 某些定时器操作
+}, 500)
+// 通过$once来监听定时器，在beforeDestroy钩子可以被清除
+this.$once(&apos;hookl:beforeDestroy&apos;, ()=&gt;{
+    clearInterval(timer)
+})
+</code></pre><p><strong>化繁为简的Watchers</strong>  </p>
+<pre><code>created(){
+    this.fetchPostList();
+},
+watch: {
+    searchInputValue(){
+        this.fetchPostList();
+    }
+}
+</code></pre><p>组件创建的时候获取一次列表，同时监听input框，每当发生变化的时候重新获取一次筛选后的列表，优化方法？</p>
+<p>在watcher中，可以直接使用函数的字面量名称；其次，声明immediate:true表示创建组件时立马执行一次。</p>
+<pre><code>watch: {
+    searchInputValue: {
+        handler: &apos;fetchPostList&apos;,
+        immediate: true
+    }
+}
+</code></pre><h4 id="vue-keep-alive实践"><a href="#vue-keep-alive实践" class="headerlink" title="vue keep-alive实践"></a>vue keep-alive实践</h4><p>在vue项目中有某些组件不需要多次渲染，需要将组件在内存中进行缓存，这时候应用<code>keep-alive</code>。它可以使被包含的组件状态维持不变，即便组件切换了，其内的状态依旧维持在内存中，下一次显示，不会重新渲染。</p>
+<pre><code>&lt;keep-alive&gt;
+&lt;component&gt;
+  &lt;!-- 组件将被缓存 --&gt;
+&lt;/component&gt;
+&lt;/keep-alive&gt;
+</code></pre><p><strong>配合router-view使用</strong><br>有时候需要将整个路由页面一起缓存下来，就是将<code>&lt;router-view&gt;</code>缓存</p>
+<pre><code>&lt;keep-alive&gt;
+    &lt;router-view v-if=&quot;$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
+&lt;/keep-alive&gt;
+&lt;router-view v-if=&quot;!$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
+
+new Router({
+    routes: [
+        {
+            name: &apos;a&apos;,
+            path: &apos;/a&apos;,
+            component: A,
+            meta: {
+                keepAlive: true
+            }
+        },
+        {
+            name: &apos;b&apos;,
+            path: &apos;/b&apos;,
+            component: B
+        }
+    ]
+})
+</code></pre><p>a路由便达到了被缓存的效果，如果还有想要缓存的路由，只需要在路由元中加入 keepAlive: true.</p>
+<p><strong>使用router.meta</strong><br>需求： 默认显示A；B跳转到A，A不刷新；C跳到A，A不刷新</p>
+<pre><code>// 在A路由里面设置meta属性
+{
+    path: &apos;/&apos;,
+    name: &apos;A&apos;,
+    component: A,
+    meta: { keepAlive: true // 需要被缓存}
+}
+// 在B组件里面设置beforeRouteLeave
+export default {
+    data() {
+        return {};
+    },
+    methods: {},
+    beforeRouteLeave(to, from, next){
+        // 设置下一个路由的meta
+        to.meta.keepAlive = true; // 让A缓存，即不刷新
+    }
+}
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/js事件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/01/js事件/" itemprop="url">javascript事件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="JavaScript事件"><a href="#JavaScript事件" class="headerlink" title="JavaScript事件"></a>JavaScript事件</h3><p><strong>事件级别</strong>  </p>
+<ul>
+<li>DOM0：element.onclick = function(){}</li>
+<li>DOM2: element.addEventListener(‘click’,function(){}, false)</li>
+<li>DOM3:element.addEventListener(‘keyup’,function(){},false)</li>
+</ul>
+<p><strong>事件流(事件三个阶段)</strong><br>事件流三个阶段，首先捕获阶段，事件通过捕获，到达目标阶段，从目标元素在上传到window对象，为冒泡阶段</p>
+<p><strong>描述DOM事件捕获的具体流程</strong><br>window -&gt; document -&gt; html标签(document.documentElement) -&gt; body -&gt;…-&gt;目标元素</p>
+<p><strong>Event对象</strong>  </p>
+<ul>
+<li>event.preventDefault()阻止默认行为 </li>
+<li>event.stopPropagation()阻止冒泡</li>
+<li>event.stopImmediatePropagation()注册两个事件，优先级执行  </li>
+<li>event.currentTarget当前绑定事件的对象</li>
+<li>event.target：触发事件的某个具体的对象，只会出现在事件机制的目标阶段</li>
+</ul>
+<p><strong>先捕获，再冒泡</strong><br><strong>在target注册的监听器，不分捕获和冒泡</strong></p>
+<p><strong>事件委托</strong><br>事件委托是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件</p>
+<pre><code>function delegateEvent(ele, selector, type, fn){
+    if(ele.addEventListener){
+        ele.addEventListener(type, eventfn, false);
+    }else if(ele.attachEvent){
+        ele.attachEvent(&quot;on&quot;+type, eventfn);
+    }else{
+        ele[&apos;on&apos;+type] = eventfn;
+    }
+    function eventfn(e){
+        var e = e||window.e;
+        var target = e.target || e.srcElement;
+        if(target.matches(selector)){
+            if(fn){
+                fn.call(target, e);
+            }
+        }
+    }
+}
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-source/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -972,451 +1417,6 @@ export default {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/js事件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/01/js事件/" itemprop="url">javascript事件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
-                2018-08-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="JavaScript事件"><a href="#JavaScript事件" class="headerlink" title="JavaScript事件"></a>JavaScript事件</h3><p><strong>事件级别</strong>  </p>
-<ul>
-<li>DOM0：element.onclick = function(){}</li>
-<li>DOM2: element.addEventListener(‘click’,function(){}, false)</li>
-<li>DOM3:element.addEventListener(‘keyup’,function(){},false)</li>
-</ul>
-<p><strong>事件流(事件三个阶段)</strong><br>事件流三个阶段，首先捕获阶段，事件通过捕获，到达目标阶段，从目标元素在上传到window对象，为冒泡阶段</p>
-<p><strong>描述DOM事件捕获的具体流程</strong><br>window -&gt; document -&gt; html标签(document.documentElement) -&gt; body -&gt;…-&gt;目标元素</p>
-<p><strong>Event对象</strong>  </p>
-<ul>
-<li>event.preventDefault()阻止默认行为 </li>
-<li>event.stopPropagation()阻止冒泡</li>
-<li>event.stopImmediatePropagation()注册两个事件，优先级执行  </li>
-<li>event.currentTarget当前绑定事件的对象</li>
-<li>event.target：触发事件的某个具体的对象，只会出现在事件机制的目标阶段</li>
-</ul>
-<p><strong>先捕获，再冒泡</strong><br><strong>在target注册的监听器，不分捕获和冒泡</strong></p>
-<p><strong>事件委托</strong><br>事件委托是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件</p>
-<pre><code>function delegateEvent(ele, selector, type, fn){
-    if(ele.addEventListener){
-        ele.addEventListener(type, eventfn, false);
-    }else if(ele.attachEvent){
-        ele.attachEvent(&quot;on&quot;+type, eventfn);
-    }else{
-        ele[&apos;on&apos;+type] = eventfn;
-    }
-    function eventfn(e){
-        var e = e||window.e;
-        var target = e.target || e.srcElement;
-        if(target.matches(selector)){
-            if(fn){
-                fn.call(target, e);
-            }
-        }
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-ticks/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/01/vue-ticks/" itemprop="url">vue-ticks</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
-                2018-08-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="Vue实践技巧"><a href="#Vue实践技巧" class="headerlink" title="Vue实践技巧"></a>Vue实践技巧</h4><p><strong>1. 多个页面都使用到的方法，可以放在vue.prototype上</strong>  </p>
-<p>在vue的入口文件(vue-cli生成的项目的话，默认/src/main.js)  </p>
-<pre><code>import port from &apos;./xxx/xxx/post&apos;
-vue.prototype.$post = post
-</code></pre><p>这样就可以在所有的vue组件页面使用this.post()方法了。把方法挂载到prototype上的时候，最好加一个$前缀，避免跟其他变量冲突。不要挂载太多方法到prototype上，只挂载一些使用频率高的。</p>
-<p><strong>封装全局基于Promise的异步请求方法</strong><br>大部分的异步请求都是直接使用axios之类的方法。  </p>
-<pre><code>axios({
-    method: &apos;post&apos;,
-    url: &apos;/user/12345&apos;,
-    data: {
-        firstName: &apos;Fred&apos;
-    }
-})
-.then(function(response){
-    console.log(response)
-})
-.catch(function(error){
-    console.log(error)
-})
-</code></pre><p>如果有跨域，或者需要设置 http 头等，还需要加入更多的配置，而这些配置，对于同一个项目来说，基本都是一样的，不一样的只有 url 跟参数，可以把它封装成一个方法。</p>
-<pre><code>function post(url, param){
-    return new Promise((resolve, reject) =&gt; {
-        axios({
-            method: &apos;post&apos;,
-            url: url,
-            data: param
-        })
-        .then(function(response){
-            resolve(response);
-        })
-        .catch(function(error){
-            reject(error);
-        })
-    })
-}
-</code></pre><p>结合第一点，可以这样使用  </p>
-<pre><code>let param = { firstName: &apos;Fred&apos;}
-this.post(&apos;/user/1234&apos;, param).then(...).catch(...)
-</code></pre><p><strong>路由参数变化组件不更新</strong><br>路由参数变化，但是组件没有对应的更新，主要是因为一般获取参数写在了created路由钩子函数中，路由参数变化的时候，这个生命周期不会重新执行。  </p>
-<p>解决方案： <strong>watch监听router</strong>  </p>
-<pre><code>watch: {
-    // 方法1
-    &apos;$route&apos;(to, from){ // 监听路由是否变化
-        if(this.$route.params.articleId){ // 判断传递值的变化
-            // 获取文章数据
-        }
-    }
-    // 方法2
-    &apos;$route&apos;(to, from){
-        if(to.path ==&quot;/page&quot;){ // 监听路由名 监听你从什么路由跳转过来的
-            this.message = this.$route.query.msg
-        }
-    }
-}
-</code></pre><p><strong>动态懒加载组件</strong><br>在webpack的新特性中支持组件的懒加载，我们可以在加载到该路由的时候再把这部分脚本进行加载，同时这个项目进行打包时，对应的文件也会被单独打包，对于首屏优化及其他页面资源加载优化都很好。  </p>
-<pre><code>const Foo = () =&gt; import(&apos;./Foo.vue&apos;)
-// 使用
-const router = new VueRouter({
-    routes: [
-        { path: &apos;/foo&apos;, component:Foo}
-    ]
-})
-</code></pre><p><strong>vue中data属性为什么不能是一个对象</strong><br>因为组件可能被用来创建多个实例，如果data是一个对象，则所有的实例将共享引用同一个数据对象。通过提供data函数，每次创建一个新实例后，我们能够调用data函数，从而返回初始数据的一个全新副本数据对象。</p>
-<p><strong>列表进入详情页的传参问题</strong><br>商品列表页面前往商品详情页面，需要传一个商品id  </p>
-<pre><code>&lt;router-link :to=&quot;{path: &apos;detail&apos;, query: {id:1}}&quot;&gt;前往detail页面&lt;/router-link&gt;
-</code></pre><p>c页面的路径为<code>http://localhost:8080/#/detail?id=1</code>，可以看到传了一个参数id=1，并且就算刷新页面id也还会存在。此时在c页面可以通过id来获取对应的详情数据，获取id的方式是<code>this.$route.query.id</code></p>
-<pre><code>// query通过path切换路由
-&lt;router-link :to=&quot;{path: &apos;Detail&apos;, query: { id: 1 }}&quot;&gt;前往Detail页面&lt;/router-link&gt;
-// params通过name切换路由
-&lt;router-link :to=&quot;{name: &apos;Detail&apos;, params: { id: 1 }}&quot;&gt;前往Detail页面&lt;/router-link&gt;
-</code></pre><p><strong>本地开发环境请求服务器接口跨域问题</strong>  </p>
-<pre><code>// 本地开发环境的跨域代理
-proxyTable: {
-    &apos;/api&apos;: {
-        target: &apos;http://jr01.0791jr.com&apos;, // 设置调用接口域名和端口号
-        changeOrigin: true,
-        pathRewrite: {
-            &apos;^/api&apos;: &apos;&apos; // 理解为用&apos;/api&apos;代替target里面的地址
-        }
-    }
-}
-</code></pre><p><strong>定时器问题</strong><br>我在a页面写一个定时，让他每秒钟打印一个1，然后跳转到b页面，此时可以看到，定时器依然在执行。这样是非常消耗性能的。</p>
-<p>方法1：<br>首先在data函数里面进行定义定时器名称：  </p>
-<pre><code>data(){
-    return {
-        timer: null
-    }
-}
-</code></pre><p>使用定时器：  </p>
-<pre><code>this.timer = (() =&gt; {
-    // 某些动作
-}, 1000)
-</code></pre><p>最后在beforeDestroy()生命周期内清除定时器  </p>
-<pre><code>beforeDestroy() {
-    clearInterval(this.timer);
-    this.timer = null;
-}
-</code></pre><p>方案2：<br>通过$once这个事件侦听器在定义完定时器之后的位置来清除定时器。  </p>
-<pre><code>const timer = setInterval(() =&gt; {
-    // 某些定时器操作
-}, 500)
-// 通过$once来监听定时器，在beforeDestroy钩子可以被清除
-this.$once(&apos;hookl:beforeDestroy&apos;, ()=&gt;{
-    clearInterval(timer)
-})
-</code></pre><p><strong>化繁为简的Watchers</strong>  </p>
-<pre><code>created(){
-    this.fetchPostList();
-},
-watch: {
-    searchInputValue(){
-        this.fetchPostList();
-    }
-}
-</code></pre><p>组件创建的时候获取一次列表，同时监听input框，每当发生变化的时候重新获取一次筛选后的列表，优化方法？</p>
-<p>在watcher中，可以直接使用函数的字面量名称；其次，声明immediate:true表示创建组件时立马执行一次。</p>
-<pre><code>watch: {
-    searchInputValue: {
-        handler: &apos;fetchPostList&apos;,
-        immediate: true
-    }
-}
-</code></pre><h4 id="vue-keep-alive实践"><a href="#vue-keep-alive实践" class="headerlink" title="vue keep-alive实践"></a>vue keep-alive实践</h4><p>在vue项目中有某些组件不需要多次渲染，需要将组件在内存中进行缓存，这时候应用<code>keep-alive</code>。它可以使被包含的组件状态维持不变，即便组件切换了，其内的状态依旧维持在内存中，下一次显示，不会重新渲染。</p>
-<pre><code>&lt;keep-alive&gt;
-&lt;component&gt;
-  &lt;!-- 组件将被缓存 --&gt;
-&lt;/component&gt;
-&lt;/keep-alive&gt;
-</code></pre><p><strong>配合router-view使用</strong><br>有时候需要将整个路由页面一起缓存下来，就是将<code>&lt;router-view&gt;</code>缓存</p>
-<pre><code>&lt;keep-alive&gt;
-    &lt;router-view v-if=&quot;$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
-&lt;/keep-alive&gt;
-&lt;router-view v-if=&quot;!$route.meta.keepAlive&quot;&gt;&lt;/router-view&gt;
-
-new Router({
-    routes: [
-        {
-            name: &apos;a&apos;,
-            path: &apos;/a&apos;,
-            component: A,
-            meta: {
-                keepAlive: true
-            }
-        },
-        {
-            name: &apos;b&apos;,
-            path: &apos;/b&apos;,
-            component: B
-        }
-    ]
-})
-</code></pre><p>a路由便达到了被缓存的效果，如果还有想要缓存的路由，只需要在路由元中加入 keepAlive: true.</p>
-<p><strong>使用router.meta</strong><br>需求： 默认显示A；B跳转到A，A不刷新；C跳到A，A不刷新</p>
-<pre><code>// 在A路由里面设置meta属性
-{
-    path: &apos;/&apos;,
-    name: &apos;A&apos;,
-    component: A,
-    meta: { keepAlive: true // 需要被缓存}
-}
-// 在B组件里面设置beforeRouteLeave
-export default {
-    data() {
-        return {};
-    },
-    methods: {},
-    beforeRouteLeave(to, from, next){
-        // 设置下一个路由的meta
-        to.meta.keepAlive = true; // 让A缓存，即不刷新
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/18/实现new/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1515,6 +1515,179 @@ var person = objectFactory(Person, &apos;Kevin&apos;, &apos;18&apos;);
 console.log(person.name) // Kevin
 console.log(person.strength) //60
 </code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
+                2018-07-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
+<p><strong>攻击分类</strong>  </p>
+<ul>
+<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
+<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
+<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
+</ul>
+<p><strong>如何防御XSS</strong>  </p>
+<ul>
+<li>转义： 转义嵌入HTML中的动态内容</li>
+<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
+<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
+</ul>
+</li>
+</ul>
+<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
+<p><strong>攻击原理</strong>  </p>
+<ol>
+<li>浏览器C浏览并登录信任网站A</li>
+<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
+<li>用户在没有登出A网站的情况下，访问危险网站B</li>
+<li>B要求访问第三方站点A，发出一个请求request</li>
+<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
+<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
+</ol>
+<p><strong>常见的防御方式</strong>  </p>
+<ul>
+<li>添加验证码</li>
+<li>验证HTTP Referer字段</li>
+<li>在HTTP头中自定义属性并验证</li>
+</ul>
+<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
+<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
+<p><strong>https作用</strong>  </p>
+<ul>
+<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
+<li>身份认证确认网站的真实性</li>
+<li>数据完整性防止内容被第三方冒充或篡改</li>
+</ul>
+<p><strong>HTTPS流程解析</strong>  </p>
+<ol>
+<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
+<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
+<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
+<li>将加密后的对称密钥发送给HTTPS服务端</li>
+<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
+</ol>
+<p><strong>https和http区别</strong>  </p>
+<ul>
+<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
+<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
+<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
+</ul>
+<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
+
           
         
       
@@ -1759,179 +1932,6 @@ console.log(person.strength) //60
 <li>web服务器通过自己的私钥解密出会话密钥</li>
 <li>web服务器通过会话密钥加密与客户端之间通信。</li>
 </ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
-                2018-07-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
-<p><strong>攻击分类</strong>  </p>
-<ul>
-<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
-<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
-<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
-</ul>
-<p><strong>如何防御XSS</strong>  </p>
-<ul>
-<li>转义： 转义嵌入HTML中的动态内容</li>
-<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
-<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
-</ul>
-</li>
-</ul>
-<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
-<p><strong>攻击原理</strong>  </p>
-<ol>
-<li>浏览器C浏览并登录信任网站A</li>
-<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
-<li>用户在没有登出A网站的情况下，访问危险网站B</li>
-<li>B要求访问第三方站点A，发出一个请求request</li>
-<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
-<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
-</ol>
-<p><strong>常见的防御方式</strong>  </p>
-<ul>
-<li>添加验证码</li>
-<li>验证HTTP Referer字段</li>
-<li>在HTTP头中自定义属性并验证</li>
-</ul>
-<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
-<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
-<p><strong>https作用</strong>  </p>
-<ul>
-<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
-<li>身份认证确认网站的真实性</li>
-<li>数据完整性防止内容被第三方冒充或篡改</li>
-</ul>
-<p><strong>HTTPS流程解析</strong>  </p>
-<ol>
-<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
-<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
-<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
-<li>将加密后的对称密钥发送给HTTPS服务端</li>
-<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
-</ol>
-<p><strong>https和http区别</strong>  </p>
-<ul>
-<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
-<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
-<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
-</ul>
-<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
 
           
         
