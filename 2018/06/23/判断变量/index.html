@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="javascript判断变量类型陷阱 六种简单数据类型：String、Number、Boolean、Null、Undefined、Symbol   Object是唯一的复杂数据类型。Object、Array、Function类型都可归结为Object复杂数据类型。  typeof：用来检测变量数据类型 对一个值使用ty">
+<meta name="description" content="javascript判断变量类型陷阱 六种简单数据类型：String、Number、Boolean、Null、Undefined、Symbol   Object是唯一的复杂数据类型。Object、Array、Function类型都可归结为Object复杂数据类型。  原始值和引用值存储在内存中的位置分别是栈和堆。原始值">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="javascript判断变量类型陷阱">
 <meta property="og:url" content="http://yoursite.com/2018/06/23/判断变量/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="javascript判断变量类型陷阱 六种简单数据类型：String、Number、Boolean、Null、Undefined、Symbol   Object是唯一的复杂数据类型。Object、Array、Function类型都可归结为Object复杂数据类型。  typeof：用来检测变量数据类型 对一个值使用typeof可能返回以下结果    undefined string boolean">
+<meta property="og:description" content="javascript判断变量类型陷阱 六种简单数据类型：String、Number、Boolean、Null、Undefined、Symbol   Object是唯一的复杂数据类型。Object、Array、Function类型都可归结为Object复杂数据类型。  原始值和引用值存储在内存中的位置分别是栈和堆。原始值是存储在栈中的简单数据段，它们的值直接存储在变量访问的位置。引用值是存储在堆中的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-25T15:31:43.000Z">
+<meta property="og:updated_time" content="2018-12-26T13:57:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="javascript判断变量类型陷阱">
-<meta name="twitter:description" content="javascript判断变量类型陷阱 六种简单数据类型：String、Number、Boolean、Null、Undefined、Symbol   Object是唯一的复杂数据类型。Object、Array、Function类型都可归结为Object复杂数据类型。  typeof：用来检测变量数据类型 对一个值使用typeof可能返回以下结果    undefined string boolean">
+<meta name="twitter:description" content="javascript判断变量类型陷阱 六种简单数据类型：String、Number、Boolean、Null、Undefined、Symbol   Object是唯一的复杂数据类型。Object、Array、Function类型都可归结为Object复杂数据类型。  原始值和引用值存储在内存中的位置分别是栈和堆。原始值是存储在栈中的简单数据段，它们的值直接存储在变量访问的位置。引用值是存储在堆中的">
 
 
 
@@ -319,6 +319,9 @@
 <li>六种简单数据类型：String、Number、Boolean、Null、Undefined、Symbol  </li>
 <li>Object是唯一的复杂数据类型。Object、Array、Function类型都可归结为Object复杂数据类型。</li>
 </ul>
+<p>原始值和引用值存储在内存中的位置分别是栈和堆。原始值是存储在栈中的简单数据段，它们的值直接存储在变量访问的位置。引用值是存储在堆中的对象。</p>
+<p>栈的优势就是存取速度比堆要快，仅次于直接位于CPU中的寄存器，但缺点是，存在栈中的数据大小与生存期必须是确定的，缺乏灵活性。堆的优势是可以动态地分配内存大小，生存期也不必事先告诉编译器，垃圾收集器会自动地收走这些不再使用的数据，但是缺点是由于在运行时动态分配内存，所以存取速度较慢。</p>
+<p>对于简单数据类型而言，他们占用内存比较小，如果放在堆中，查找会浪费很多时间，而把堆中的数据放入栈中也会影响栈的效率。比如对象和数组是可以无限拓展的，正好放在可以动态分配大小的堆中。</p>
 <p><strong>typeof</strong>：用来检测变量数据类型</p>
 <p>对一个值使用typeof可能返回以下结果  </p>
 <ul>

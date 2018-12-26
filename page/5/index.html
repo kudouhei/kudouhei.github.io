@@ -247,7 +247,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/ajax/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/28/性能优化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -266,7 +266,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/28/ajax/" itemprop="url">解决跨域</a></h1>
+                <a class="post-title-link" href="/2018/05/28/性能优化/" itemprop="url">前端性能优化</a></h1>
         
 
         <div class="post-meta">
@@ -318,271 +318,129 @@
       
         
           
-            <h4 id="ajax跨域"><a href="#ajax跨域" class="headerlink" title="ajax跨域"></a>ajax跨域</h4><p>ajax跨域属于浏览器“同源策略”中的一部分。</p>
-<p>原因：  </p>
+            <h4 id="前端性能优化"><a href="#前端性能优化" class="headerlink" title="前端性能优化"></a>前端性能优化</h4><p><strong>1. 网络方面（网络传输性能）</strong><br>浏览器同一时间所发送的网络请求数是有限的。浏览器处理用户请求的过程：<strong>浏览器在得到用户请求之后，经历了下面阶段：重定向-&gt;拉取缓存-&gt;DNS查询-&gt;建立TCP链接-&gt;发起请求-&gt;接收响应-&gt;处理HTML元素-&gt;元素加载完成</strong></p>
 <ul>
-<li>浏览器限制</li>
-<li>跨域（同源策略）</li>
-<li>XHR请求</li>
-</ul>
-<p>当我们发送XMLHttpRequest请求的时候，如果请求的是别的域(主机域名、端口)不同时，那么就会产生跨域问题(客户端无法获取服务端返回的数据)。 </p>
-<p><strong>跨域的问题是发生在XMLHttpRequest请求的，也就是说，不是XMLHttpRequest请求是不会有跨域问题的</strong></p>
-<h5 id="如何解决ajax跨域"><a href="#如何解决ajax跨域" class="headerlink" title="如何解决ajax跨域"></a>如何解决ajax跨域</h5><p><strong>1. jsonp方式</strong><br>JSONP能够用来解决跨域方案,主要是因为 <code>&lt;script&gt;</code> 脚本拥有跨域能力.</p>
-<p><img src="/images/ajax/jsonp.jpg" alt=""></p>
-<p><strong>实现流程</strong>  </p>
-<ul>
-<li><p>客户端网页通过添加一个<code>&lt;script&gt;</code>元素，向服务器请求JSON数据，这种做法不受同源政策限制。</p>
-<pre><code>function addScriptTag(src){
-    var script = document.createElement(&apos;script&apos;);
-    script.setAttribute(&quot;type&quot;, &quot;text/javascript&quot;);
-    script.src = src;
-    document.body.appendChild(script);
-}
-window.onload = function(){
-    addScriptTag(&apos;http://example.com/ip?callback=foo&apos;);
-}
-function foo(data){
-    console.log(&apos;response data:&apos;+JSON.stringify(data));
-}
-</code></pre></li>
-<li><p>服务端对应的接口在返回参数外面添加函数包裹层</p>
-<pre><code>foo({
-    &quot;test&quot;: &quot;testData&quot;
-})
-</code></pre></li>
-<li><p>由于<code>&lt;script&gt;</code>元素请求的脚本，直接作为代码运行。只要浏览器定义了foo函数，该函数就会立即调用。作为参数的JSON数据被视为JavaScript对象，而不是字符串，因此避免了使用JSON.parse的步骤。</p>
-</li>
-</ul>
-<p>一般的JSONP接口和普通接口返回数据是有区别的，所以接口如果要做JSONP兼容，需要进行判断是否有对应callback关键字参数，如果有则是JSONP请求，返回JSONP数据，否则返回普通数据。</p>
-<p><strong>注意：普通ajax请求和jsonp请求区别</strong>  </p>
-<ul>
-<li>普通的ajax请求发出去Type类型是xhr，而jsonp发出的请求是script。</li>
-<li>返回的类型不同(Content-Type)。普通ajax请求返回的是application/json，jsonp请求返回的是application/javascript</li>
-<li>需要进行判断是否有对应callback关键字参数，如果有则是JSONP请求，返回JSONP数据，否则返回普通数据。</li>
-</ul>
-<p><strong>JSONP弊端</strong></p>
-<ul>
-<li>服务器需要改动代码支持</li>
-<li>只支持GET</li>
-<li>发送的不是XHR请求</li>
-</ul>
-<p><strong>jsonp两点疑问</strong>  </p>
-<ul>
-<li>问题一：jsonp是需要动态创建script标签的，我们需不需要处理这些script元素？怎么处理？<ul>
-<li>jsonp动态创建的节点是需要删除的。</li>
-<li>jsonp创建script节点后，通常还会挂上onload、onreadystatechange、onerror等事件，需要考虑的是在实现jsonp时，一般都会生成一个uuid，然后将它挂载到window上，用以包装用户的callback。这些挂载到window上的callback也是需要释放的。</li>
+<li>减少http请求，必要的资源合并</li>
+<li>减小资源体积，资源压缩(图片体积，雪碧图，使用字体图标，使用webp格式)</li>
+<li>缓存<ul>
+<li>DNS缓存：浏览器会在DNS解析步骤中消耗一定的时间<ul>
+<li>DNS预解析<ul>
+<li><code>&lt;link rel=&quot;dns-prefetch&quot; href=&quot;A.com&quot;&gt;</code></li>
+<li><code>&lt;meta http-equiv=&quot;x-dns-prefetch-control&quot; content=&quot;on&quot;&gt;</code></li>
 </ul>
 </li>
-<li>问题二：jsonp请求的时候，服务器发生错误该怎么办，比如服务器崩掉，比如返回404页面，前端该怎么处理这个错误？<ul>
-<li>在JSONP的返回中嵌入状态码，前端根据状态码判断成功或失败然后调用不同的回调函数。还有比如用jquery的话，用$.getJSON()或$.ajax()方法在发生错误时可以用error回调函数来捕获错误，前端对用户进行提示。</li>
+<li>当浏览网页时，浏览器会在加载网页时对网页中的域名进行预解析并缓存，这样在浏览器加载网页中的链接时，就无需进行DNS解析，减少用户的等待时间，提高用户体验</li>
+</ul>
+</li>
+<li>CDN部署与缓存：CDN作为静态资源文件的分发网络，本身就已经提升了，网站静态资源的获取速度，加快网站的加载速度，同时也给静态资源做好缓存工作，有效的利用已缓存的静态资源，加快获取速度</li>
+<li>http缓存：给资源设定缓存时间，防止在有效的缓存时间内对资源进行重复的下载，从而提升整体网页的加载速度</li>
 </ul>
 </li>
 </ul>
-<p><strong>2. 代理请求方式</strong><br>前端对接口进行代理  </p>
+<p><img src="/images/css/c1.png" alt="">  </p>
+<p>浏览器默认的缓存是放在内存里，内存里的缓存会因为进程的结束或浏览器的关闭而被清除，而存在硬盘里的缓存才能够被长期保留下去。<code>from memory cache</code>和<code>from dis cache</code>，通过在服务器上设置的Etag字段控制缓存存放的位置，在浏览器接收到服务器响应后，会检测响应头部Header，如果有Etag字段，那么浏览器就会将本次缓存写入磁盘中。</p>
+<p>拉取缓存会出现200、304两种不同的状态码，取决于浏览器是否有向服务器发起验证请求。 只有向服务器发起验证请求并确认缓存未被更新，才会返回304状态码。</p>
+<p><strong>2. 渲染和DOM操作方面</strong>  </p>
 <ul>
-<li>前端ajax请求的是本地接口</li>
-<li>本地接口接收到请求后向实际的接口请求数据，然后再讲信息返回给前端</li>
-<li>一般用Node.js即可代理</li>
+<li>减少重排和重绘<ul>
+<li>DOM渲染层与GPU硬件加速：布局是由CPU处理的，绘制则是由GPU完成的<ul>
+<li>浏览器会先获取DOM树并依据样式将其分割成多个独立的渲染层</li>
+<li>CPU将每个层绘制进绘图中</li>
+<li>将位图作为纹理上传至GPU绘制</li>
+<li>GPU将所有的渲染层缓存，如果下次上传的渲染层没有发生变化，GPU就不需要对其进行重绘，并复合多个渲染层最终形成图像</li>
 </ul>
-<p><strong>3. 通过WebSocket跨域</strong><br>WebSocket是一种通信协议，使用ws://非加密和wss://加密作为协议前缀。该协议不实现同源政策，只要服务器支持，就可以通过他进行跨源通信。  </p>
-<pre><code>wsUrl = &apos;wss://127.0.0.1:8090/ws/&apos;;
-//发送
-ws = new WebSocket(wsUrl);
-//连接成功建立时调用
-ws.open = function(event){
-    console.log(&quot;websocke onopen&quot;);
-    var msg = {
-        username: &quot;test&quot;
-    }
-    //通过send()方法向服务端发送消息，参数必须为字符串
-    ws.send(JSON.stringify(msg))
-}
-//服务端向客户端发送消息时调用
-ws.onmessage = function(event){
-    console.log(&quot;websocket onmessage:&quot; + event.data)
-    if(event.data ===&quot;success&quot;){
-        ws.close()
-    }
-}
-//连接被关闭时调用
-ws.onclose = function(event){
-    console.log(&apos;websocket onclose&apos; + event.data);
-}
-//连接出错误时调用
-ws.onerror = function(event){
-    console.log(&quot;websocket onerror&quot;+event.data)
-}
-</code></pre><p><strong>4. 跨源资源共享CORS</strong><br>这种机制让web应用服务器能支持跨站访问控制，从而使得安全地进行跨站数据传输成为可能。这个规范是针对API容器的（比如XMLHTTPRequest或者Fetch），以减轻跨域HTTP请求的风险。</p>
-<p>只要服务器返回的响应中包含头部信息Access-Control-Allow-Origin: domain-name，domain-name为允许跨域的域名，也可以设置成*，浏览器就会允许本次跨域请求。 </p>
-<ul>
-<li>使用简单方便，更为安全</li>
-<li>支持POST请求方式</li>
-<li>CORS存在兼容问题，仅支持IE10以上</li>
-</ul>
-<h4 id="手写原生ajax请求"><a href="#手写原生ajax请求" class="headerlink" title="手写原生ajax请求"></a>手写原生ajax请求</h4><pre><code>ajax({
-    url: &apos;/url&apos;,
-    type: &apos;post&apos;,
-    data: {name: &apos;test&apos;},
-    dataType: &apos;json&apos;,
-    success: function(response){
-        console.log(&quot;success&quot;);
-    },
-    fail: function(status){
-        console.log(&quot;fail&quot;);
-    }
-})
-function ajax(options){
-    options = options || {};
-    options.type = (options.type || &quot;GET&quot;).toUpperCase();
-    options.dataType = options.dataType || &quot;json&quot;;
-    var params = formatParams(options.data);
-    if(window.XMLHttpRequest){
-        var xhr = new XMLHttpRequest();
-    }else{
-        var xhr = new ActiveXObject(&apos;Microsoft.XMLHTTP&apos;);
-    }
-    if(options.type===&quot;GET&quot;){
-        xhr.open(&quot;GET&quot;, options.url+&quot;?&quot;+params, true);
-        xhr.send(null);
-    }else if(options.type===&quot;POST&quot;){
-        xhr.open(&quot;POST&quot;, options.url, true);
-        xhr.setRequestHeader(&quot;Content-Type&quot;, &apos;application/x-www-form-urlencoded&apos;);
-        xhr.send(params);
-    }
-    xhr.onreadystatechange = function(){
-        if(xhr.readyState ==4){
-            var status = xhr.status;
-            if(status&gt;=200 &amp;&amp; status&lt;300 || status==304){
-                options.success &amp;&amp; options.success(xhr.responseText);
-            }else{
-                options.fail &amp;&amp; options.fail(status)
-            }
-        }
-    }
-}
-function formatParams(data){
-    var arr = [];
-    for(var i in data){
-        arr.push(encodeURIComponent(i)+&quot;=&quot;+encodeURIComponent(data[i]));
-    }
-    return arr;
-}
-</code></pre><h4 id="完全不同源的跨域-两个页面之间的通信"><a href="#完全不同源的跨域-两个页面之间的通信" class="headerlink" title="完全不同源的跨域(两个页面之间的通信)"></a>完全不同源的跨域(两个页面之间的通信)</h4><p><strong>1. 通过location.hash跨域</strong><br>通过设置/监听url的hash部分，来实现跨域，借助第三个页面进行辅助。</p>
-<pre><code>A域 a.html -&gt; B域 b.html -&gt; A域 c.html -&gt; A域 a.html
-
-// a.html
-&lt;iframe id=&quot;iframe-b&quot; src=&quot;http://domain-b.com/b.html&quot;&gt;&lt;/iframe&gt;
-&lt;script&gt;
-    var bPage = document.getElementById(&apos;iframe-b&apos;);
-    bPage.src = bPage.src + &apos;#user=test&apos;;
-    function cb(res){
-        console.log(res)
-    }
-&lt;/script&gt;
-
-// b.html
-&lt;iframe id=&quot;iframe-c&quot; src=&quot;http://domain-a.com/c.html&quot;&gt;&lt;/iframe&gt;
-&lt;script&gt;
-    var cPage = document.getElementById(&apos;iframe-c&apos;);
-    window.onhashchange = function(){
-        cPage.src = cPage.src + location.hash
-    }
-&lt;/script&gt;
-
-// c.html
-&lt;script&gt;
-    window.onhashchange = function(){
-        window.parent.parent.cb(&apos;success&apos;+location.hash)
-    }
-&lt;/script&gt;
-</code></pre><p>优点： 可以解决域名完全不同的跨域。实现双向通讯。<br>缺点：location.hash暴露在url中，安全性不高。由于url大小限制，支持传递的数据量有限。  </p>
-<p><strong>2通过window.postMessage</strong><br>window.postMessage方法，允许跨窗口通信，不论这两个窗口是否同源。</p>
-<p> otherWindow.postMessage(message,targetOrigin, 可选)   </p>
-<ul>
-<li>message：消息内容</li>
-<li><p>targetOrigin：接受消息窗口的源，也可以设置为通配符*，向所有窗口发送。</p>
-<p>发送者和接收者可以通过message事件，监听对方的消息。message事件的事件对象event包含三个属性：  </p>
 </li>
-<li><p>event.source：发送消息的窗口对象的引用，可以用此在两个窗口建立双向通信。</p>
-</li>
-<li>event.origin: 发送消息的URI</li>
-<li><p>event.data: 消息内容</p>
-<pre><code>// 发送者domain-a/a.html
-&lt;script&gt;
-var newWindow = window.open(&apos;http://domain-b.com/b.html&apos;)
-    newWindow.postMessage(&apos;Hello&apos;,&apos;http://domain-b.com/b.html&apos;) //向b.html发送消息
-// 双向通信，接受b.html的回复消息
-var onmessage = function(event){
-    var data = event.data;
-    var origin = event.origin;
-    if(origin==&apos;http://domain-b.com/b.html&apos;){
-        console.log(data); // Nice
-    }
-}
-window.addEventListener(&apos;message&apos;, onmessage, false);
-    &lt;/script&gt;
-
-//接收者 domain-b.com/b.html
-&lt;script&gt;
-    var onmessage = function(event){
-        var data = event.data;
-        var origin = event.origin;
-        var source = event.source;
-        if(origin==&apos;http://domain-a.com/a.html&apos;){
-            console.log(data) // Hello
-            //回复消息
-            source.postMessage(&apos;Nice&apos;,&apos;http://domain-a.com/a.html&apos;)
-        }
-    }
-    window.addEventListener(&apos;message&apos;, onmessage, false)
-&lt;/script&gt;
-</code></pre></li>
+<li>重排：渲染层内的元素布局发生修改，都会导致页面重新排列，比如窗口的尺寸发生变化、删除或添加DOM元素，修改了影响元素盒子大小的CSS属性。获取某些属性，浏览器为了获得正确的值也会触发重排。<ul>
+<li>offset</li>
+<li>scroll</li>
+<li>client(top/left/width/height)</li>
+<li>width,height</li>
+<li>调用了getComputedStyle()或者IE的currentStyle</li>
 </ul>
-<p><strong>手写jsonp</strong>  </p>
-<pre><code>var jsonp = function(url,data,callback){
-    //将传入的data数据转化为url字符串形式
-    //{id:1,name:&apos;test&apos;}=&gt; id=1&amp;name=test
-    var dataString = url.indexOf(&apos;?&apos;)==-1 ? &apos;?&apos;:&apos;&amp;&apos;;
-    for(var key in data){
-        dataString += key + &apos;=&apos; + data[key] + &apos;&amp;&apos;;
-    };
-    //处理url中的回调函数
-    // cbFuncName回调函数的名字 ：my_json_cb_名字的前缀 + 随机数（把小数点去掉）
-    var cbFuncName = &apos;my_json_cb_&apos;+Math.random().toString().replace(&apos;.&apos;,&apos;&apos;);
-    dataString += &apos;callback=&apos;+ cbFuncName;
-    // 创建一个script标签并插入到页面中
-    var scriptEle = document.createElement(&apos;script&apos;);
-    scriptEle.src = url + dataString;
-    //挂载回调函数
-    window[cbFuncName] = function(data){
-        callback(data);
-        document.body.removeChild(scriptEle);
-    }
-    //append到页面中
-    document.body.appendChild(scriptEle);
-}
-
-var baidu = new Object();
-baidu.sug = function(data){
-    console.log(data)
-}
-jsonp(&apos;http://suggestion.baidu.com/su&apos;,{wd:&apos;baidu&apos;})
-//Request URL: http://suggestion.baidu.com/su?wd=baidu&amp;callback=my_json_cb_07050386954155996
-//window.baidu.sug({q:&quot;baidu&quot;,p:false,s:[&quot;百度翻译&quot;,&quot;百度网盘&quot;,&quot;百度地图&quot;,&quot;百度云盘&quot;,&quot;百度学术&quot;,&quot;百度&quot;,&quot;百度云&quot;,&quot;百度文库&quot;,&quot;百度贴吧&quot;,&quot;百度翻译在线&quot;]});
-</code></pre><h4 id="Ajax中什么时候用同步，什么时候用异步"><a href="#Ajax中什么时候用同步，什么时候用异步" class="headerlink" title="Ajax中什么时候用同步，什么时候用异步"></a>Ajax中什么时候用同步，什么时候用异步</h4><p><strong>同步请求</strong><br>同步请求即当前发出请求后，浏览器什么都不能做，必须等到请求完成返回数据之后，才会执行后续的代码。即当ajax返回数据后，才执行后面的function。</p>
-<p><strong>异步请求</strong><br>异步请求是当发出请求的同时，浏览器可以继续做任何事，Ajax发送请求并不会影响页面的加载与用户操作，相当于两条线互不影响。</p>
-<p><strong>ajax默认是异步的，async的值是true</strong>  </p>
-<p><strong>如何选择同步还是异步模式</strong><br>在发送ajax请求后，还需要继续处理服务器的响应结果，如果这是使用异步请求模式同时未将结果的处理交由另一个JS函数进行处理。会导致异步请求的响应还没有到达，函数已经执行完了return，会导致return的结果为空字符串。  </p>
-<p><strong>ajax异步请求302</strong><br>当服务器将302响应发给浏览器时，浏览器并不是直接进行ajax回调处理，而是先执行302重定向—从response headers中读取Location信息，然后向location中的Url发出请求，在收到这个请求的响应后才会进行ajax回调处理。</p>
-<p><strong>ajax -&gt; browser -&gt; server -&gt; 302 -&gt; browser(redirect) -&gt; server -&gt; browser -&gt; ajax callback</strong>  </p>
-<p>由于302返回的重定向URL在服务器上有相应的处理程序，所以ajax回调函数中得到的状态码是200，所以想在ajax请求中根据302响应通过location.href进行重定向是不可行的。</p>
-<p>状态码status&gt;=200&amp;&amp;status&lt;300||status==304，才会被视为success，才会走success的回调方法。</p>
-<p><strong>解决方法</strong>  </p>
+</li>
+<li>重绘：绘制，即渲染上色，所有对元素的视觉表现属性的修改，会引发重绘</li>
+</ul>
+</li>
+<li>优化网页渲染<ul>
+<li>css的文件放在头部，js文件放在尾部或者异步加载<ul>
+<li>动态脚本加载</li>
+<li>defer：defer是在HTML解析完之后才执行，如果是多个，按照加载的顺序依次执行</li>
+<li>async：async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</li>
+</ul>
+</li>
+<li>尽量避免内联样式 </li>
+</ul>
+</li>
+<li>DOM操作优化<ul>
+<li>避免在document上直接进行频繁的DOM操作</li>
+<li>使用classname代替大量的内联样式修改</li>
+<li>使用requestAnimationFrame代替setInterval操作</li>
+<li>使用事件代理</li>
+</ul>
+</li>
+</ul>
+<p><strong>async和defer区别</strong>  </p>
+<ul>
+<li>没有defer或async，浏览器会立即加载并执行指定脚本，所有script元素都会按照在页面出现的先后顺序依次被解析，只有在解析完前面的script代码后，才会解析后面的script代码。</li>
+<li>async标志，使用async属性表示当前脚本不必等待其他脚本，也不必阻塞文档呈现。但是不能保证异步脚本按照他们在页面出现的顺序执行。</li>
+<li>defer，使用defer属性可以让脚本在文档完成呈现之后再执行，延迟脚本总是按照指定的顺序执行。</li>
+</ul>
+<p><strong>3. 数据方面</strong>  </p>
+<ul>
+<li>图片加载处理（懒加载，预加载）</li>
+<li>json数据格式交互</li>
+<li>部分常用数据的缓存</li>
+</ul>
+<h5 id="浏览器显示页面的原理"><a href="#浏览器显示页面的原理" class="headerlink" title="浏览器显示页面的原理"></a>浏览器显示页面的原理</h5><p>流程  </p>
 <ol>
-<li><p>不用ajax，改用form  </p>
-<pre><code>&lt;form method=&quot;post&quot; action=&quot;/url/respond&quot;&gt;&lt;/form&gt;
-</code></pre></li>
+<li>获取HTML文档及样式表文件</li>
+<li>解析成对应的树形数据结构<ul>
+<li>DOM tree</li>
+<li>CSSOM tree</li>
+</ul>
+</li>
+<li>计算可见节点形成render tree</li>
+<li>计算DOM的形状及位置进行布局</li>
+<li>将每个节点转化为实际像素绘制到视口上</li>
 </ol>
+<p><strong>资源加载：</strong>  </p>
+<ul>
+<li>执行JavaScript会阻止DOM tree构建</li>
+<li>加载CSS会阻止render tree构建</li>
+</ul>
+<p>默认情况下，JavaScript脚本会在引入它的位置执行，这是会阻断DOM tree的构建；如果在运行脚本时浏览器尚未完成CSS的下载和CSSOM tree的构建，浏览器会将脚本执行延迟到这些操作结束之后。</p>
+<p><strong>影响性能的因素</strong>  </p>
+<ul>
+<li>白屏<ul>
+<li>HTML和CSS的加载及解析速度</li>
+<li><code>&lt;head&gt;</code>内的脚本加载及执行</li>
+</ul>
+</li>
+<li>首屏<ul>
+<li>图片加载</li>
+<li><code>&lt;body&gt;</code>内的脚本加载及执行</li>
+</ul>
+</li>
+</ul>
+<p><strong>提高前端性能</strong>  </p>
+<ul>
+<li>缩短白屏时间</li>
+<li>加快首屏显示</li>
+<li>尽快监听主要操作的事件  </li>
+</ul>
+<h4 id="对移动端的认识"><a href="#对移动端的认识" class="headerlink" title="对移动端的认识"></a>对移动端的认识</h4><p>从兼容上讲  </p>
+<ul>
+<li>PC要兼容IE6+，Firefox，chrome，Safari</li>
+<li>mobile的网页开发，只需要考虑webkit内核的浏览器和chrome，uc，qq，小米手机浏览器，兼容的东西少了些</li>
+</ul>
+<p>从开发上讲  </p>
+<ul>
+<li>mobile端的网页开发比PC页面小了，装的东西要少些，相对交互稍简单些（滑动，触屏，手势） </li>
+</ul>
+<p>移动端前端开发：分为移动端web app和移动端网页</p>
+<p><strong>移动端网页布局和PC差异</strong><br>主要是css方面，外加如何做到同一url，不同客户端展现不一致的做法，俗称pc和mobile都兼容。</p>
+<p>rem在移动端布局  </p>
+<p>移动端的字体默认为16px，那么1rem我想表示为10px的话，我们就需要 10 % 16 = 0.625 即为62.5%，这样就可以比较方便的把设计稿里的px转换成rem单位来做到自适应了。这样无论用户如何设置电脑或者手机的默认字体大小，设置为rem的单位的长度都会随比例变化。</p>
 
           
         
