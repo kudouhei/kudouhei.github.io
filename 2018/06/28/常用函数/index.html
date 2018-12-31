@@ -92,7 +92,7 @@
 <meta property="og:site_name" content="FE_hei">
 <meta property="og:description" content="常用函数节流函数节流函数就是预先设定一个执行周期，当调用动作的时刻大于等于执行周期则执行该动作，然后进入下一个新周期。 适用场景：    适合指定每隔一定时间间隔内执行不超过一次的情况 window对象的resize、scroll事件 拖拽时的mousemove事件  实现：   function throttle(fn, threshhold){     var timeout;     var">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-19T09:35:30.000Z">
+<meta property="og:updated_time" content="2018-12-28T14:42:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用函数">
 <meta name="twitter:description" content="常用函数节流函数节流函数就是预先设定一个执行周期，当调用动作的时刻大于等于执行周期则执行该动作，然后进入下一个新周期。 适用场景：    适合指定每隔一定时间间隔内执行不超过一次的情况 window对象的resize、scroll事件 拖拽时的mousemove事件  实现：   function throttle(fn, threshhold){     var timeout;     var">
@@ -386,9 +386,9 @@
     if(typeof obj !== &apos;object&apos;)return;
     var newObj = obj instanceof Array ? []: {};
     for(var key in obj){
-        if(obj.hasOwnProperty(key){
+        if(obj.hasOwnProperty(key)){
             newObj[key] = typeof obj[key] === &apos;object&apos;? deepCopy(obj[key]): obj[key]
-        })
+        }
     }
     return newObj;
 }
@@ -627,7 +627,7 @@ test();
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

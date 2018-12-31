@@ -84,18 +84,18 @@
 
 
 
-<meta name="description" content="服务端渲染SSR单页应用需要等JS加载完毕后在前端渲染页面，就是说在js加载完毕并开始执行渲染操作前的这段时间里浏览器会产生白屏。 服务端渲染（Server Side Render，简称SSR）的意义在于弥补主要内容在前端渲染的成本，减少白屏时间，提升首次有效绘制的速度。可以使用服务端渲染来获得更快的首次有效绘制。">
+<meta name="description" content="深浅拷贝浅拷贝：只能拷贝最外部一层，深层的对象，依然是通过引用指向同一块堆内存。  简单实现 1234567function clone (obj) &amp;#123;    const newObj = &amp;#123;&amp;#125;    for (let i in obj) &amp;#123;   ">
 <meta name="keywords" content="js">
 <meta property="og:type" content="article">
-<meta property="og:title" content="服务端渲染">
-<meta property="og:url" content="http://yoursite.com/2018/08/31/服务端渲染/index.html">
+<meta property="og:title" content="深拷贝">
+<meta property="og:url" content="http://yoursite.com/2018/12/31/深拷贝/index.html">
 <meta property="og:site_name" content="FE_hei">
-<meta property="og:description" content="服务端渲染SSR单页应用需要等JS加载完毕后在前端渲染页面，就是说在js加载完毕并开始执行渲染操作前的这段时间里浏览器会产生白屏。 服务端渲染（Server Side Render，简称SSR）的意义在于弥补主要内容在前端渲染的成本，减少白屏时间，提升首次有效绘制的速度。可以使用服务端渲染来获得更快的首次有效绘制。">
+<meta property="og:description" content="深浅拷贝浅拷贝：只能拷贝最外部一层，深层的对象，依然是通过引用指向同一块堆内存。  简单实现 1234567function clone (obj) &amp;#123;    const newObj = &amp;#123;&amp;#125;    for (let i in obj) &amp;#123;        newObj[i] = obj[i]    &amp;#125;    return newObj;&amp;#125">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-02T14:05:18.000Z">
+<meta property="og:updated_time" content="2018-12-31T04:13:04.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="服务端渲染">
-<meta name="twitter:description" content="服务端渲染SSR单页应用需要等JS加载完毕后在前端渲染页面，就是说在js加载完毕并开始执行渲染操作前的这段时间里浏览器会产生白屏。 服务端渲染（Server Side Render，简称SSR）的意义在于弥补主要内容在前端渲染的成本，减少白屏时间，提升首次有效绘制的速度。可以使用服务端渲染来获得更快的首次有效绘制。">
+<meta name="twitter:title" content="深拷贝">
+<meta name="twitter:description" content="深浅拷贝浅拷贝：只能拷贝最外部一层，深层的对象，依然是通过引用指向同一块堆内存。  简单实现 1234567function clone (obj) &amp;#123;    const newObj = &amp;#123;&amp;#125;    for (let i in obj) &amp;#123;        newObj[i] = obj[i]    &amp;#125;    return newObj;&amp;#125">
 
 
 
@@ -125,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/31/服务端渲染/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/12/31/深拷贝/"/>
 
 
 
 
 
-  <title>服务端渲染 | FE_hei</title>
+  <title>深拷贝 | FE_hei</title>
   
 
 
@@ -248,7 +248,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/31/服务端渲染/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/31/深拷贝/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FE_Hei">
@@ -265,7 +265,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">服务端渲染</h1>
+          <h1 class="post-title" itemprop="name headline">深拷贝</h1>
         
 
         <div class="post-meta">
@@ -277,8 +277,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-31T00:00:00+08:00">
-                2018-08-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-31T00:00:00+08:00">
+                2018-12-31
               </time>
             
 
@@ -315,8 +315,38 @@
       
 
       
-        <h3 id="服务端渲染SSR"><a href="#服务端渲染SSR" class="headerlink" title="服务端渲染SSR"></a>服务端渲染SSR</h3><p>单页应用需要等JS加载完毕后在前端渲染页面，就是说在js加载完毕并开始执行渲染操作前的这段时间里浏览器会产生白屏。</p>
-<p>服务端渲染（Server Side Render，简称SSR）的意义在于弥补主要内容在前端渲染的成本，减少白屏时间，提升首次有效绘制的速度。可以使用服务端渲染来获得更快的首次有效绘制。</p>
+        <h4 id="深浅拷贝"><a href="#深浅拷贝" class="headerlink" title="深浅拷贝"></a>深浅拷贝</h4><p><strong>浅拷贝：</strong>只能拷贝最外部一层，深层的对象，依然是通过引用指向同一块堆内存。</p>
+<ul>
+<li><p>简单实现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clone</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> newObj = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        newObj[i] = obj[i]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Object.assign()—该方法用于将所有可枚举属性的值从一个或多个源对象复制到目标对象，它将返回目标对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;</span><br><span class="line">    name: <span class="string">'test'</span>,</span><br><span class="line">    book: &#123;<span class="attr">price</span>: <span class="string">'45'</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> b = <span class="built_in">Object</span>.assign(&#123;&#125;, a);</span><br><span class="line"><span class="comment">// 改变对象 a 之后，对象 b 的基本属性保持不变。但是当改变对象 a 中的对象 price 时，对象 b 相应的位置也发生了变化。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>扩展运算符</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> b = &#123;...a&#125;;</span><br><span class="line"><span class="comment">// 与Object.assign()一样</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Array.prototype.slice()—方法返回一个新的数组对象，这一对象由begin和end（不包括end）决定原数组的浅拷贝。原始数组不会被改变。<strong>相应的还有<code>concat</code></strong>操作不改变原数组</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = [<span class="number">0</span>, <span class="string">"1"</span>, [<span class="number">2</span>,<span class="number">3</span>]];</span><br><span class="line"><span class="keyword">let</span> b = a.slice(<span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// ["1", [2,3]]</span></span><br><span class="line">a[<span class="number">2</span>][<span class="number">0</span>] = <span class="number">4</span>;</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// ["1", [4,3]]</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>深拷贝</strong></p>
+<ul>
+<li><p><code>JSON.parse(JSON.stringify(object))</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = [<span class="number">0</span>, <span class="string">"1"</span>, [<span class="number">2</span>, <span class="number">3</span>]];</span><br><span class="line"><span class="keyword">let</span> b = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify( a.slice(<span class="number">1</span>) ));</span><br><span class="line"><span class="built_in">console</span>.log(b);</span><br><span class="line"><span class="comment">// ["1", [2, 3]]</span></span><br><span class="line">a[<span class="number">2</span>][<span class="number">0</span>] = <span class="number">4</span>;</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// ["1", [2, 3]]</span></span><br></pre></td></tr></table></figure>
+<p><strong>深拷贝注意</strong></p>
+<ul>
+<li>循环引用,会报错</li>
+<li>new Date情况，转换结果不正确。函数、正则情况、symbol</li>
+<li>会抛弃对象的constructor，深拷贝后不管对象原来的构造函数是什么，都会变成Object；</li>
+</ul>
+</li>
+<li><p>代码实现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> deepCopy = <span class="function"><span class="keyword">function</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> obj !== <span class="string">'object'</span>)<span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">var</span> newObj = obj <span class="keyword">instanceof</span> <span class="built_in">Array</span> ? []: &#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> obj)&#123;</span><br><span class="line">        <span class="keyword">if</span>(obj.hasOwnProperty(key))&#123;</span><br><span class="line">           newObj[key] = <span class="keyword">typeof</span> obj[key] === <span class="string">'object'</span>? deepCopy(obj[key]): obj[key]</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> newObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>解决循环引用</strong>–设置一个哈希表存储已拷贝过的对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> deepCopy = <span class="function"><span class="keyword">function</span>(<span class="params">obj, hash= new WeakMap(</span>))</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> obj !== <span class="string">'object'</span>)<span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// 查表</span></span><br><span class="line">    <span class="keyword">if</span> (hash.has(obj))<span class="keyword">return</span> hash.get(obj);</span><br><span class="line">    <span class="keyword">var</span> newObj = obj <span class="keyword">instanceof</span> <span class="built_in">Array</span> ? []: &#123;&#125;;</span><br><span class="line">    <span class="comment">// 哈希表设值</span></span><br><span class="line">    hash.set(obj, newObj)</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> obj)&#123;</span><br><span class="line">        <span class="keyword">if</span>(obj.hasOwnProperty(key))&#123;</span><br><span class="line">           newObj[key] = <span class="keyword">typeof</span> obj[key] === <span class="string">'object'</span>? deepCopy(obj[key], hash): obj[key]</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> newObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 
       
     </div>
@@ -347,8 +377,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/13/webpack配置优化/" rel="next" title="Webpack配置优化">
-                <i class="fa fa-chevron-left"></i> Webpack配置优化
+              <a href="/2018/12/22/页面生命周期/" rel="next" title="页面生命周期">
+                <i class="fa fa-chevron-left"></i> 页面生命周期
               </a>
             
           </div>
@@ -356,10 +386,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/09/02/css性能优化/" rel="prev" title="css性能优化">
-                css性能优化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -505,7 +531,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端渲染SSR"><span class="nav-number">1.</span> <span class="nav-text">服务端渲染SSR</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#深浅拷贝"><span class="nav-number">1.</span> <span class="nav-text">深浅拷贝</span></a></li></ol></div>
             
 
           </div>

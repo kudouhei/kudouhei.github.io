@@ -247,6 +247,157 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/31/深拷贝/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/31/深拷贝/" itemprop="url">深拷贝</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-31T00:00:00+08:00">
+                2018-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="深浅拷贝"><a href="#深浅拷贝" class="headerlink" title="深浅拷贝"></a>深浅拷贝</h4><p><strong>浅拷贝：</strong>只能拷贝最外部一层，深层的对象，依然是通过引用指向同一块堆内存。</p>
+<ul>
+<li><p>简单实现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clone</span> (<span class="params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> newObj = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        newObj[i] = obj[i]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> newObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Object.assign()—该方法用于将所有可枚举属性的值从一个或多个源对象复制到目标对象，它将返回目标对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = &#123;</span><br><span class="line">    name: <span class="string">'test'</span>,</span><br><span class="line">    book: &#123;<span class="attr">price</span>: <span class="string">'45'</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> b = <span class="built_in">Object</span>.assign(&#123;&#125;, a);</span><br><span class="line"><span class="comment">// 改变对象 a 之后，对象 b 的基本属性保持不变。但是当改变对象 a 中的对象 price 时，对象 b 相应的位置也发生了变化。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>扩展运算符</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> b = &#123;...a&#125;;</span><br><span class="line"><span class="comment">// 与Object.assign()一样</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Array.prototype.slice()—方法返回一个新的数组对象，这一对象由begin和end（不包括end）决定原数组的浅拷贝。原始数组不会被改变。<strong>相应的还有<code>concat</code></strong>操作不改变原数组</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = [<span class="number">0</span>, <span class="string">"1"</span>, [<span class="number">2</span>,<span class="number">3</span>]];</span><br><span class="line"><span class="keyword">let</span> b = a.slice(<span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// ["1", [2,3]]</span></span><br><span class="line">a[<span class="number">2</span>][<span class="number">0</span>] = <span class="number">4</span>;</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// ["1", [4,3]]</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>深拷贝</strong></p>
+<ul>
+<li><p><code>JSON.parse(JSON.stringify(object))</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = [<span class="number">0</span>, <span class="string">"1"</span>, [<span class="number">2</span>, <span class="number">3</span>]];</span><br><span class="line"><span class="keyword">let</span> b = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify( a.slice(<span class="number">1</span>) ));</span><br><span class="line"><span class="built_in">console</span>.log(b);</span><br><span class="line"><span class="comment">// ["1", [2, 3]]</span></span><br><span class="line">a[<span class="number">2</span>][<span class="number">0</span>] = <span class="number">4</span>;</span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// ["1", [2, 3]]</span></span><br></pre></td></tr></table></figure>
+<p><strong>深拷贝注意</strong></p>
+<ul>
+<li>循环引用,会报错</li>
+<li>new Date情况，转换结果不正确。函数、正则情况、symbol</li>
+<li>会抛弃对象的constructor，深拷贝后不管对象原来的构造函数是什么，都会变成Object；</li>
+</ul>
+</li>
+<li><p>代码实现</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> deepCopy = <span class="function"><span class="keyword">function</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> obj !== <span class="string">'object'</span>)<span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">var</span> newObj = obj <span class="keyword">instanceof</span> <span class="built_in">Array</span> ? []: &#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> obj)&#123;</span><br><span class="line">        <span class="keyword">if</span>(obj.hasOwnProperty(key))&#123;</span><br><span class="line">           newObj[key] = <span class="keyword">typeof</span> obj[key] === <span class="string">'object'</span>? deepCopy(obj[key]): obj[key]</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> newObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>解决循环引用</strong>–设置一个哈希表存储已拷贝过的对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> deepCopy = <span class="function"><span class="keyword">function</span>(<span class="params">obj, hash= new WeakMap(</span>))</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">typeof</span> obj !== <span class="string">'object'</span>)<span class="keyword">return</span>;</span><br><span class="line">    <span class="comment">// 查表</span></span><br><span class="line">    <span class="keyword">if</span> (hash.has(obj))<span class="keyword">return</span> hash.get(obj);</span><br><span class="line">    <span class="keyword">var</span> newObj = obj <span class="keyword">instanceof</span> <span class="built_in">Array</span> ? []: &#123;&#125;;</span><br><span class="line">    <span class="comment">// 哈希表设值</span></span><br><span class="line">    hash.set(obj, newObj)</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> key <span class="keyword">in</span> obj)&#123;</span><br><span class="line">        <span class="keyword">if</span>(obj.hasOwnProperty(key))&#123;</span><br><span class="line">           newObj[key] = <span class="keyword">typeof</span> obj[key] === <span class="string">'object'</span>? deepCopy(obj[key], hash): obj[key]</span><br><span class="line">    	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> newObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/22/页面生命周期/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1834,212 +1985,6 @@ var r2 = reBuildTree([2,4,5], [4,2,5]);
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/13/webpack配置优化/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/13/webpack配置优化/" itemprop="url">Webpack配置优化</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-13T00:00:00+08:00">
-                2018-08-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="webpack配置优化"><a href="#webpack配置优化" class="headerlink" title="webpack配置优化"></a>webpack配置优化</h3><p><strong>DefinePlugin</strong>  </p>
-<ul>
-<li>DefinePlugin 允许创建一个在编译时可以配置的全局常量。这可能会对开发模式和发布模式的构建允许不同的行为非常有用。</li>
-<li>比如一些 debug 的功能在生产环境中需要关闭、开发环境中和生产环境中 api 地址的不同。</li>
-</ul>
-<p><strong>CommonsChunkPlugin</strong>  </p>
-<ul>
-<li><p>用于提取一些公共代码，一般是用于提取第三方库，这个在上线部署时很有必要，因为出现bug，一般都是业务代码的问题，第三方库相对比较稳定，这个时候第三方库代码不应该受到影响，CommonsChunkPlugin可以减少热更的代价</p>
-<pre><code>// 将第三方库单独打包成一个vender
-new webpack.optimize.CommonsChunkPlugin({
-  name: &apos;vendor&apos;,
-  minChunks: function (module) {
-    // any required modules inside node_modules are extracted to vendor
-    return (
-      module.resource &amp;&amp;
-      /\.js$/.test(module.resource) &amp;&amp;
-      module.resource.indexOf(
-        path.join(__dirname, &apos;../node_modules&apos;)
-      ) === 0
-    )
-  }
-})
-</code></pre></li>
-</ul>
-<p><strong>懒加载</strong>  </p>
-<ul>
-<li><p>webpack遇到import()，会单独将其抽离成一个js文件，等到运行时才去加载</p>
-<pre><code>async function doSomeThing () {
-  const {default: moment} = await import(&apos;moment&apos;)
-  console.log(moment())
-}
-
-setTimeout(() =&gt; {
-  doSomeThing()
-}, 1000)
-</code></pre></li>
-</ul>
-<h4 id="webpack配置重点"><a href="#webpack配置重点" class="headerlink" title="webpack配置重点"></a>webpack配置重点</h4><p><strong>path模块</strong><br>path是Node.js中的一个模块，用于处理目录的对象。  </p>
-<p>常用方法：  </p>
-<ul>
-<li><code>path.join()</code>:用于连接路径</li>
-<li><code>path.resolve()</code>:用于将相对路径转为绝对路径</li>
-</ul>
-<p><strong>process</strong><br>process对象是Node的一个全局对象，提供当前Node进程的信息。  </p>
-<pre><code>process对象提供一系列属性，用于返回系统信息  
-process.argv： 返回当前进程的命令行参数数组  
-process.env： 返回一个对象，成员为当前Shell的环境变量，比如process.env.HOME  
-process.pid： 当前进程的进程号  
-</code></pre><p><strong>webpack-merge</strong>  </p>
-<ul>
-<li>在开发环境中，我们需要具有强大的、具有实时重新加载(live reloading)或热模块替换(hot module replacement)能力的 source map 和 localhost server。</li>
-<li>在生产环境中，我们的目标则转向于关注更小的 bundle，更轻量的 source map，以及更优化的资源，以改善加载时间。</li>
-<li>由于要遵循逻辑分离，我们通常建议为每个环境编写彼此独立的 webpack 配置。通用的配置部分，我们抽象出一个公共文件，通过 webpack-merge 工具的“通用”配置，我们不必在环境特定的配置中重复代码。</li>
-</ul>
-<p><strong>ExtractTextWebpackPlugin</strong>  </p>
-<p>ExtractTextWebpackPlugin 插件通常用来做样式文件的分离，被分离的文件不会被内嵌到 JS bundle 中，而会被放到一个单独的文件中，在样式文件比较大的时候，能够提前样式的加载。</p>
-<pre><code>const ExtractTextPlugin = require(&quot;extract-text-webpack-plugin&quot;);  
-module.exports = {
-    module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: &quot;style-loader&quot;,
-                    use: &quot;css-loader&quot;
-                })
-            }
-        ]
-    },
-    plugins: [
-        new ExtractTextPlugin(&quot;styles.css&quot;)
-    ]
-}
-</code></pre><p>它会将所有的入口 chunk(entry chunks)中引用的 *.css，移动到独立分离的 CSS 文件。因此，你的样式将不再内嵌到 JS bundle 中，而是会放到一个单独的 CSS 文件（即 styles.css）当中。 如果你的样式文件大小较大，这会做更快提前加载，因为 CSS bundle 会跟 JS bundle 并行加载。  </p>
-<p><strong>html-webpack-plugin</strong><br>通常在开发中，我们为了避免 CDN 和浏览器的缓存通常会个输出文件 bundle.js 加上一个hash 值例如 [hash].bundle.js，使用 html-webpack-plugin 能够在创建新的 html 文件的时候将我们把带有哈希值的 bundle.js 引用到 html 文件.</p>
-<p><strong>UglifyjsWebpackPlugin</strong><br>用来压缩 js 代码</p>
-<h4 id="webpack的loader和plugin区别"><a href="#webpack的loader和plugin区别" class="headerlink" title="webpack的loader和plugin区别"></a>webpack的loader和plugin区别</h4><ul>
-<li>loader用于加载某些资源文件。因为webpack本身只能打包commonjs规范的JS文件，对于其他资源如css、图片或者jsx等没有办法加载。所以就需要对应的loader将资源转化，加载进来。loader用于加载，作用于一个文件上。</li>
-<li>plugin用于扩展webpack功能，而loader只专注于转化文件，plugin功能更丰富</li>
-</ul>
-<h4 id="babel工作原理"><a href="#babel工作原理" class="headerlink" title="babel工作原理"></a>babel工作原理</h4><p>babel的主要功能就是个编译器，输入语言ES6+，编译目标语言是ES5。以字符串的形式将源代码传给他，它就会返回一段新的代码字符串。</p>
-<p><strong>babel的编译过程</strong>  </p>
-<ul>
-<li>解析：使用Babylon解析器，会根据输入的js代码将代码字符串解析成抽象语法树</li>
-<li>变换：对抽象语法树进行变换操作</li>
-<li>再建：使用babel-generator根据变换后的抽象语法树再生成代码字符串</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2094,7 +2039,7 @@ module.exports = {
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
