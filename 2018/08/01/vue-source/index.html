@@ -94,7 +94,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/vue/source.png">
 <meta property="og:image" content="http://yoursite.com/images/vue/diff.jpg">
-<meta property="og:updated_time" content="2018-09-07T06:25:35.000Z">
+<meta property="og:updated_time" content="2019-02-10T13:48:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vue-source">
 <meta name="twitter:description" content="Vue源码学习Vue的核心可以分为三个大块：数据处理和双向绑定、模板编译、虚拟dom。 1.vue响应式原理基本概念    data: vue实例中的数据项 observer：数据属性的观察者，监控对象的读写操作 dep：消息订阅器，拥有收集订阅者、发布更新的功能 watcher：消息订阅者，可以订阅dep，之后接受dep发布的更新并执行对应视图或者表达式的更新。   vue的数据响应式实现分为两">
@@ -339,7 +339,7 @@
 <li>当data值被读取时，并且有Watcher实例，就会收集依赖，将该Watcher实例与闭包的Dep实例相互引用。当setter方法被调用时，就可以通过闭包的Dep实例通知所有的Watcher实例执行一个回调。</li>
 <li>最终达到数据变化-&gt;视图更新；视图交互变化-&gt;数据model变更的双向绑定效果。</li>
 </ol>
-<h4 id="Vue的生命周期"><a href="#Vue的生命周期" class="headerlink" title="Vue的生命周期"></a>Vue的生命周期</h4><p>Vue的生命周期，首先需要创建一个实例，也就是在new Vue()的对象过程当中，首先默认执行了init，在init的过程当中首先调用beforeCreate，然后再去调用created。所以一般beforeCreate的时候不要去修改data里赋值的数据，最早要等到created里面去做。</p>
+<h4 id="Vue的生命周期"><a href="#Vue的生命周期" class="headerlink" title="Vue的生命周期"></a>Vue的生命周期</h4><p>Vue的生命周期，首先需要创建一个实例，也就是在new Vue()的对象过程当中，首先默认执行了init，在init的过程当中首先调用beforeCreate，然后再去调用created。所以一般beforeCreate的时候不要去修改data里赋值的数据，最早要等到created里面去做，数据(Data Observer)、属性和方法的运算，watch/event事件回调。</p>
 <p>当created完成后，会去判断instance实例里是否含有“el”，如果没有的话，会调用<code>vm.$mount(el)</code>这个方法，然后执行。如果有的话，直接执行下一步。然后会判断是否含有“template”，如果有的话，会把template解析成一个render函数。render函数是发生在beforeMount和mounted之间的，所以在beforeMount的时候，<code>$el</code>还只是HTML里面写的节点，然后mounted的时候，它就把渲染出来的内容挂载到了DOM节点上。</p>
 <p>beforeMount在有了render函数的时候才会去执行，当执行完了render函数后，就会调用mounted这个钩子，在mounted挂载完毕之后，这个实例就算走完流程了。</p>
 <p>后续的钩子函数执行的过程都是需要外部的触发才会执行的。比如有数据的变化会调用beforeUpdate，然后经过Virtual Dom,最后updated更新完毕。当组件被销毁的时候，它会调用beforeDestory，以destoryed。</p>
@@ -606,8 +606,8 @@ export default {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/01/vue-ticks/" rel="next" title="vue-ticks">
-                <i class="fa fa-chevron-left"></i> vue-ticks
+              <a href="/2018/08/01/js事件/" rel="next" title="javascript事件">
+                <i class="fa fa-chevron-left"></i> javascript事件
               </a>
             
           </div>
@@ -787,7 +787,7 @@ export default {
         <div class="copyright" >
   
   © 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

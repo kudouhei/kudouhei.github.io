@@ -893,7 +893,7 @@ h1.getName();
 <li>当data值被读取时，并且有Watcher实例，就会收集依赖，将该Watcher实例与闭包的Dep实例相互引用。当setter方法被调用时，就可以通过闭包的Dep实例通知所有的Watcher实例执行一个回调。</li>
 <li>最终达到数据变化-&gt;视图更新；视图交互变化-&gt;数据model变更的双向绑定效果。</li>
 </ol>
-<h4 id="Vue的生命周期"><a href="#Vue的生命周期" class="headerlink" title="Vue的生命周期"></a>Vue的生命周期</h4><p>Vue的生命周期，首先需要创建一个实例，也就是在new Vue()的对象过程当中，首先默认执行了init，在init的过程当中首先调用beforeCreate，然后再去调用created。所以一般beforeCreate的时候不要去修改data里赋值的数据，最早要等到created里面去做。</p>
+<h4 id="Vue的生命周期"><a href="#Vue的生命周期" class="headerlink" title="Vue的生命周期"></a>Vue的生命周期</h4><p>Vue的生命周期，首先需要创建一个实例，也就是在new Vue()的对象过程当中，首先默认执行了init，在init的过程当中首先调用beforeCreate，然后再去调用created。所以一般beforeCreate的时候不要去修改data里赋值的数据，最早要等到created里面去做，数据(Data Observer)、属性和方法的运算，watch/event事件回调。</p>
 <p>当created完成后，会去判断instance实例里是否含有“el”，如果没有的话，会调用<code>vm.$mount(el)</code>这个方法，然后执行。如果有的话，直接执行下一步。然后会判断是否含有“template”，如果有的话，会把template解析成一个render函数。render函数是发生在beforeMount和mounted之间的，所以在beforeMount的时候，<code>$el</code>还只是HTML里面写的节点，然后mounted的时候，它就把渲染出来的内容挂载到了DOM节点上。</p>
 <p>beforeMount在有了render函数的时候才会去执行，当执行完了render函数后，就会调用mounted这个钩子，在mounted挂载完毕之后，这个实例就算走完流程了。</p>
 <p>后续的钩子函数执行的过程都是需要外部的触发才会执行的。比如有数据的变化会调用beforeUpdate，然后经过Virtual Dom,最后updated更新完毕。当组件被销毁的时候，它会调用beforeDestory，以destoryed。</p>
@@ -1131,6 +1131,161 @@ export default {
 <p>在更新视图的时候，如果需要diff的prevVNode不存在，那么就用新的vnode创建一个真实dom节点；如果需要diff的prevVNode存在，首先对prevVNode和VNode进行diff，并将需要的更新的dom操作已patch的形式打到prevVNode上，并完成真实dom的更新工作。</p>
 <p>patch方法为整个Virtual DOM的核心方法，主要完成了新的虚拟dom节点和旧的虚拟dom节点的diff过程，经过patch过程之后生成真实的dom节点并完成视图的更新工作。</p>
 
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/js事件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/01/js事件/" itemprop="url">javascript事件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="JavaScript事件"><a href="#JavaScript事件" class="headerlink" title="JavaScript事件"></a>JavaScript事件</h3><p><strong>事件级别</strong>  </p>
+<ul>
+<li>DOM0：element.onclick = function(){}</li>
+<li>DOM2: element.addEventListener(‘click’,function(){}, false)</li>
+<li>DOM3:element.addEventListener(‘keyup’,function(){},false)</li>
+</ul>
+<p><strong>事件流(事件三个阶段)</strong><br>事件流三个阶段，首先捕获阶段，事件通过捕获，到达目标阶段，从目标元素在上传到window对象，为冒泡阶段</p>
+<p><strong>描述DOM事件捕获的具体流程</strong><br>window -&gt; document -&gt; html标签(document.documentElement) -&gt; body -&gt;…-&gt;目标元素</p>
+<p><strong>Event对象</strong>  </p>
+<ul>
+<li>event.preventDefault()阻止默认行为 </li>
+<li>event.stopPropagation()阻止冒泡</li>
+<li>event.stopImmediatePropagation()注册两个事件，优先级执行  </li>
+<li>event.currentTarget当前绑定事件的对象</li>
+<li>event.target：触发事件的某个具体的对象，只会出现在事件机制的目标阶段</li>
+</ul>
+<p><strong>先捕获，再冒泡</strong><br><strong>在target注册的监听器，不分捕获和冒泡</strong></p>
+<p><strong>事件委托</strong><br>事件委托是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件</p>
+<pre><code>function delegateEvent(ele, selector, type, fn){
+    if(ele.addEventListener){
+        ele.addEventListener(type, eventfn, false);
+    }else if(ele.attachEvent){
+        ele.attachEvent(&quot;on&quot;+type, eventfn);
+    }else{
+        ele[&apos;on&apos;+type] = eventfn;
+    }
+    function eventfn(e){
+        var e = e||window.e;
+        var target = e.target || e.srcElement;
+        if(target.matches(selector)){
+            if(fn){
+                fn.call(target, e);
+            }
+        }
+    }
+}
+</code></pre>
           
         
       
@@ -1468,161 +1623,6 @@ export default {
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/js事件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/01/js事件/" itemprop="url">javascript事件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
-                2018-08-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="JavaScript事件"><a href="#JavaScript事件" class="headerlink" title="JavaScript事件"></a>JavaScript事件</h3><p><strong>事件级别</strong>  </p>
-<ul>
-<li>DOM0：element.onclick = function(){}</li>
-<li>DOM2: element.addEventListener(‘click’,function(){}, false)</li>
-<li>DOM3:element.addEventListener(‘keyup’,function(){},false)</li>
-</ul>
-<p><strong>事件流(事件三个阶段)</strong><br>事件流三个阶段，首先捕获阶段，事件通过捕获，到达目标阶段，从目标元素在上传到window对象，为冒泡阶段</p>
-<p><strong>描述DOM事件捕获的具体流程</strong><br>window -&gt; document -&gt; html标签(document.documentElement) -&gt; body -&gt;…-&gt;目标元素</p>
-<p><strong>Event对象</strong>  </p>
-<ul>
-<li>event.preventDefault()阻止默认行为 </li>
-<li>event.stopPropagation()阻止冒泡</li>
-<li>event.stopImmediatePropagation()注册两个事件，优先级执行  </li>
-<li>event.currentTarget当前绑定事件的对象</li>
-<li>event.target：触发事件的某个具体的对象，只会出现在事件机制的目标阶段</li>
-</ul>
-<p><strong>先捕获，再冒泡</strong><br><strong>在target注册的监听器，不分捕获和冒泡</strong></p>
-<p><strong>事件委托</strong><br>事件委托是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件</p>
-<pre><code>function delegateEvent(ele, selector, type, fn){
-    if(ele.addEventListener){
-        ele.addEventListener(type, eventfn, false);
-    }else if(ele.attachEvent){
-        ele.attachEvent(&quot;on&quot;+type, eventfn);
-    }else{
-        ele[&apos;on&apos;+type] = eventfn;
-    }
-    function eventfn(e){
-        var e = e||window.e;
-        var target = e.target || e.srcElement;
-        if(target.matches(selector)){
-            if(fn){
-                fn.call(target, e);
-            }
-        }
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/18/实现new/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1721,6 +1721,179 @@ var person = objectFactory(Person, &apos;Kevin&apos;, &apos;18&apos;);
 console.log(person.name) // Kevin
 console.log(person.strength) //60
 </code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
+                2018-07-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
+<p><strong>攻击分类</strong>  </p>
+<ul>
+<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
+<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
+<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
+</ul>
+<p><strong>如何防御XSS</strong>  </p>
+<ul>
+<li>转义： 转义嵌入HTML中的动态内容</li>
+<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
+<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
+</ul>
+</li>
+</ul>
+<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
+<p><strong>攻击原理</strong>  </p>
+<ol>
+<li>浏览器C浏览并登录信任网站A</li>
+<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
+<li>用户在没有登出A网站的情况下，访问危险网站B</li>
+<li>B要求访问第三方站点A，发出一个请求request</li>
+<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
+<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
+</ol>
+<p><strong>常见的防御方式</strong>  </p>
+<ul>
+<li>添加验证码</li>
+<li>验证HTTP Referer字段</li>
+<li>在HTTP头中自定义属性并验证</li>
+</ul>
+<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
+<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
+<p><strong>https作用</strong>  </p>
+<ul>
+<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
+<li>身份认证确认网站的真实性</li>
+<li>数据完整性防止内容被第三方冒充或篡改</li>
+</ul>
+<p><strong>HTTPS流程解析</strong>  </p>
+<ol>
+<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
+<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
+<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
+<li>将加密后的对称密钥发送给HTTPS服务端</li>
+<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
+</ol>
+<p><strong>https和http区别</strong>  </p>
+<ul>
+<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
+<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
+<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
+</ul>
+<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
+
           
         
       
@@ -1965,179 +2138,6 @@ console.log(person.strength) //60
 <li>web服务器通过自己的私钥解密出会话密钥</li>
 <li>web服务器通过会话密钥加密与客户端之间通信。</li>
 </ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/前端安全/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/17/前端安全/" itemprop="url">前端安全</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">
-                2018-07-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="前端安全"><a href="#前端安全" class="headerlink" title="前端安全"></a>前端安全</h3><h4 id="XSS跨站脚本攻击"><a href="#XSS跨站脚本攻击" class="headerlink" title="XSS跨站脚本攻击"></a>XSS跨站脚本攻击</h4><p>XSS允许攻击者可以在其他用户浏览的web页面中注入客户端脚本。</p>
-<p><strong>攻击分类</strong>  </p>
-<ul>
-<li>反射型XSS：被动的非持久性XSS。诱骗用户点击URL带攻击代码的链接，服务器解析后响应，在返回的响应内容中隐藏和嵌入攻击者的XSS代码，被浏览器执行，攻击用户。</li>
-<li>存储型XSS：主动提交恶意数据到服务器，攻击者在数据中嵌入代码，这样当其他用户请求后，服务器从数据库中查询数据并发给用户，用户浏览此类页面时就可能受到攻击。 </li>
-<li>DOM-based XSS：基于DOM的XSS，通过对具体DOM代码进行分析，根据实际情况构造dom节点进行XSS跨站脚本攻击。</li>
-</ul>
-<p><strong>如何防御XSS</strong>  </p>
-<ul>
-<li>转义： 转义嵌入HTML中的动态内容</li>
-<li>内容安全策略：额外的安全层，用于检测并削弱某些特定类型的攻击，包括跨站脚本和数据注入攻击。<ul>
-<li>定义content-security-policy HTTP标头，其允许创建信任的内容的来源白名单，并指示浏览器仅执行或渲染来自这些来源的资源，而不要盲目地信任服务器提供的所有内容</li>
-</ul>
-</li>
-</ul>
-<h4 id="CSRF跨站请求伪造"><a href="#CSRF跨站请求伪造" class="headerlink" title="CSRF跨站请求伪造"></a>CSRF跨站请求伪造</h4><p>攻击装伪造成受信用户攻击受信用网站。</p>
-<p><strong>攻击原理</strong>  </p>
-<ol>
-<li>浏览器C浏览并登录信任网站A</li>
-<li>登录成功，在浏览器C产生登录A凭证Cookie</li>
-<li>用户在没有登出A网站的情况下，访问危险网站B</li>
-<li>B要求访问第三方站点A，发出一个请求request</li>
-<li>根据B在4的请求，浏览器带着2处产生的Cookie访问A</li>
-<li>A不知道5中的请求是C发出的还是B发出的，由于浏览器会自动带上用户C的Cookie，所以A会根据用户的权限处理5的请求，这样B就达到了模拟用户操作的目的。</li>
-</ol>
-<p><strong>常见的防御方式</strong>  </p>
-<ul>
-<li>添加验证码</li>
-<li>验证HTTP Referer字段</li>
-<li>在HTTP头中自定义属性并验证</li>
-</ul>
-<h4 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h4><p><strong>HTTP</strong><br>明文传输协议，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
-<p><strong>HTTPS</strong><br>超文本安全传输协议，相比HTTP多了一个SSL/TSL的认证过程，端口为443。<strong>HTTPS在HTTP和TCP中间加上一层加密层SSL</strong>。TLS/SSL中使用了非对称加密，对称加密以及HASH算法。</p>
-<p><strong>https作用</strong>  </p>
-<ul>
-<li>内容加密建立一个信息安全通道，来保证数据传输的安全</li>
-<li>身份认证确认网站的真实性</li>
-<li>数据完整性防止内容被第三方冒充或篡改</li>
-</ul>
-<p><strong>HTTPS流程解析</strong>  </p>
-<ol>
-<li>客户端先向服务端发送一次HTTPS的连接请求。HTTPS服务端返回CA证书和加密公钥public key（非对称加密）</li>
-<li>客户端用预设的CA列表验证证书，若证书有问题则提示风险</li>
-<li>客户端生成随机对称密钥，并通过第一步中的public key做加密</li>
-<li>将加密后的对称密钥发送给HTTPS服务端</li>
-<li>之后双方传送数据都用第五步得到的对称密钥加密后通信。</li>
-</ol>
-<p><strong>https和http区别</strong>  </p>
-<ul>
-<li>https是具有安全性的ssl加密传输协议，http是超文本传输协议，信息是明文传输</li>
-<li>两者是完全不同的连接方式，用的端口也不一样，http是80，https是443</li>
-<li>http连接简单，无状态的；https协议是由SSL+http协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</li>
-</ul>
-<p><strong>http工作流程</strong><br>域名解析 -&gt; 发起TCP的3次握手 -&gt; 建立TCP连接后发起http请求 -&gt; 服务器响应http请求，浏览器得到HTML代码 -&gt; 浏览器解析html代码，并请求HTML代码中的资源 -&gt; 浏览器对页面进行渲染呈现给用户。</p>
 
           
         
@@ -2581,7 +2581,7 @@ console.log(addCurry(1)(3,4));
         <div class="copyright" >
   
   © 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
