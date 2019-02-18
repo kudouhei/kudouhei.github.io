@@ -2029,6 +2029,173 @@ test();
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/图片懒加载/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/26/图片懒加载/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T22:58:21+08:00">
+                2018-06-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>title: 图片懒加载</p>
+<p>date: 2018-06-26 </p>
+<p>tags: JavaScript</p>
+<p>-–</p>
+<h4 id="为什么要懒加载或者预加载"><a href="#为什么要懒加载或者预加载" class="headerlink" title="为什么要懒加载或者预加载"></a>为什么要懒加载或者预加载</h4><p>dang</p>
+<h4 id="预加载"><a href="#预加载" class="headerlink" title="预加载"></a>预加载</h4><p>提前加载图片，当用户需要查看时可直接从本地缓存中渲染</p>
+<p>加载方式：</p>
+<ul>
+<li><p>css预加载，先通过css将图片加载到不可见区域，待到满足触发条件后，再通过js渲染</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#preload-01</span> &#123; <span class="attribute">background</span>: <span class="built_in">url</span>(http://domain.tld/image-01.png) no-repeat -<span class="number">9999px</span> -<span class="number">9999px</span>; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>js预加载，通过new Image()把图片下载到本地，让浏览器缓存，设置其src来实现加载，在使用onload方法回调加载完成事件。</p>
+</li>
+</ul>
+<h4 id="图片懒加载"><a href="#图片懒加载" class="headerlink" title="图片懒加载"></a>图片懒加载</h4><p>图片先用占位符表示，不要将图片地址放到src属性中，而是放到其他属性(data-original)中，页面加载完成后，监听窗口滚动，当图片出现在视窗中时再给他赋予真实的图片地址，也就是将data-original中的属性拿出来放到src属性中。在滚动页面过程中，通过给scroll事件绑定lazyload函数，不断的加载出需要的图片。</p>
+<p><strong>懒加载和预加载</strong>：一个延迟加载，一个提前加载；一个减低服务器压力，一个增加服务器压力，换取用户体验</p>
+<p><strong>判断图片是否进入可视区域</strong>  </p>
+<p>方法一：  </p>
+<ul>
+<li>通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。</li>
+<li>document.documentElement.clientHeight获取屏幕可视窗口高度</li>
+<li>通过element.offsetTop获取元素相对于文档顶部的距离</li>
+<li>通过document.documentElement.scrollTop获取浏览器窗口顶部与文档顶部之间的距离，也就是滚动条滚动的距离。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> lazyLoad = &#123;</span><br><span class="line">    <span class="comment">// 获取元素到页面顶部的距离</span></span><br><span class="line">    getoffsetTop: <span class="function"><span class="keyword">function</span>(<span class="params">elem</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> offTop = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(elem!=<span class="literal">null</span>)&#123;</span><br><span class="line">            offTop += elem.offsetTop; <span class="comment">//获取元素到其上一级元素顶部的距离</span></span><br><span class="line">            elem = elem.offsetParent; <span class="comment">//元素上一级元素</span></span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="keyword">return</span> offTop;</span><br><span class="line">	&#125;</span><br><span class="line">     <span class="comment">// 判断是否加载图片</span></span><br><span class="line">        isLoad: <span class="function"><span class="keyword">function</span>(<span class="params">elem</span>)</span>&#123;</span><br><span class="line">          <span class="keyword">var</span> cHeight = <span class="built_in">window</span>.innerHeight || <span class="built_in">document</span>.body.clientHeight || <span class="built_in">document</span>.documentElement.clientHeight; <span class="comment">//可视窗口的高度</span></span><br><span class="line">          <span class="keyword">var</span> sx = <span class="built_in">window</span>.pageXOffset || <span class="built_in">document</span>.body.scrollTop || <span class="built_in">document</span>.documentElement.scrollTop; <span class="comment">//浏览器可视窗口距离页面顶部的距离</span></span><br><span class="line">          <span class="keyword">var</span> oTop = <span class="keyword">this</span>.getoffsetTop(elem); <span class="comment">//元素到页面顶部的距离</span></span><br><span class="line">          <span class="keyword">var</span> viewHeight = oTop-sx; <span class="comment">//元素到页面顶部的距离</span></span><br><span class="line">          <span class="comment">// 图片进入浏览器可视区域，加载图片</span></span><br><span class="line">          <span class="keyword">if</span>(cHeight &gt;= viewHeight)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">          &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//图片没进入浏览器可视区域，不加载图片</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        loadImg: <span class="function"><span class="keyword">function</span>(<span class="params">elems</span>)</span>&#123;</span><br><span class="line">          <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>,len=elems.length; i&lt;len;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.isLoad(elems[i]))&#123;</span><br><span class="line">              <span class="keyword">if</span>(elems[i].className !== <span class="string">'loaded'</span>)&#123;</span><br><span class="line">                <span class="comment">//针对使用data-自定义的属性，要使用getAttribute()获取值</span></span><br><span class="line">               elems[i].src = elems[i].getAttribute(<span class="string">'data-url'</span>);<span class="comment">//实际的url替换原来的url</span></span><br><span class="line">                elems[i].className = <span class="string">"loaded"</span>; <span class="comment">//被加载的图片，添加class属性</span></span><br><span class="line">              &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">              <span class="keyword">return</span>; <span class="comment">//下一个图片没有进入加载区域，不循环</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//使用</span></span><br><span class="line">      <span class="built_in">window</span>.onscroll = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        lazyLoad.loadImg(<span class="built_in">document</span>.getElementsByTagName(<span class="string">'img'</span>))</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//html,src指向为占位符，data-url为图片的实际url</span></span><br></pre></td></tr></table></figure>
+<p>方法二：  </p>
+<ul>
+<li><p>使用element.getBoundindClientRect()直接得到top值。</p>
+</li>
+<li><p>该函数返回一个Object对象，该对象有6个属性：top，left，right，bottom，width，height</p>
+</li>
+<li><p>浏览器兼容性，IE67的left、top会少2px，并且没有width、height属性</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isElementInView</span>(<span class="params">el</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> react = el.getBoundingClientRect();</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    rect.top &gt;=<span class="number">0</span> &amp;&amp; </span><br><span class="line">    rect.left &gt;=<span class="number">0</span> &amp;&amp;</span><br><span class="line">    rect.bottom &lt;=(<span class="built_in">window</span>.innerHeight || <span class="built_in">document</span>.documentElement.clientHeight) &amp;&amp;</span><br><span class="line">    rect.right &lt;=(<span class="built_in">window</span>.innerWidth || <span class="built_in">document</span>.documentElement.clientWidth)  </span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  方法三：  </p>
+<ul>
+<li>HTML5新的IntersectionObserver，可以自动观察元素是否可见</li>
+<li>用法：  </li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> observer = <span class="keyword">new</span> IntersectionObserver(callback, option)</span><br><span class="line"><span class="comment">// 开始观察</span></span><br><span class="line">observer.observe(<span class="built_in">document</span>.getElementById(<span class="string">'first'</span>))</span><br><span class="line"><span class="comment">// 停止观察</span></span><br><span class="line">observer.unobserve(<span class="built_in">document</span>.getElementById(<span class="string">'first'</span>))</span><br><span class="line"><span class="comment">// 关闭观察器</span></span><br><span class="line">observer.disconnect()</span><br></pre></td></tr></table></figure>
+<p>回调方法，每当期望被监视的元素进入或者退出另外一个元素的时候，该回调方法将会被执行，或者两个元素的交集部分大小发生变化的时候回调方法会被执行。  </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">query</span>(<span class="params">tag</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Array</span>.from(<span class="built_in">document</span>.getElementsByTagName(tag));</span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">var</span> observer = <span class="keyword">new</span> IntersectionObserver(<span class="function">(<span class="params">changes</span>) =&gt;</span> &#123;</span><br><span class="line">  changes.forEach(<span class="function">(<span class="params">change</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(change.intersectionRatio &gt; <span class="number">0</span>)&#123;</span><br><span class="line">      <span class="keyword">var</span> img = change.target;</span><br><span class="line">      img.src = img.dataset.src;</span><br><span class="line">      observer.unobserve(img)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line">query(<span class="string">'img'</span>).forEach(<span class="function">(<span class="params">item</span>) =&gt;</span> &#123;</span><br><span class="line">  observer.observe(item)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>图片懒加载优化</strong>   </p>
+<p>使用节流函数  </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">func, delay, time</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> timeout, startTime=<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> curTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">      clearTimeout(timeout);</span><br><span class="line">    <span class="keyword">if</span>(curTime - startTime &gt;= time)&#123;</span><br><span class="line">      func.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">      startTime = curTime;</span><br><span class="line">      <span class="comment">// 没到触发间隔，重新设定定时器</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      timeout = setTimeout(func, delay)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'scroll'</span>, throttle(lazyload, <span class="number">500</span>, <span class="number">1000</span>))</span><br></pre></td></tr></table></figure>
+<h4 id="模拟封装vue的懒加载"><a href="#模拟封装vue的懒加载" class="headerlink" title="模拟封装vue的懒加载"></a>模拟封装vue的懒加载</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">LazyLoad</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> active = <span class="literal">false</span>; <span class="comment">// active是节流函数的标志位，用到闭包</span></span><br><span class="line">    <span class="keyword">const</span> lazyLoad = <span class="function"><span class="params">()</span>=&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// throttle:200ms内只会执行一次lazyLoad方法</span></span><br><span class="line">        <span class="keyword">if</span>(active) <span class="keyword">return</span>;</span><br><span class="line">        active = <span class="literal">true</span>;</span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">// 获取所有class为lazy的img标签</span></span><br><span class="line">            <span class="keyword">let</span> lazyImages = [].slice().call(<span class="built_in">document</span>.querySelectorAll(<span class="string">"img.lazy"</span>));</span><br><span class="line">            lazyImages.forEach(<span class="function"><span class="params">lazyImage</span> =&gt;</span> &#123;</span><br><span class="line">                <span class="comment">// 判断元素是否进入viewport</span></span><br><span class="line">                <span class="keyword">if</span>(isInView(lazyImage)) &#123;</span><br><span class="line">                    lazyImage.src = lazyImage.dataset.src;</span><br><span class="line">                    <span class="comment">// 删除class 防止下次重复查找到该img标签</span></span><br><span class="line">                    lazyImage.classList.remove(<span class="string">'lazy'</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 当全部处理完，移除监听</span></span><br><span class="line">                <span class="keyword">if</span> (lazyImages.length === <span class="number">0</span>) &#123;</span><br><span class="line">          			<span class="built_in">document</span>.removeEventListener(<span class="string">"scroll"</span>, lazyLoad);</span><br><span class="line">          			<span class="built_in">window</span>.removeEventListener(<span class="string">"resize"</span>, lazyLoad);</span><br><span class="line">          			<span class="built_in">window</span>.removeEventListener(<span class="string">"orientationchange"</span>, lazyLoad);</span><br><span class="line">        		&#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            active = <span class="literal">false</span>;</span><br><span class="line">        &#125;, <span class="number">200</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">document</span>.addEventListener(<span class="string">"scroll"</span>, lazyLoad);</span><br><span class="line">  	<span class="built_in">document</span>.addEventListener(<span class="string">"resize"</span>, lazyLoad);</span><br><span class="line">  	<span class="built_in">document</span>.addEventListener(<span class="string">"orientationchange"</span>, lazyLoad);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 在全局中的mounted钩子中执行</span></span><br><span class="line"><span class="keyword">const</span> vm = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'.wrap'</span>,</span><br><span class="line">  store,</span><br><span class="line">  mounted: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    LazyLoad();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 封装img-lazy组件</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;img :<span class="class"><span class="keyword">class</span></span>=<span class="string">"['lazy', className]"</span> :src=<span class="string">"defaultImg"</span> :data-src=<span class="string">"url"</span> :data-srcset=<span class="string">"`$&#123;url&#125; 1x`"</span> alt=<span class="string">"fordeal"</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">  export default &#123;</span></span><br><span class="line"><span class="regexp">    props: &#123;</span></span><br><span class="line"><span class="regexp">      url: &#123;</span></span><br><span class="line"><span class="regexp">        type: String</span></span><br><span class="line"><span class="regexp">      &#125;,</span></span><br><span class="line"><span class="regexp">      defaultImg: &#123;</span></span><br><span class="line"><span class="regexp">        type: String,</span></span><br><span class="line"><span class="regexp">        default: [默认图片]</span></span><br><span class="line"><span class="regexp">      className: &#123;</span></span><br><span class="line"><span class="regexp">        type: String,</span></span><br><span class="line"><span class="regexp">        default: ''</span></span><br><span class="line"><span class="regexp">      &#125;</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line">&lt;img-lazy className=<span class="string">"image"</span> :url=<span class="string">"item.display_image"</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/模块化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2174,242 +2341,6 @@ console.log(counter); // 4
 <li>组件化则着重于可复用性，需要进行高度封装，一般通过接口访问。 </li>
 </ul>
 
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/26/图片懒加载/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/26/图片懒加载/" itemprop="url">图片懒加载</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-26T00:00:00+08:00">
-                2018-06-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="图片懒加载"><a href="#图片懒加载" class="headerlink" title="图片懒加载"></a>图片懒加载</h4><p>原理是优先加载在可视区域内的图片，而不一次性加载所有图片。当浏览器滚动，图片进入可视区时再去加载图片。通过设置图片的src属性来让浏览器发起图片请求。当这个属性为空或没有时，就不会发送请求。</p>
-<p><strong>判断图片是否进入可视区域</strong><br>方法一：  </p>
-<ul>
-<li><p>通过计算该图片距离document顶部的高度是否小于当前可视区域相对于document顶部高度来判断。</p>
-<ul>
-<li>document.documentElement.clientHeight获取屏幕可视窗口高度</li>
-<li>通过element.offsetTop获取元素相对于文档顶部的距离</li>
-<li><p>通过document.documentElement.scrollTop获取浏览器窗口顶部与文档顶部之间的距离，也就是滚动条滚动的距离。</p>
-<pre><code>var lazyLoad = {
-    // 获取元素到页面顶部的距离
-    getoffsetTop: function(elem){
-        var offTop = 0;
-        while(elem!=null){
-            offTop += elem.offsetTop; //获取元素到其上一级元素顶部的距离
-            elem = elem.offsetParent; //元素上一级元素
-        }
-        return offTop;
-    }
-    // 判断是否加载图片
-    isLoad: function(elem){
-        var cHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight; //可视窗口的高度
-        var sx = window.pageXOffset || document.body.scrollTop || document.documentElement.scrollTop; //浏览器可视窗口距离页面顶部的距离
-        var oTop = this.getoffsetTop(elem); //元素到页面顶部的距离
-        var viewHeight = oTop-sx; //元素到页面顶部的距离
-        // 图片进入浏览器可视区域，加载图片
-        if(cHeight &gt;= viewHeight){
-            return true;
-        }else{
-            //图片没进入浏览器可视区域，不加载图片
-            return false;
-        }
-    },
-    loadImg: function(elems){
-        for(var i=0,len=elems.length; i&lt;len;i++){
-            if(this.isLoad(elems[i])){
-                if(elems[i].className !== &apos;loaded&apos;){
-                    //针对使用data-自定义的属性，要使用getAttribute()获取值
-                    elems[i].src = elems[i].getAttribute(&apos;data-url&apos;);//实际的url替换原来的url
-                    elems[i].className = &quot;loaded&quot;; //被加载的图片，添加class属性
-                }
-            }else{
-                return; //下一个图片没有进入加载区域，不循环
-            }
-        }
-    }
-}
-//使用
-window.onscroll = function(){
-    lazyLoad.loadImg(document.getElementsByTagName(&apos;img&apos;))
-}
-//html,src指向为占位符，data-url为图片的实际url
-&lt;img src=&apos;img/17.jpg&apos; data-url=&apos;img/11.jpg&apos;&gt;
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<p>方法二：  </p>
-<ul>
-<li>使用element.getBoundindClientRect()直接得到top值。</li>
-<li>该函数返回一个Object对象，该对象有6个属性：top，left，right，bottom，width，height</li>
-<li><p>浏览器兼容性，IE67的left、top会少2px，并且没有width、height属性</p>
-<pre><code>function isElementInView(el){
-    var react = el.getBoundingClientRect();
-    return (
-        rect.top &gt;=0 &amp;&amp; 
-        rect.left &gt;=0 &amp;&amp;
-        rect.bottom &lt;=(window.innerHeight || document.documentElement.clientHeight) &amp;&amp;
-        rect.right &lt;=(window.innerWidth || document.documentElement.clientWidth)    
-    )
-}
-</code></pre><p>  方法三：  </p>
-</li>
-<li><p>HTML5新的IntersectionObserver，可以自动观察元素是否可见</p>
-</li>
-</ul>
-<p>用法：  </p>
-<pre><code>var observer = new IntersectionObserver(callback, option)
-// 开始观察
-observer.observe(document.getElementById(&apos;first&apos;))
-// 停止观察
-observer.unobserve(document.getElementById(&apos;first&apos;))
-// 关闭观察器
-observer.disconnect()
-</code></pre><p>回调方法，每当期望被监视的元素进入或者退出另外一个元素的时候，该回调方法将会被执行，或者两个元素的交集部分大小发生变化的时候回调方法会被执行。</p>
-<pre><code>function query(tag){
-    return Array.from(document.getElementsByTagName(tag));
-} 
-var observer = new IntersectionObserver((changes) =&gt; {
-    changes.forEach((change) =&gt; {
-        if(change.intersectionRatio &gt; 0){
-            var img = change.target;
-            img.src = img.dataset.src;
-            observer.unobserve(img)
-        }
-    })
-})
-query(&apos;img&apos;).forEach((item) =&gt; {
-    observer.observe(item)
-})        
-</code></pre><p><strong>图片懒加载优化</strong><br>使用节流函数  </p>
-<pre><code>function throttle(func, delay, time){
-    var timeout, startTime=new Date();
-    return function(){
-        var context = this,
-            args = arguments,
-            curTime = new Date();
-            clearTimeout(timeout);
-        if(curTime - startTime &gt;= time){
-            func.apply(context, args);
-            startTime = curTime;
-            // 没到触发间隔，重新设定定时器
-        }else{
-            timeout = setTimeout(func, delay)
-        }
-    }
-}
-window.addEventListener(&apos;scroll&apos;, throttle(lazyload, 500, 1000))                
-</code></pre>
           
         
       
