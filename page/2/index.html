@@ -801,161 +801,6 @@ h1.getName();
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/js事件/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="FE_Hei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FE_hei">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/01/js事件/" itemprop="url">javascript事件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
-                2018-08-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="JavaScript事件"><a href="#JavaScript事件" class="headerlink" title="JavaScript事件"></a>JavaScript事件</h3><p><strong>事件级别</strong>  </p>
-<ul>
-<li>DOM0：element.onclick = function(){}</li>
-<li>DOM2: element.addEventListener(‘click’,function(){}, false)</li>
-<li>DOM3:element.addEventListener(‘keyup’,function(){},false)</li>
-</ul>
-<p><strong>事件流(事件三个阶段)</strong><br>事件流三个阶段，首先捕获阶段，事件通过捕获，到达目标阶段，从目标元素在上传到window对象，为冒泡阶段</p>
-<p><strong>描述DOM事件捕获的具体流程</strong><br>window -&gt; document -&gt; html标签(document.documentElement) -&gt; body -&gt;…-&gt;目标元素</p>
-<p><strong>Event对象</strong>  </p>
-<ul>
-<li>event.preventDefault()阻止默认行为 </li>
-<li>event.stopPropagation()阻止冒泡</li>
-<li>event.stopImmediatePropagation()注册两个事件，优先级执行  </li>
-<li>event.currentTarget当前绑定事件的对象</li>
-<li>event.target：触发事件的某个具体的对象，只会出现在事件机制的目标阶段</li>
-</ul>
-<p><strong>先捕获，再冒泡</strong><br><strong>在target注册的监听器，不分捕获和冒泡</strong></p>
-<p><strong>事件委托</strong><br>事件委托是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件</p>
-<pre><code>function delegateEvent(ele, selector, type, fn){
-    if(ele.addEventListener){
-        ele.addEventListener(type, eventfn, false);
-    }else if(ele.attachEvent){
-        ele.attachEvent(&quot;on&quot;+type, eventfn);
-    }else{
-        ele[&apos;on&apos;+type] = eventfn;
-    }
-    function eventfn(e){
-        var e = e||window.e;
-        var target = e.target || e.srcElement;
-        if(target.matches(selector)){
-            if(fn){
-                fn.call(target, e);
-            }
-        }
-    }
-}
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/vue-source/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1286,6 +1131,161 @@ export default {
 <p>在更新视图的时候，如果需要diff的prevVNode不存在，那么就用新的vnode创建一个真实dom节点；如果需要diff的prevVNode存在，首先对prevVNode和VNode进行diff，并将需要的更新的dom操作已patch的形式打到prevVNode上，并完成真实dom的更新工作。</p>
 <p>patch方法为整个Virtual DOM的核心方法，主要完成了新的虚拟dom节点和旧的虚拟dom节点的diff过程，经过patch过程之后生成真实的dom节点并完成视图的更新工作。</p>
 
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/01/js事件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FE_Hei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FE_hei">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/01/js事件/" itemprop="url">javascript事件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-01T00:00:00+08:00">
+                2018-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="JavaScript事件"><a href="#JavaScript事件" class="headerlink" title="JavaScript事件"></a>JavaScript事件</h3><p><strong>事件级别</strong>  </p>
+<ul>
+<li>DOM0：element.onclick = function(){}</li>
+<li>DOM2: element.addEventListener(‘click’,function(){}, false)</li>
+<li>DOM3:element.addEventListener(‘keyup’,function(){},false)</li>
+</ul>
+<p><strong>事件流(事件三个阶段)</strong><br>事件流三个阶段，首先捕获阶段，事件通过捕获，到达目标阶段，从目标元素在上传到window对象，为冒泡阶段</p>
+<p><strong>描述DOM事件捕获的具体流程</strong><br>window -&gt; document -&gt; html标签(document.documentElement) -&gt; body -&gt;…-&gt;目标元素</p>
+<p><strong>Event对象</strong>  </p>
+<ul>
+<li>event.preventDefault()阻止默认行为 </li>
+<li>event.stopPropagation()阻止冒泡</li>
+<li>event.stopImmediatePropagation()注册两个事件，优先级执行  </li>
+<li>event.currentTarget当前绑定事件的对象</li>
+<li>event.target：触发事件的某个具体的对象，只会出现在事件机制的目标阶段</li>
+</ul>
+<p><strong>先捕获，再冒泡</strong><br><strong>在target注册的监听器，不分捕获和冒泡</strong></p>
+<p><strong>事件委托</strong><br>事件委托是利用事件的冒泡原理来实现的，何为事件冒泡呢？就是事件从最深的节点开始，然后逐步向上传播事件</p>
+<pre><code>function delegateEvent(ele, selector, type, fn){
+    if(ele.addEventListener){
+        ele.addEventListener(type, eventfn, false);
+    }else if(ele.attachEvent){
+        ele.attachEvent(&quot;on&quot;+type, eventfn);
+    }else{
+        ele[&apos;on&apos;+type] = eventfn;
+    }
+    function eventfn(e){
+        var e = e||window.e;
+        var target = e.target || e.srcElement;
+        if(target.matches(selector)){
+            if(fn){
+                fn.call(target, e);
+            }
+        }
+    }
+}
+</code></pre>
           
         
       
